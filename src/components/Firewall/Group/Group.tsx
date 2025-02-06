@@ -1,6 +1,6 @@
 import { mdiContentCopy, mdiRefresh } from "@mdi/js";
 import Icon from "@mdi/react";
-import { TableCell, Tooltip } from "@nextui-org/react";
+import { TableCell, Tooltip } from "@heroui/react";
 
 export default function Group() {
     return (

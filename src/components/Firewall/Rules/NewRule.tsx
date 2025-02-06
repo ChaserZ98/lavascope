@@ -1,5 +1,3 @@
-import { mdiPlus } from "@mdi/js";
-import Icon from "@mdi/react";
 import {
     Button,
     Input,
@@ -8,7 +6,9 @@ import {
     SelectSection,
     Textarea,
     Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
+import { mdiPlus } from "@mdi/js";
+import Icon from "@mdi/react";
 
 import {
     NewRuleState,
@@ -391,7 +391,7 @@ export default function NewRule(props: NewRuleProps) {
                             variant="light"
                             color="primary"
                             className="text-default-400 transition-colors-opacity hover:text-primary-400"
-                            onClick={() => {
+                            onPress={() => {
                                 props.onRuleCreate(props.newRule);
                             }}
                             isLoading={props.newRule.creating}

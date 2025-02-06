@@ -8,7 +8,7 @@ import {
     CardHeader,
     Divider,
     Input,
-} from "@nextui-org/react";
+} from "@heroui/react";
 
 import { Environment, useEnvironmentStore } from "@/zustand/environment";
 import { useScreenStore } from "@/zustand/screen";
@@ -100,7 +100,7 @@ export default function Settings() {
                         color="primary"
                         size={screenSize === "sm" ? "sm" : "md"}
                         isDisabled={isChanged()}
-                        onClick={() => {
+                        onPress={() => {
                             setSettings({ ...tempSettings });
                         }}
                     >

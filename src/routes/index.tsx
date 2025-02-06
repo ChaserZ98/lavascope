@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 
-import { Spinner } from "@nextui-org/react";
+import { Spinner } from "@heroui/react";
 
 const AppError = lazy(() => import("@/AppError.tsx"));
 

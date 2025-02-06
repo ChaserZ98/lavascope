@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import { mdiPencil, mdiTrashCan } from "@mdi/js";
-import Icon from "@mdi/react";
 import {
     Button,
     Modal,
@@ -18,7 +16,9 @@ import {
     TableRow,
     Tooltip,
     useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
+import { mdiPencil, mdiTrashCan } from "@mdi/js";
+import Icon from "@mdi/react";
 import { toast } from "react-toastify";
 
 import ProxySwitch from "@/components/ProxySwitch";
@@ -143,7 +143,7 @@ export default function GroupTable() {
                                             variant="light"
                                             color="danger"
                                             className="text-default-400 transition-colors-opacity hover:text-danger-400"
-                                            onClick={() => {
+                                            onPress={() => {
                                                 selectedGroupId.current =
                                                     group.id;
                                                 deleteTimeoutId.current &&
@@ -201,7 +201,7 @@ export default function GroupTable() {
                             <ModalFooter>
                                 <Button
                                     color="primary"
-                                    onClick={() => {
+                                    onPress={() => {
                                         if (!selectedGroupId.current) {
                                             logging.warn(
                                                 `Delete group operation failed: Group ID is null`
@@ -224,7 +224,7 @@ export default function GroupTable() {
                                 <Button
                                     color="danger"
                                     variant="light"
-                                    onClick={onClose}
+                                    onPress={onClose}
                                 >
                                     Cancel
                                 </Button>
@@ -235,7 +235,7 @@ export default function GroupTable() {
             </Modal>
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
-                    onClick={() => fetchGroups(settings, fetchClient)}
+                    onPress={() => fetchGroups(settings, fetchClient)}
                     isLoading={refreshing}
                 >
                     Refresh

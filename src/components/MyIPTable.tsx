@@ -1,7 +1,5 @@
 import { useCallback } from "react";
 
-import { mdiContentCopy, mdiRefresh } from "@mdi/js";
-import Icon from "@mdi/react";
 import {
     Button,
     Table,
@@ -11,7 +9,9 @@ import {
     TableHeader,
     TableRow,
     Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
+import { mdiContentCopy, mdiRefresh } from "@mdi/js";
+import Icon from "@mdi/react";
 import { toast } from "react-toastify";
 
 import useFetch from "@/hooks/fetch";
@@ -137,7 +137,7 @@ export default function MyIPTable() {
                                                 variant="light"
                                                 color="primary"
                                                 className="text-default-400 transition-colors-opacity hover:text-primary-500"
-                                                onClick={() =>
+                                                onPress={() =>
                                                     copy(
                                                         version === IPVersion.V4
                                                             ? ipv4.value
@@ -164,7 +164,7 @@ export default function MyIPTable() {
                                             variant="light"
                                             color="primary"
                                             className="text-default-400 transition-colors-opacity hover:text-primary-500"
-                                            onClick={() =>
+                                            onPress={() =>
                                                 refresh(version, fetchClient)
                                             }
                                             disabled={

@@ -13,7 +13,7 @@ import {
     Tabs,
     Tooltip,
     useDisclosure,
-} from "@nextui-org/react";
+} from "@heroui/react";
 import { toast } from "react-toastify";
 
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
@@ -348,7 +348,7 @@ export default function Rules() {
                                         isLoading={
                                             selectedRule.current?.deleting
                                         }
-                                        onClick={() => {
+                                        onPress={() => {
                                             if (!selectedRule.current) {
                                                 logging.warn(
                                                     `Delete rule operation failed: Rule ID is null`
@@ -373,7 +373,7 @@ export default function Rules() {
                                     <Button
                                         color="danger"
                                         variant="light"
-                                        onClick={onClose}
+                                        onPress={onClose}
                                     >
                                         Cancel
                                     </Button>
@@ -385,7 +385,7 @@ export default function Rules() {
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
-                    onClick={() => refresh(id, settings, fetchClient)}
+                    onPress={() => refresh(id, settings, fetchClient)}
                     isLoading={refreshing}
                 >
                     Refresh

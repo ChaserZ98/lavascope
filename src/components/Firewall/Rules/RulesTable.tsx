@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Pagination } from "@nextui-org/react";
+import { Pagination } from "@heroui/react";
 
 import { NewRuleState, RuleState } from "@/zustand/firewall/rules";
 import { Version as IPVersion } from "@/zustand/ip";

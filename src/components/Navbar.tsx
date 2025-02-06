@@ -1,19 +1,19 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import { mdiCog, mdiThemeLightDark } from "@mdi/js";
-import Icon from "@mdi/react";
 import {
     Button,
+    Link as HeroUILink,
     Navbar,
     NavbarBrand,
     NavbarContent,
     NavbarItem,
     NavbarMenu,
     NavbarMenuToggle,
-    Link as NextUILink,
     Tooltip,
-} from "@nextui-org/react";
+} from "@heroui/react";
+import { mdiCog, mdiThemeLightDark } from "@mdi/js";
+import Icon from "@mdi/react";
 
 import { Environment, useEnvironmentStore } from "@/zustand/environment";
 import { Screen, useScreenStore } from "@/zustand/screen";
@@ -42,21 +42,21 @@ export default function Navigation() {
                 className="md:hidden text-foreground transition-colors-opacity"
             />
             <NavbarBrand className="text-foreground">
-                <NextUILink
+                <HeroUILink
                     to="/"
                     color="foreground"
                     size={screenSize === Screen.SM ? "sm" : "lg"}
                     isBlock
                     as={Link}
                     className="text-medium text-wrap sm:text-large transition-colors-opacity"
-                    onClick={() => setIsMenuOpen(false)}
+                    onPress={() => setIsMenuOpen(false)}
                 >
                     Vultr Firewall Watcher
-                </NextUILink>
+                </HeroUILink>
             </NavbarBrand>
             <NavbarContent justify="center" className="hidden md:flex gap-4">
                 <NavbarItem isActive={location.pathname === "/"}>
-                    <NextUILink
+                    <HeroUILink
                         to="/"
                         color="foreground"
                         size="lg"
@@ -65,10 +65,10 @@ export default function Navigation() {
                         className="transition-colors-opacity"
                     >
                         Groups
-                    </NextUILink>
+                    </HeroUILink>
                 </NavbarItem>
                 <NavbarItem isActive={location.pathname === "/my-ip"}>
-                    <NextUILink
+                    <HeroUILink
                         to="/my-ip"
                         color="foreground"
                         size="lg"
@@ -77,7 +77,7 @@ export default function Navigation() {
                         className="transition-colors-opacity"
                     >
                         My IP
-                    </NextUILink>
+                    </HeroUILink>
                 </NavbarItem>
             </NavbarContent>
             <NavbarContent
@@ -95,7 +95,7 @@ export default function Navigation() {
                     >
                         <Button
                             isIconOnly
-                            onClick={() => toggleTheme()}
+                            onPress={() => toggleTheme()}
                             className="p-0.5 min-w-8 w-8 h-8 sm:p-1 sm:min-w-10 sm:w-10 sm:h-10 text-default-foreground"
                         >
                             <Icon path={mdiThemeLightDark} className="w-full" />
@@ -141,30 +141,30 @@ export default function Navigation() {
                 }
             >
                 <NavbarItem isActive={location.pathname === "/"}>
-                    <NextUILink
+                    <HeroUILink
                         to="/"
                         color="foreground"
                         size="lg"
                         isBlock
                         as={Link}
                         className="transition-colors-opacity text-medium"
-                        onClick={() => setIsMenuOpen(false)}
+                        onPress={() => setIsMenuOpen(false)}
                     >
                         Groups
-                    </NextUILink>
+                    </HeroUILink>
                 </NavbarItem>
                 <NavbarItem isActive={location.pathname === "/my-ip"}>
-                    <NextUILink
+                    <HeroUILink
                         to="/my-ip"
                         color="foreground"
                         size="lg"
                         isBlock
                         as={Link}
                         className="transition-colors-opacity text-medium"
-                        onClick={() => setIsMenuOpen(false)}
+                        onPress={() => setIsMenuOpen(false)}
                     >
                         My IP
-                    </NextUILink>
+                    </HeroUILink>
                 </NavbarItem>
             </NavbarMenu>
         </Navbar>

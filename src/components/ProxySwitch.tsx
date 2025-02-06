@@ -1,4 +1,4 @@
-import { Switch } from "@nextui-org/react";
+import { Switch } from "@heroui/react";
 
 import { useSettingsStore } from "@/zustand/settings";
 

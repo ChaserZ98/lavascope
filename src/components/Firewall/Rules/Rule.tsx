@@ -1,6 +1,6 @@
+import { Button, Input, Textarea, Tooltip } from "@heroui/react";
 import { mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Button, Input, Textarea, Tooltip } from "@nextui-org/react";
 
 import {
     portToProtocol,
@@ -125,7 +125,7 @@ export default function Rule(props: FirewallRuleProps) {
                             variant="light"
                             color="danger"
                             className="text-default-400 transition-colors-opacity hover:text-danger-400"
-                            onClick={() =>
+                            onPress={() =>
                                 props.onDelete({
                                     id: props.id,
                                     ip_type: props.ip_type,

@@ -7,7 +7,7 @@ import {
     mdiWindowRestore,
 } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Image } from "@nextui-org/react";
+import { Image } from "@heroui/react";
 import { Window, getCurrentWindow } from "@tauri-apps/api/window";
 
 import tauriNotify from "@/hooks/notification";
