@@ -13,7 +13,7 @@ pub fn create_tray(app: &AppHandle) -> Result<TrayIcon, tauri::Error> {
         .tooltip("Vultr Firewall Watcher")
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&menu)
-        .menu_on_left_click(false)
+        .show_menu_on_left_click(false)
         .on_menu_event(|app, event| menu_click_handler(app, &event))
         .on_tray_icon_event(move |tray, event| system_tray_event_handler(tray, &event, &menu))
         .build(app)
