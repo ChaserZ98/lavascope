@@ -1,5 +1,5 @@
+import { atom } from "jotai";
 import { toast } from "react-toastify";
-import { create, StoreApi } from "zustand";
 
 import logging from "@/utils/log";
 
@@ -21,39 +21,39 @@ export enum Version {
     V6 = "v6",
 }
 
-export type IPState = {
+type IPState = {
     value: string;
     refreshing: boolean;
 };
+const createIPAtoms = (version: Version) =>
+    atom<IPState>({
+        value: localStorage.getItem(`ip${version}`) || "",
+        refreshing: false,
+    });
 
-type State = {
-    [Version.V4]: IPState;
-    [Version.V6]: IPState;
-};
+export const ipv4Atom = createIPAtoms(Version.V4);
+export const ipv6Atom = createIPAtoms(Version.V6);
 
-type Action = {
-    refresh: (
-        ipVersion: Version,
+export const refreshAtom = atom(
+    null,
+    (
+        _get,
+        set,
+        version: Version,
         fetchClient: typeof fetch,
-        timeout?: number
-    ) => void;
-};
-
-function refresh(set: StoreApi<State>["setState"]): Action["refresh"] {
-    return (ipVersion, fetchClient, timeout = 5000) => {
+        timeout: number = 5000
+    ) => {
         const endpoints =
-            ipVersion === Version.V4 ? IPv4Endpoints : IPv6Endpoints;
-        set(() => ({
-            [ipVersion]: {
-                value: "",
-                refreshing: true,
-            },
-        }));
+            version === Version.V4 ? IPv4Endpoints : IPv6Endpoints;
+        const ipAtom = version === Version.V4 ? ipv4Atom : ipv6Atom;
+        set(ipAtom, {
+            value: "",
+            refreshing: true,
+        });
 
         const exclusiveAbortController = new AbortController();
-
         const tasks = endpoints.map((endpoint) => {
-            logging.info(`Fetching ${ipVersion} address from ${endpoint}.`);
+            logging.info(`Fetching ${version} address from ${endpoint}.`);
             const timeoutSignal = AbortSignal.timeout(timeout);
             const mergedSignal = AbortSignal.any([
                 exclusiveAbortController.signal,
@@ -63,7 +63,7 @@ function refresh(set: StoreApi<State>["setState"]): Action["refresh"] {
             return fetchClient(endpoint, { signal: mergedSignal })
                 .then((response) => {
                     if (response.ok) return response.text();
-                    throw new Error(`Failed to fetch ${ipVersion} address.`);
+                    throw new Error(`Failed to fetch ${version} address.`);
                 })
                 .then((ip) => {
                     exclusiveAbortController.abort(
@@ -89,43 +89,29 @@ function refresh(set: StoreApi<State>["setState"]): Action["refresh"] {
 
         Promise.any(tasks)
             .then((res) => {
-                set(() => ({
-                    [ipVersion]: {
-                        value: res.ip,
-                        refreshing: false,
-                    },
-                }));
+                set(ipAtom, {
+                    value: res.ip,
+                    refreshing: false,
+                });
+                localStorage.setItem(`ip${version}`, res.ip);
                 logging.info(
-                    `Fetched ${ipVersion} address ${res.ip} from ${res.endpoint}`
+                    `Fetched ${version} address ${res.ip} from ${res.endpoint}`
                 );
             })
             .catch((err) => {
-                set(() => ({
-                    [ipVersion]: {
-                        value: "",
-                        refreshing: false,
-                    },
-                }));
+                set(ipAtom, {
+                    value: "",
+                    refreshing: false,
+                });
+                localStorage.removeItem(`ip${version}`);
                 logging.error(
-                    `Failed to fetch ${ipVersion} address: ${
+                    `Failed to fetch ${version} address: ${
                         err.name === "AggregateError"
                             ? "All requests failed"
                             : err
                     }`
                 );
-                toast.error(`Failed to fetch ${ipVersion} address.`);
+                toast.error(`Failed to fetch ${version} address.`);
             });
-    };
-}
-
-export const useIPStore = create<State & Action>((set) => ({
-    [Version.V4]: {
-        value: "",
-        refreshing: false,
-    },
-    [Version.V6]: {
-        value: "",
-        refreshing: false,
-    },
-    refresh: refresh(set),
-}));
+    }
+);

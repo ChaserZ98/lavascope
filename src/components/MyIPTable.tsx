@@ -12,22 +12,28 @@ import {
 } from "@heroui/react";
 import { mdiContentCopy, mdiRefresh } from "@mdi/js";
 import Icon from "@mdi/react";
+import { useAtomValue, useSetAtom } from "jotai";
 import { toast } from "react-toastify";
 
 import useFetch from "@/hooks/fetch";
+import { Environment, environmentAtom } from "@/store/environment";
+import {
+    ipv4Atom,
+    ipv6Atom,
+    Version as IPVersion,
+    refreshAtom,
+} from "@/store/ip";
+import { settingsAtom } from "@/store/settings";
 import clipboard from "@/utils/clipboard";
 import logging from "@/utils/log";
-import { Environment, useEnvironmentStore } from "@/zustand/environment";
-import { Version as IPVersion, useIPStore } from "@/zustand/ip";
-import { useSettingsStore } from "@/zustand/settings";
 import ProxySwitch from "./ProxySwitch";
 
 export default function MyIPTable() {
-    const environment = useEnvironmentStore((state) => state.environment);
-    const ipv4 = useIPStore((state) => state[IPVersion.V4]);
-    const ipv6 = useIPStore((state) => state[IPVersion.V6]);
-    const refreshIP = useIPStore((state) => state.refresh);
-    const settings = useSettingsStore((state) => state.settings);
+    const environment = useAtomValue(environmentAtom);
+    const ipv4 = useAtomValue(ipv4Atom);
+    const ipv6 = useAtomValue(ipv6Atom);
+    const refreshIP = useSetAtom(refreshAtom);
+    const settings = useAtomValue(settingsAtom);
 
     const fetchClient = useFetch(
         settings.useProxy
@@ -55,6 +61,7 @@ export default function MyIPTable() {
         },
         [settings]
     );
+
     const copy = useCallback((ip: string) => {
         clipboard
             .writeText(ip)

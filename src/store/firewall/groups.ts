@@ -1,9 +1,10 @@
-import { produce } from "immer";
+import { atom } from "jotai";
+import { atomFamily } from "jotai/utils";
 import { toast } from "react-toastify";
-import { StoreApi } from "zustand";
 
+import logging from "@/utils/log";
 import { Version as IPVersion } from "../ip";
-import { type FirewallState } from "./firewall";
+import { firewallAtom } from "./firewall";
 import {
     initialNewRuleIPv4,
     initialNewRuleIPv6,
@@ -11,8 +12,6 @@ import {
     RulesMeta,
     RuleState,
 } from "./rules";
-
-import logging from "@/utils/log";
 
 const endpoint = new URL("https://api.vultr.com/v2/firewalls");
 
@@ -64,33 +63,30 @@ export type GroupsMeta = {
     total: number;
 };
 
-export type GroupsAction = {
-    refreshGroups: (
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout?: number
-    ) => void;
-    deleteGroupById: (
-        id: string,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout?: number
-    ) => void;
-};
+export const groupsAtom = atom((get) => get(firewallAtom).groups);
 
-function refreshGroups(
-    set: StoreApi<FirewallState>["setState"]
-): GroupsAction["refreshGroups"] {
-    return (apiToken, fetchClient, timeout = 5000) => {
+export const groupAtom = atomFamily((id: string) =>
+    atom((get) => get(firewallAtom).groups[id])
+);
+
+export const refreshGroupsAtom = atom(
+    null,
+    (
+        _get,
+        set,
+        apiToken: string,
+        fetchClient: typeof fetch,
+        timeout: number = 5000
+    ) => {
         logging.info(`Fetching firewall groups.`);
-        set(() => ({ refreshing: true }));
+        set(firewallAtom, (state) => {
+            state.refreshing = true;
+        });
 
         const timeoutSignal = AbortSignal.timeout(timeout);
         fetchClient(endpoint, {
             method: "GET",
-            headers: {
-                Authorization: `Bearer ${apiToken}`,
-            },
+            headers: { Authorization: `Bearer ${apiToken}` },
             signal: timeoutSignal,
         })
             .then(async (res) => {
@@ -107,22 +103,20 @@ function refreshGroups(
                     logging.info(
                         `Successfully fetched ${res.data.meta.total} firewall groups.`
                     );
-                    set((state) => {
-                        return {
-                            meta: res.data.meta,
-                            groups: firewall_groups.reduce((acc, group) => {
-                                acc[group.id] =
-                                    group.id in state.groups &&
-                                    state.groups[group.id].date_modified ===
-                                        group.date_modified
-                                        ? state.groups[group.id]
-                                        : {
-                                              ...initialGroupState,
-                                              ...group,
-                                          };
-                                return acc;
-                            }, {} as Record<string, GroupState>),
-                        };
+                    set(firewallAtom, (state) => {
+                        state.meta = res.data.meta;
+                        state.groups = firewall_groups.reduce((acc, group) => {
+                            acc[group.id] =
+                                group.id in state.groups &&
+                                state.groups[group.id].date_modified ===
+                                    group.date_modified
+                                    ? state.groups[group.id]
+                                    : {
+                                          ...initialGroupState,
+                                          ...group,
+                                      };
+                            return acc;
+                        }, {} as Record<string, GroupState>);
                     });
                 } else if (res.status < 500)
                     throw new Error(
@@ -145,23 +139,33 @@ function refreshGroups(
                             : err.message || err
                     }`
                 );
-
-                set(() => ({ groups: {}, meta: null }));
+                set(firewallAtom, (state) => {
+                    state.groups = {};
+                    state.meta = null;
+                });
             })
-            .finally(() => set(() => ({ refreshing: false })));
-    };
-}
+            .finally(() =>
+                set(firewallAtom, (state) => {
+                    state.refreshing = false;
+                })
+            );
+    }
+);
 
-function deleteGroupById(
-    set: StoreApi<FirewallState>["setState"]
-): GroupsAction["deleteGroupById"] {
-    return (id, apiToken, fetchClient, timeout = 5000) => {
+export const deleteGroupByIdAtom = atom(
+    null,
+    (
+        _get,
+        set,
+        id: string,
+        apiToken: string,
+        fetchClient: typeof fetch,
+        timeout: number = 5000
+    ) => {
         logging.info(`Deleting group with ID ${id}.`);
-        set(
-            produce((state: FirewallState) => {
-                state.groups[id].deleting = true;
-            })
-        );
+        set(firewallAtom, (state) => {
+            state.groups[id].deleting = true;
+        });
         const timeoutSignal = AbortSignal.timeout(timeout);
         fetchClient(new URL(`${endpoint}/${id}`), {
             method: "DELETE",
@@ -179,11 +183,9 @@ function deleteGroupById(
                         }`
                     );
                 }
-                set(
-                    produce((state: FirewallState) => {
-                        delete state.groups[id];
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    delete state.groups[id];
+                });
                 logging.info(`Successfully deleted group with ID ${id}`);
                 toast.success(`Successfully deleted group with ID ${id}`);
             })
@@ -199,16 +201,9 @@ function deleteGroupById(
                     logging.error(`${err}`);
                     toast.error(err.message);
                 }
-                set(
-                    produce((state: FirewallState) => {
-                        state.groups[id].deleting = false;
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    state.groups[id].deleting = false;
+                });
             });
-    };
-}
-
-export const groupsAction = {
-    refreshGroups,
-    deleteGroupById,
-};
+    }
+);

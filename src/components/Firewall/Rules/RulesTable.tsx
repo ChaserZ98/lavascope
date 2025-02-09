@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import { Pagination } from "@heroui/react";
 
-import { NewRuleState, RuleState } from "@/zustand/firewall/rules";
-import { Version as IPVersion } from "@/zustand/ip";
+import { NewRuleState, RuleState } from "@/store/firewall/rules";
+import { Version as IPVersion } from "@/store/ip";
 import NewRule from "./NewRule";
 import Rule from "./Rule";
 

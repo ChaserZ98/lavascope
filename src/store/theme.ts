@@ -1,14 +1,9 @@
-import { create } from "zustand";
+import { atom } from "jotai";
 
 export enum Theme {
     LIGHT = "light",
     DARK = "dark",
 }
-
-type ThemeState = {
-    theme: Theme;
-    toggleTheme: () => void;
-};
 
 function createInitialTheme(): Theme {
     let cachedTheme: string | null = localStorage.getItem("theme");
@@ -22,15 +17,12 @@ function createInitialTheme(): Theme {
     return cachedTheme as Theme;
 }
 
-export const useThemeStore = create<ThemeState>()((set) => ({
-    theme: createInitialTheme(),
-    toggleTheme: () => {
-        set((state) => {
-            const newTheme =
-                state.theme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
-            localStorage.setItem("theme", newTheme);
-            document.documentElement.dataset.theme = newTheme;
-            return { theme: newTheme };
-        });
-    },
-}));
+export const themeAtom = atom(createInitialTheme());
+
+export const toggleThemeAtom = atom(null, (get, set) => {
+    const currentTheme = get(themeAtom);
+    const newTheme = currentTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
+    set(themeAtom, newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.dataset.theme = newTheme;
+});

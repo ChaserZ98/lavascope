@@ -15,16 +15,17 @@ import {
 import { mdiCog, mdiThemeLightDark } from "@mdi/js";
 import Icon from "@mdi/react";
 
-import { Environment, useEnvironmentStore } from "@/zustand/environment";
-import { Screen, useScreenStore } from "@/zustand/screen";
-import { useThemeStore } from "@/zustand/theme";
+import { Environment, environmentAtom } from "@/store/environment";
+import { Screen, screenSizeAtom } from "@/store/screen";
+import { toggleThemeAtom } from "@/store/theme";
+import { useAtomValue, useSetAtom } from "jotai";
 
 export default function Navigation() {
     const location = useLocation();
 
-    const toggleTheme = useThemeStore((state) => state.toggleTheme);
-    const environment = useEnvironmentStore((state) => state.environment);
-    const screenSize = useScreenStore((state) => state.size);
+    const toggleTheme = useSetAtom(toggleThemeAtom);
+    const environment = useAtomValue(environmentAtom);
+    const screenSize = useAtomValue(screenSizeAtom);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 

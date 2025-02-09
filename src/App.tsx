@@ -7,16 +7,15 @@ import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "@/components/Navbar";
 import TauriTitleBar from "@/components/TauriTitleBar";
-import { useScreenStore } from "@/zustand/screen";
+import { addScreenSizeListener, screenSizeAtom } from "@/store/screen";
+import { useSetAtom } from "jotai";
 import checkCompatibility from "./utils/compatibility";
 
 export default function App() {
-    const addScreenSizeListener = useScreenStore(
-        (state) => state.addEventListener
-    );
+    const setScreenSize = useSetAtom(screenSizeAtom);
     useEffect(() => {
         checkCompatibility();
-        const removeScreenSizeListener = addScreenSizeListener();
+        const removeScreenSizeListener = addScreenSizeListener(setScreenSize);
         return () => removeScreenSizeListener();
     }, []);
     return (

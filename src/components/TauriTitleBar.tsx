@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Image } from "@heroui/react";
 import {
     mdiWindowClose,
     mdiWindowMaximize,
@@ -7,19 +8,19 @@ import {
     mdiWindowRestore,
 } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Image } from "@heroui/react";
 import { Window, getCurrentWindow } from "@tauri-apps/api/window";
 
 import tauriNotify from "@/hooks/notification";
+import { Environment, environmentAtom } from "@/store/environment";
 import logging from "@/utils/log";
-import { Environment, useEnvironmentStore } from "@/zustand/environment";
 
 import appIcon from "@img/app-icon.png";
+import { useAtomValue } from "jotai";
 
 const mainWindowLabel = "main";
 
 export default function TauriTitleBar() {
-    const environment = useEnvironmentStore((state) => state.environment);
+    const environment = useAtomValue(environmentAtom);
 
     const mainWindowRef = useRef<Window | null>(null);
     const unlistenCloseRef = useRef(() => {});

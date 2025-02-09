@@ -10,17 +10,18 @@ import {
     Input,
 } from "@heroui/react";
 
-import { Environment, useEnvironmentStore } from "@/zustand/environment";
-import { useScreenStore } from "@/zustand/screen";
-import { useSettingsStore, type Settings } from "@/zustand/settings";
+import { Environment, environmentAtom } from "@/store/environment";
+import { screenSizeAtom } from "@/store/screen";
+import { setSettingsAtom, settingsAtom, type Settings } from "@/store/settings";
+import { useAtomValue, useSetAtom } from "jotai";
 
 export default function Settings() {
-    const environment = useEnvironmentStore((state) => state.environment);
+    const environment = useAtomValue(environmentAtom);
 
-    const screenSize = useScreenStore((state) => state.size);
+    const screenSize = useAtomValue(screenSizeAtom);
 
-    const settings = useSettingsStore((state) => state.settings);
-    const setSettings = useSettingsStore((state) => state.setSettings);
+    const settings = useAtomValue(settingsAtom);
+    const setSettings = useSetAtom(setSettingsAtom);
 
     const [tempSettings, setTempSettings] = useState<Settings>({
         ...settings,

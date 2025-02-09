@@ -19,22 +19,28 @@ import {
 } from "@heroui/react";
 import { mdiPencil, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
+import { useAtomValue, useSetAtom } from "jotai";
 import { toast } from "react-toastify";
 
 import ProxySwitch from "@/components/ProxySwitch";
 import useFetch from "@/hooks/fetch";
+import { Environment, environmentAtom } from "@/store/environment";
+import { refreshingAtom } from "@/store/firewall/firewall";
+import {
+    deleteGroupByIdAtom,
+    groupsAtom,
+    refreshGroupsAtom,
+} from "@/store/firewall/groups";
+import { Settings, settingsAtom } from "@/store/settings";
 import logging from "@/utils/log";
-import { Environment, useEnvironmentStore } from "@/zustand/environment";
-import { useFirewallStore } from "@/zustand/firewall/firewall";
-import { Settings, useSettingsStore } from "@/zustand/settings";
 
 export default function GroupTable() {
-    const environment = useEnvironmentStore((state) => state.environment);
-    const settings = useSettingsStore((state) => state.settings);
-    const groups = useFirewallStore((state) => state.groups);
-    const refreshing = useFirewallStore((state) => state.refreshing);
-    const refreshGroups = useFirewallStore((state) => state.refreshGroups);
-    const deleteGroupById = useFirewallStore((state) => state.deleteGroupById);
+    const environment = useAtomValue(environmentAtom);
+    const settings = useAtomValue(settingsAtom);
+    const groups = useAtomValue(groupsAtom);
+    const refreshing = useAtomValue(refreshingAtom);
+    const refreshGroups = useSetAtom(refreshGroupsAtom);
+    const deleteGroupById = useSetAtom(deleteGroupByIdAtom);
 
     const fetchClient = useFetch(
         settings.useProxy

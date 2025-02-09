@@ -19,20 +19,26 @@ import { toast } from "react-toastify";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import ProxySwitch from "@/components/ProxySwitch";
 import useFetch from "@/hooks/fetch";
-import { Environment, useEnvironmentStore } from "@/zustand/environment";
-import { useFirewallStore } from "@/zustand/firewall/firewall";
-import { initialGroupState } from "@/zustand/firewall/groups";
+import { Environment, environmentAtom } from "@/store/environment";
+import { groupAtom } from "@/store/firewall/groups";
 import {
+    createRuleAtom,
+    deleteRuleByIdAtom,
     NewRuleState,
     newRuleStateToCreateRule,
     portToProtocol,
+    refreshingAtom,
+    refreshRulesAtom,
+    rulesAtom,
     RuleState,
-} from "@/zustand/firewall/rules";
-import { Version as IPVersion } from "@/zustand/ip";
-import { Screen, useScreenStore } from "@/zustand/screen";
-import { Settings, useSettingsStore } from "@/zustand/settings";
+    setNewRuleAtom,
+} from "@/store/firewall/rules";
+import { Version as IPVersion } from "@/store/ip";
+import { Screen, screenSizeAtom } from "@/store/screen";
+import { Settings, settingsAtom } from "@/store/settings";
 
 import logging from "@/utils/log";
+import { useAtomValue, useSetAtom } from "jotai";
 
 function getRelativeTimeString(date: string) {
     const now = new Date();
@@ -67,23 +73,21 @@ function getRelativeTimeString(date: string) {
 export default function Rules() {
     const { id = "" } = useParams<{ id: string }>();
 
-    const environment = useEnvironmentStore((state) => state.environment);
+    const environment = useAtomValue(environmentAtom);
 
-    const screenSize = useScreenStore((state) => state.size);
+    const screenSize = useAtomValue(screenSizeAtom);
 
     const navigate = useNavigate();
 
-    const settings = useSettingsStore((state) => state.settings);
+    const settings = useAtomValue(settingsAtom);
 
-    const group =
-        useFirewallStore((state) => state.groups[id]) || initialGroupState;
-    const rules = useFirewallStore((state) => state.groups[id]?.rules) || {};
-    const refreshing =
-        useFirewallStore((state) => state.groups[id]?.refreshing) || false;
-    const refreshRules = useFirewallStore((state) => state.refreshRules);
-    const deleteRuleById = useFirewallStore((state) => state.deleteRuleById);
-    const createRule = useFirewallStore((state) => state.createRule);
-    const setNewRule = useFirewallStore((state) => state.setNewRule);
+    const group = useAtomValue(groupAtom(id));
+    const rules = useAtomValue(rulesAtom(id));
+    const refreshing = useAtomValue(refreshingAtom(id));
+    const refreshRules = useSetAtom(refreshRulesAtom);
+    const deleteRuleById = useSetAtom(deleteRuleByIdAtom);
+    const createRule = useSetAtom(createRuleAtom);
+    const setNewRule = useSetAtom(setNewRuleAtom);
 
     const fetchClient = useFetch(
         settings.useProxy

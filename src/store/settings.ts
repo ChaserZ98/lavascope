@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { atom } from "jotai";
 
 import logging from "@/utils/log";
 
@@ -8,15 +8,7 @@ export type Settings = {
     apiToken: string;
 };
 
-type State = {
-    settings: Settings;
-};
-
-type Action = {
-    setSettings: (settings: Settings) => void;
-};
-
-export function isSettings(settings: any): settings is Settings {
+function isSettings(settings: any): settings is Settings {
     return (
         typeof settings.proxyAddress === "string" &&
         typeof settings.useProxy === "boolean" &&
@@ -44,11 +36,8 @@ function createInitialSettings(): Settings {
     }
 }
 
-export const useSettingsStore = create<State & Action>((set) => ({
-    settings: createInitialSettings(),
-    setSettings: (settings: Settings) =>
-        set(() => {
-            localStorage.setItem("settings", JSON.stringify(settings));
-            return { settings };
-        }),
-}));
+export const settingsAtom = atom(createInitialSettings());
+export const setSettingsAtom = atom(null, (_get, set, settings: Settings) => {
+    localStorage.setItem("settings", JSON.stringify(settings));
+    set(settingsAtom, settings);
+});

@@ -22,12 +22,13 @@
         "@tauri-apps/plugin-shell": "^2.2.0",
         "framer-motion": "^12.4.1",
         "immer": "^10.1.1",
+        "jotai": "^2.11.3",
+        "jotai-immer": "^0.4.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-router-dom": "^6.26.2",
         "react-toastify": "^10.0.5",
-        "tailwind-scrollbar": "^3.1.0",
-        "zustand": "^5.0.3"
+        "tailwind-scrollbar": "^3.1.0"
     },
     "devDependencies": {
         "@tauri-apps/cli": "^2.2.7",

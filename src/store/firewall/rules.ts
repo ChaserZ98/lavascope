@@ -1,10 +1,10 @@
-import { produce } from "immer";
+import { atom } from "jotai";
+import { atomFamily } from "jotai/utils";
 import { toast } from "react-toastify";
-import { StoreApi } from "zustand";
 
 import logging from "@/utils/log";
 import { Version as IPVersion } from "../ip";
-import { type FirewallState } from "./firewall";
+import { firewallAtom } from "./firewall";
 
 const endpoint = (groupId: string, ruleId?: number) =>
     new URL(
@@ -196,28 +196,47 @@ export function newRuleStateToCreateRule(
     };
 }
 
-function setNewRule(
-    set: StoreApi<FirewallState>["setState"]
-): RulesAction["setNewRule"] {
-    return (groupId, rule) => {
-        set(
-            produce((state: FirewallState) => {
-                state.groups[groupId].newRule[rule.ip_type] = rule;
-            })
-        );
-    };
-}
+export const initialNewRuleIPv4: NewRuleState = {
+    ip_type: IPVersion.V4,
+    protocol: "ssh",
+    port: "22",
+    sourceType: SourceType.ANYWHERE,
+    source: "0.0.0.0/0",
+    notes: "",
+    creating: false,
+};
 
-function refreshRules(
-    set: StoreApi<FirewallState>["setState"]
-): RulesAction["refreshRules"] {
-    return (id, apiToken, fetchClient, timeout = 5000) => {
+export const initialNewRuleIPv6: NewRuleState = {
+    ip_type: IPVersion.V6,
+    protocol: "ssh",
+    port: "22",
+    sourceType: SourceType.ANYWHERE,
+    source: "::/0",
+    notes: "",
+    creating: false,
+};
+
+export const rulesAtom = atomFamily((id: string) =>
+    atom((get) => get(firewallAtom).groups[id]?.rules)
+);
+export const refreshingAtom = atomFamily((id: string) =>
+    atom((get) => get(firewallAtom).groups[id]?.refreshing)
+);
+
+export const refreshRulesAtom = atom(
+    null,
+    (
+        _get,
+        set,
+        id: string,
+        apiToken: string,
+        fetchClient: typeof fetch,
+        timeout: number = 5000
+    ) => {
         logging.info(`Fetching rules for group ${id}.`);
-        set(
-            produce((state: FirewallState) => {
-                state.groups[id].refreshing = true;
-            })
-        );
+        set(firewallAtom, (state) => {
+            state.groups[id].refreshing = true;
+        });
         const timeoutSignal = AbortSignal.timeout(timeout);
         fetchClient(endpoint(id), {
             method: "GET",
@@ -243,21 +262,19 @@ function refreshRules(
                     logging.info(
                         `Successfully fetched ${meta.total} rules for group ${id}.`
                     );
-                    set(
-                        produce((state: FirewallState) => {
-                            state.groups[id]!.rules = firewall_rules.reduce(
-                                (acc, rule) => {
-                                    acc[rule.id] = {
-                                        ...rule,
-                                        deleting: false,
-                                    };
-                                    return acc;
-                                },
-                                {} as Record<number, RuleState>
-                            );
-                            state.groups[id]!.meta = meta;
-                        })
-                    );
+                    set(firewallAtom, (state) => {
+                        state.groups[id].meta = meta;
+                        state.groups[id].rules = firewall_rules.reduce(
+                            (acc, rule) => {
+                                acc[rule.id] = {
+                                    ...rule,
+                                    deleting: false,
+                                };
+                                return acc;
+                            },
+                            {} as Record<number, RuleState>
+                        );
+                    });
                 } else if (res.status < 500)
                     throw new Error(
                         `${res.status} ${
@@ -279,33 +296,34 @@ function refreshRules(
                             : err.message
                     }`
                 );
-                set(
-                    produce((state: FirewallState) => {
-                        state.groups[id]!.rules = {};
-                        state.groups[id]!.meta = null;
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    state.groups[id].rules = {};
+                    state.groups[id].meta = null;
+                });
             })
             .finally(() =>
-                set(
-                    produce((state: FirewallState) => {
-                        state.groups[id]!.refreshing = false;
-                    })
-                )
+                set(firewallAtom, (state) => {
+                    state.groups[id].refreshing = false;
+                })
             );
-    };
-}
+    }
+);
 
-function deleteRuleById(
-    set: StoreApi<FirewallState>["setState"]
-): RulesAction["deleteRuleById"] {
-    return async (groupId, ruleId, apiToken, fetchClient, timeout = 5000) => {
+export const deleteRuleByIdAtom = atom(
+    null,
+    async (
+        _get,
+        set,
+        groupId: string,
+        ruleId: number,
+        apiToken: string,
+        fetchClient: typeof fetch,
+        timeout: number = 5000
+    ) => {
         logging.info(`Deleting the rule ${ruleId} in group ${groupId}.`);
-        set(
-            produce((state: FirewallState) => {
-                state.groups[groupId].rules[ruleId].deleting = true;
-            })
-        );
+        set(firewallAtom, (state) => {
+            state.groups[groupId].rules[ruleId].deleting = true;
+        });
 
         const timeoutSignal = AbortSignal.timeout(timeout);
 
@@ -325,11 +343,9 @@ function deleteRuleById(
                         }`
                     );
                 }
-                set(
-                    produce((state: FirewallState) => {
-                        delete state.groups[groupId].rules[ruleId];
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    delete state.groups[groupId].rules[ruleId];
+                });
                 logging.info(
                     `Successfully deleted the rule ${ruleId} in group ${groupId}.`
                 );
@@ -348,29 +364,32 @@ function deleteRuleById(
                             : err.message
                     }`
                 );
-                set(
-                    produce((state: FirewallState) => {
-                        state.groups[groupId].rules[ruleId].deleting = false;
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    state.groups[groupId].rules[ruleId].deleting = false;
+                });
             });
-    };
-}
+    }
+);
 
-function createRule(
-    set: StoreApi<FirewallState>["setState"]
-): RulesAction["createRule"] {
-    return (groupId, newRule, apiToken, fetchClient, timeout = 5000) => {
+export const createRuleAtom = atom(
+    null,
+    (
+        _get,
+        set,
+        groupId: string,
+        newRule: CreateRule,
+        apiToken: string,
+        fetchClient: typeof fetch,
+        timeout: number = 5000
+    ) => {
         logging.info(
             `Creating a new rule ${JSON.stringify(
                 newRule
             )} in group ${groupId}.`
         );
-        set(
-            produce((state: FirewallState) => {
-                state.groups[groupId].newRule[newRule.ip_type].creating = true;
-            })
-        );
+        set(firewallAtom, (state) => {
+            state.groups[groupId].newRule[newRule.ip_type].creating = true;
+        });
 
         const timeoutSignal = AbortSignal.timeout(timeout);
         fetchClient(endpoint(groupId), {
@@ -399,18 +418,16 @@ function createRule(
                 toast.success("Successfully created the rule.");
 
                 const rule = data.firewall_rule as RuleInfo;
-                set(
-                    produce((state: FirewallState) => {
-                        state.groups[groupId].rules[rule.id] = {
-                            ...rule,
-                            deleting: false,
-                        };
-                        state.groups[groupId].newRule[newRule.ip_type] =
-                            newRule.ip_type === IPVersion.V4
-                                ? initialNewRuleIPv4
-                                : initialNewRuleIPv6;
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    state.groups[groupId].rules[rule.id] = {
+                        ...rule,
+                        deleting: false,
+                    };
+                    state.groups[groupId].newRule[newRule.ip_type] =
+                        newRule.ip_type === IPVersion.V4
+                            ? initialNewRuleIPv4
+                            : initialNewRuleIPv6;
+                });
             })
             .catch((err: Error) => {
                 logging.error(
@@ -427,40 +444,19 @@ function createRule(
                             : err.message
                     }`
                 );
-                set(
-                    produce((state: FirewallState) => {
-                        state.groups[groupId].newRule[
-                            newRule.ip_type
-                        ].creating = false;
-                    })
-                );
+                set(firewallAtom, (state) => {
+                    state.groups[groupId].newRule[newRule.ip_type].creating =
+                        false;
+                });
             });
-    };
-}
+    }
+);
 
-export const initialNewRuleIPv4: NewRuleState = {
-    ip_type: IPVersion.V4,
-    protocol: "ssh",
-    port: "22",
-    sourceType: SourceType.ANYWHERE,
-    source: "0.0.0.0/0",
-    notes: "",
-    creating: false,
-};
-
-export const initialNewRuleIPv6: NewRuleState = {
-    ip_type: IPVersion.V6,
-    protocol: "ssh",
-    port: "22",
-    sourceType: SourceType.ANYWHERE,
-    source: "::/0",
-    notes: "",
-    creating: false,
-};
-
-export const rulesAction = {
-    setNewRule,
-    refreshRules,
-    deleteRuleById,
-    createRule,
-};
+export const setNewRuleAtom = atom(
+    null,
+    (_get, set, groupId: string, rule: NewRuleState) => {
+        set(firewallAtom, (state) => {
+            state.groups[groupId].newRule[rule.ip_type] = rule;
+        });
+    }
+);

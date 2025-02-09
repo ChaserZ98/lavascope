@@ -9,14 +9,15 @@ import {
 } from "@heroui/react";
 import { mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
+import { useAtomValue } from "jotai";
 
 import {
     NewRuleState,
     Protocol,
     ProtocolSelection,
     SourceType,
-} from "@/zustand/firewall/rules";
-import { Version as IPVersion, useIPStore } from "@/zustand/ip";
+} from "@/store/firewall/rules";
+import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@/store/ip";
 
 const protocols = [
     {
@@ -182,8 +183,8 @@ type NewRuleProps = {
 };
 
 export default function NewRule(props: NewRuleProps) {
-    const myIPv4 = useIPStore((state) => state[IPVersion.V4]);
-    const myIPv6 = useIPStore((state) => state[IPVersion.V6]);
+    const myIPv4 = useAtomValue(ipv4Atom);
+    const myIPv6 = useAtomValue(ipv6Atom);
 
     return (
         <tr
