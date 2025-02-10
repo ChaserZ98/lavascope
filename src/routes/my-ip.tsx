@@ -1,6 +1,12 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import MyIPTable from "@/components/MyIPTable";
 
-export default function MyIP() {
+export const Route = createFileRoute("/my-ip")({
+    component: MyIP,
+});
+
+function MyIP() {
     return (
         <div className="flex w-full h-full justify-center">
             <div className="max-w-[700px] w-full">

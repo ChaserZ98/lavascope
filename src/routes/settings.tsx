@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useState } from "react";
-
 import {
     Button,
     Card,
@@ -9,13 +7,19 @@ import {
     Divider,
     Input,
 } from "@heroui/react";
+import { createFileRoute } from "@tanstack/react-router";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
 
 import { Environment, environmentAtom } from "@/store/environment";
 import { screenSizeAtom } from "@/store/screen";
-import { setSettingsAtom, settingsAtom, type Settings } from "@/store/settings";
-import { useAtomValue, useSetAtom } from "jotai";
+import { setSettingsAtom, type Settings, settingsAtom } from "@/store/settings";
 
-export default function Settings() {
+export const Route = createFileRoute("/settings")({
+    component: Settings,
+});
+
+function Settings() {
     const environment = useAtomValue(environmentAtom);
 
     const screenSize = useAtomValue(screenSizeAtom);

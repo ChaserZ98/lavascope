@@ -24,21 +24,16 @@ export function addScreenSizeListener(
         typeof useSetAtom<Screen, [SetStateAction<Screen>], void>
     >
 ) {
-    const smQueryFunction = (e: MediaQueryListEvent) => {
+    const smQueryFunction = (e: MediaQueryListEvent) =>
         e.matches && setScreen(Screen.SM);
-    };
-    const mdQueryFunction = (e: MediaQueryListEvent) => {
+    const mdQueryFunction = (e: MediaQueryListEvent) =>
         e.matches && setScreen(Screen.MD);
-    };
-    const lgQueryFunction = (e: MediaQueryListEvent) => {
+    const lgQueryFunction = (e: MediaQueryListEvent) =>
         e.matches && setScreen(Screen.LG);
-    };
-    const xlQueryFunction = (e: MediaQueryListEvent) => {
+    const xlQueryFunction = (e: MediaQueryListEvent) =>
         e.matches && setScreen(Screen.XL);
-    };
-    const xxlQueryFunction = (e: MediaQueryListEvent) => {
+    const xxlQueryFunction = (e: MediaQueryListEvent) =>
         e.matches && setScreen(Screen.XXL);
-    };
 
     smQuery.addEventListener("change", (e) => smQueryFunction(e));
     mdQuery.addEventListener("change", (e) => mdQueryFunction(e));
@@ -59,10 +54,10 @@ export const screenSizeAtom = atom(
     smQuery.matches
         ? Screen.SM
         : mdQuery.matches
-        ? Screen.MD
-        : lgQuery.matches
-        ? Screen.LG
-        : xlQuery.matches
-        ? Screen.XL
-        : Screen.XXL
+          ? Screen.MD
+          : lgQuery.matches
+            ? Screen.LG
+            : xlQuery.matches
+              ? Screen.XL
+              : Screen.XXL
 );

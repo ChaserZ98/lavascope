@@ -28,3 +28,6 @@ dist-ssr
 
 # Bun config
 bunfig.toml
+
+# TanStack Router file
+src/routeTree.gen.ts

@@ -261,14 +261,14 @@ export default function NewRule(props: NewRuleProps) {
                         props.isLoading
                     }
                     value={props.newRule.port}
-                    onChange={(e) => {
+                    onChange={(e) =>
                         e.target.value.match(/^[0-9]{0,5}$/)
                             ? props.onRuleChange({
                                   ...props.newRule,
                                   port: e.target.value,
                               })
-                            : e.preventDefault();
-                    }}
+                            : e.preventDefault()
+                    }
                     classNames={{
                         base: "min-w-[80px]",
                         inputWrapper: "transition-colors-opacity !duration-250",

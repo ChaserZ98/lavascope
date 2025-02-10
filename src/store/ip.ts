@@ -115,3 +115,32 @@ export const refreshAtom = atom(
             });
     }
 );
+
+export const ipv4EndpointsAtom = atom(IPv4Endpoints);
+export const ipv6EndpointsAtom = atom(IPv6Endpoints);
+
+export const addIPv4EndpointAtom = atom(null, (_get, set, endpoint: string) => {
+    set(ipv4EndpointsAtom, (prev) => [...prev, endpoint]);
+});
+export const deleteIPv4EndpointAtom = atom(
+    null,
+    (_get, set, endpoint: string) => {
+        set(ipv4EndpointsAtom, (prev) => prev.filter((e) => e !== endpoint));
+    }
+);
+export const resetIPv4EndpointsAtom = atom(null, (_get, set) => {
+    set(ipv4EndpointsAtom, IPv4Endpoints);
+});
+
+export const addIPv6EndpointAtom = atom(null, (_get, set, endpoint: string) => {
+    set(ipv6EndpointsAtom, (prev) => [...prev, endpoint]);
+});
+export const deleteIPv6EndpointAtom = atom(
+    null,
+    (_get, set, endpoint: string) => {
+        set(ipv6EndpointsAtom, (prev) => prev.filter((e) => e !== endpoint));
+    }
+);
+export const resetIPv6EndpointsAtom = atom(null, (_get, set) => {
+    set(ipv6EndpointsAtom, IPv6Endpoints);
+});

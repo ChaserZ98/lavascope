@@ -110,25 +110,38 @@ export type RulesAction = {
     ) => void;
 };
 
-export function portToProtocol(port: string): string {
-    switch (port) {
-        case "22":
-            return "SSH";
-        case "53":
-            return "DNS";
-        case "80":
-            return "HTTP";
-        case "443":
-            return "HTTPS";
-        case "3306":
-            return "MySQL";
-        case "5432":
-            return "PostgreSQL";
-        case "3389":
-            return "MS RDP";
-        default:
-            return "";
+export function protocolPortToDisplayProtocol(
+    protocol: Protocol,
+    port: string
+): string {
+    if (port === "53") return "DNS";
+    if (protocol === Protocol.TCP) {
+        switch (port) {
+            case "22":
+                return "SSH";
+            case "80":
+                return "HTTP";
+            case "443":
+                return "HTTPS";
+            case "3306":
+                return "MySQL";
+            case "5432":
+                return "PostgreSQL";
+            case "3389":
+                return "MS RDP";
+            default:
+                return Protocol.TCP.toUpperCase();
+        }
     }
+    if (protocol === Protocol.UDP) {
+        switch (port) {
+            case "443":
+                return "HTTP3";
+            default:
+                return Protocol.UDP.toUpperCase();
+        }
+    }
+    return protocol.toUpperCase();
 }
 
 function toRuleProtocol(protocol: ProtocolSelection): Protocol {
@@ -159,10 +172,10 @@ function toRuleProtocol(protocol: ProtocolSelection): Protocol {
 export function newRuleStateToCreateRule(
     newRuleState: NewRuleState
 ): CreateRule {
-    let protocol = toRuleProtocol(newRuleState.protocol);
+    const protocol = toRuleProtocol(newRuleState.protocol);
     let subnet = "";
     let subnet_size = 0;
-    let source =
+    const source =
         newRuleState.sourceType === SourceType.CLOUDFLARE
             ? "cloudflare"
             : newRuleState.sourceType === SourceType.LOAD_BALANCER

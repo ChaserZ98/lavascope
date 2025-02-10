@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-
 import {
     Button,
     Link as HeroUILink,
@@ -14,11 +11,13 @@ import {
 } from "@heroui/react";
 import { mdiCog, mdiThemeLightDark } from "@mdi/js";
 import Icon from "@mdi/react";
+import { Link, useLocation } from "@tanstack/react-router";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useState } from "react";
 
 import { Environment, environmentAtom } from "@/store/environment";
 import { Screen, screenSizeAtom } from "@/store/screen";
 import { toggleThemeAtom } from "@/store/theme";
-import { useAtomValue, useSetAtom } from "jotai";
 
 export default function Navigation() {
     const location = useLocation();

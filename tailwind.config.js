@@ -1,5 +1,5 @@
-const { heroui } = require("@heroui/react");
-const tailwindScrollbar = require("tailwind-scrollbar");
+import { heroui } from "@heroui/react";
+import tailwindScrollbar from "tailwind-scrollbar";
 
 /** @type {import('tailwindcss').Config} */
 export default {

@@ -1,6 +1,12 @@
+import { createFileRoute } from "@tanstack/react-router";
+
 import GroupTable from "@/components/Firewall/Group/GroupTable";
 
-export default function Home() {
+export const Route = createFileRoute("/groups/")({
+    component: Groups,
+});
+
+function Groups() {
     return (
         <main
             className="flex flex-col items-center justify-center gap-4 px-4

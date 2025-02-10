@@ -18,9 +18,9 @@ import { toast } from "react-toastify";
 import useFetch from "@/hooks/fetch";
 import { Environment, environmentAtom } from "@/store/environment";
 import {
+    Version as IPVersion,
     ipv4Atom,
     ipv6Atom,
-    Version as IPVersion,
     refreshAtom,
 } from "@/store/ip";
 import { settingsAtom } from "@/store/settings";

@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
 import {
     Button,
     Divider,
@@ -14,6 +11,9 @@ import {
     Tooltip,
     useDisclosure,
 } from "@heroui/react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
@@ -26,7 +26,7 @@ import {
     deleteRuleByIdAtom,
     NewRuleState,
     newRuleStateToCreateRule,
-    portToProtocol,
+    protocolPortToDisplayProtocol,
     refreshingAtom,
     refreshRulesAtom,
     rulesAtom,
@@ -36,15 +36,17 @@ import {
 import { Version as IPVersion } from "@/store/ip";
 import { Screen, screenSizeAtom } from "@/store/screen";
 import { Settings, settingsAtom } from "@/store/settings";
-
 import logging from "@/utils/log";
-import { useAtomValue, useSetAtom } from "jotai";
+
+export const Route = createFileRoute("/groups/$id")({
+    component: Rules,
+});
 
 function getRelativeTimeString(date: string) {
     const now = new Date();
     const then = new Date(date);
 
-    let diff = Math.round((now.getTime() - then.getTime()) / 1000);
+    const diff = Math.round((now.getTime() - then.getTime()) / 1000);
     if (diff < 60) return "Just now";
     if (diff < 3600) {
         const minutes = Math.floor(diff / 60);
@@ -70,8 +72,8 @@ function getRelativeTimeString(date: string) {
     return `${years} year${years === 1 ? "" : "s"} ago`;
 }
 
-export default function Rules() {
-    const { id = "" } = useParams<{ id: string }>();
+function Rules() {
+    const { id = "" } = Route.useParams();
 
     const environment = useAtomValue(environmentAtom);
 
@@ -117,7 +119,7 @@ export default function Rules() {
     );
 
     const onRuleDelete = useCallback((rule: RuleState) => {
-        deleteTimeoutId.current && clearTimeout(deleteTimeoutId.current);
+        if (deleteTimeoutId.current) clearTimeout(deleteTimeoutId.current);
         selectedRule.current = rule;
         deleteModal.onOpen();
     }, []);
@@ -132,11 +134,22 @@ export default function Rules() {
         setNewRule(group.id, rule);
     }, []);
 
+    if (!group) {
+        logging.warn(`Group with ID ${id} not found`);
+        toast.error(`Group with ID ${id} not found`);
+        navigate({
+            to: "/",
+        });
+        return;
+    }
+
     useEffect(() => {
         if (!group.id) {
             logging.warn(`Group with ID ${id} not found`);
             toast.error(`Group with ID ${id} not found`);
-            navigate("/");
+            navigate({
+                to: "/",
+            });
             return;
         }
         if (group.id && group.meta === undefined)
@@ -306,7 +319,7 @@ export default function Rules() {
                                         <p>
                                             <span>Protocol: </span>
                                             <span className="font-mono uppercase">
-                                                {selectedRule.current
+                                                {/* {selectedRule.current
                                                     ?.protocol +
                                                     (portToProtocol(
                                                         selectedRule.current
@@ -317,7 +330,12 @@ export default function Rules() {
                                                                   .current
                                                                   ?.port || ""
                                                           )})`
-                                                        : "")}
+                                                        : "")} */}
+                                                {protocolPortToDisplayProtocol(
+                                                    selectedRule.current!
+                                                        .protocol,
+                                                    selectedRule.current!.port
+                                                )}
                                             </span>
                                         </p>
                                         <p>

@@ -1,6 +1,3 @@
-import { useCallback, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-
 import {
     Button,
     Modal,
@@ -19,7 +16,9 @@ import {
 } from "@heroui/react";
 import { mdiPencil, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
+import { Link } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
 import ProxySwitch from "@/components/ProxySwitch";
@@ -152,7 +151,7 @@ export default function GroupTable() {
                                             onPress={() => {
                                                 selectedGroupId.current =
                                                     group.id;
-                                                deleteTimeoutId.current &&
+                                                if (deleteTimeoutId.current)
                                                     clearTimeout(
                                                         deleteTimeoutId.current
                                                     );

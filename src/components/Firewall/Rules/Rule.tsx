@@ -3,7 +3,7 @@ import { mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 
 import {
-    portToProtocol,
+    protocolPortToDisplayProtocol,
     RuleInfo,
     RuleState,
     SourceType,
@@ -27,11 +27,10 @@ export default function Rule(props: FirewallRuleProps) {
                     placeholder="Protocol"
                     aria-label="Protocol"
                     variant="faded"
-                    value={`${props.protocol.toUpperCase()}${
-                        portToProtocol(props.port) === ""
-                            ? ""
-                            : ` (${portToProtocol(props.port)})`
-                    }`}
+                    value={protocolPortToDisplayProtocol(
+                        props.protocol,
+                        props.port
+                    )}
                     classNames={{
                         base: "min-w-[150px]",
                         inputWrapper: "transition-colors-opacity !duration-250",

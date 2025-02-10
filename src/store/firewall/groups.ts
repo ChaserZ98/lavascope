@@ -6,11 +6,11 @@ import logging from "@/utils/log";
 import { Version as IPVersion } from "../ip";
 import { firewallAtom } from "./firewall";
 import {
+    NewRuleState,
+    RuleState,
+    RulesMeta,
     initialNewRuleIPv4,
     initialNewRuleIPv6,
-    NewRuleState,
-    RulesMeta,
-    RuleState,
 } from "./rules";
 
 const endpoint = new URL("https://api.vultr.com/v2/firewalls");
