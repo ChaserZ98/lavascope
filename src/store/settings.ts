@@ -1,4 +1,5 @@
 import { atom } from "jotai";
+import { atomWithImmer } from "jotai-immer";
 
 import logging from "@/utils/log";
 
@@ -37,8 +38,41 @@ function createInitialSettings(): Settings {
     }
 }
 
-export const settingsAtom = atom(createInitialSettings());
+export const settingsAtom = atomWithImmer(createInitialSettings());
 export const setSettingsAtom = atom(null, (_get, set, settings: Settings) => {
     localStorage.setItem("settings", JSON.stringify(settings));
     set(settingsAtom, settings);
+});
+
+export const apiTokenAtom = atom(
+    (get) => get(settingsAtom).apiToken,
+    (_get, set, apiToken: string) => {
+        set(settingsAtom, (state) => {
+            state.apiToken = apiToken;
+            localStorage.setItem("settings", JSON.stringify(state));
+        });
+    }
+);
+export const proxyAddressAtom = atom(
+    (get) => get(settingsAtom).proxyAddress,
+    (_get, set, proxyAddress: string) => {
+        set(settingsAtom, (state) => {
+            state.proxyAddress = proxyAddress;
+            localStorage.setItem("settings", JSON.stringify(state));
+        });
+    }
+);
+export const useProxyAtom = atom(
+    (get) => get(settingsAtom).useProxy,
+    (_get, set, useProxy: boolean) => {
+        set(settingsAtom, (state) => {
+            state.useProxy = useProxy;
+            localStorage.setItem("settings", JSON.stringify(state));
+        });
+    }
+);
+
+export const showDevPanelAtom = atomWithImmer({
+    jotai: true,
+    tanStack: true,
 });
