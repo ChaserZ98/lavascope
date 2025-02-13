@@ -1,9 +1,9 @@
-import { useState } from "react";
-
 import { Pagination } from "@heroui/react";
+import { useState } from "react";
 
 import { NewRuleState, RuleState } from "@/store/firewall/rules";
 import { Version as IPVersion } from "@/store/ip";
+
 import NewRule from "./NewRule";
 import Rule from "./Rule";
 
@@ -23,8 +23,8 @@ export default function RulesTable(props: RulesTableProps) {
     const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
 
     return (
-        <div className="flex flex-col relative justify-between gap-4 bg-content2 p-4 overflow-auto rounded-large shadow-small shadow-content2 transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow] ease-[ease] duration-250 select-none w-fit">
-            <div className="mx-auto sticky left-1/2 -translate-x-1/2">
+        <div className="flex flex-col relative justify-between gap-4 bg-content2 p-4 rounded-large shadow-small shadow-content2 transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow] ease-[ease] duration-250 select-none w-fit">
+            <div className="sticky left-1/2 -translate-x-1/2 w-fit">
                 <Pagination
                     isDisabled={props.refreshing}
                     showControls
@@ -40,7 +40,7 @@ export default function RulesTable(props: RulesTableProps) {
                     }}
                 />
             </div>
-            <table className="min-w-full h-auto table-auto w-full">
+            <table className="h-auto table-auto overflow-auto">
                 <thead className="[&>tr]:first:rounded-lg">
                     <tr className="group outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2">
                         {[

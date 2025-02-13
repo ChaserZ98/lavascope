@@ -5,42 +5,64 @@ import {
     NavbarBrand,
     NavbarContent,
     NavbarItem,
-    NavbarMenu,
-    NavbarMenuToggle,
     Tooltip,
 } from "@heroui/react";
-import { mdiCog, mdiThemeLightDark } from "@mdi/js";
+import { mdiCog, mdiIpOutline, mdiThemeLightDark, mdiWall } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useState } from "react";
 
-import { Environment, environmentAtom } from "@/store/environment";
 import { Screen, screenSizeAtom } from "@/store/screen";
 import { toggleThemeAtom } from "@/store/theme";
+
+export function BottomNavigation() {
+    return (
+        <div className="flex bottom-0 right-0 border-t-1 border-divider w-full h-28 bg-content1 transition-colors-opacity md:hidden">
+            <HeroUILink
+                to="/groups"
+                color="foreground"
+                size="lg"
+                isBlock
+                as={Link}
+                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-medium"
+                activeProps={{
+                    className: "text-primary",
+                }}
+            >
+                <Icon path={mdiWall} className="w-8" />
+                <p>Groups</p>
+            </HeroUILink>
+            <HeroUILink
+                to="/my-ip"
+                color="foreground"
+                size="lg"
+                isBlock
+                as={Link}
+                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-medium text-foreground"
+                activeProps={{
+                    className: "text-primary",
+                }}
+            >
+                <Icon path={mdiIpOutline} className="w-8" />
+                <p>My IP</p>
+            </HeroUILink>
+        </div>
+    );
+}
 
 export default function Navigation() {
     const location = useLocation();
 
     const toggleTheme = useSetAtom(toggleThemeAtom);
-    const environment = useAtomValue(environmentAtom);
     const screenSize = useAtomValue(screenSizeAtom);
-
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     return (
         <Navbar
             shouldHideOnScroll
-            isMenuOpen={isMenuOpen}
-            onMenuOpenChange={setIsMenuOpen}
             classNames={{
-                base: "select-none transition-colors-opacity",
+                base: "border-b-1 border-divider select-none transition-colors-opacity",
             }}
         >
-            <NavbarMenuToggle
-                aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-                className="md:hidden text-foreground transition-colors-opacity"
-            />
             <NavbarBrand className="text-foreground">
                 <HeroUILink
                     to="/"
@@ -49,25 +71,25 @@ export default function Navigation() {
                     isBlock
                     as={Link}
                     className="text-medium text-wrap sm:text-large transition-colors-opacity"
-                    onPress={() => setIsMenuOpen(false)}
                 >
                     Vultr Firewall Watcher
                 </HeroUILink>
             </NavbarBrand>
             <NavbarContent justify="center" className="hidden md:flex gap-4">
-                <NavbarItem isActive={location.pathname === "/"}>
+                <NavbarItem>
                     <HeroUILink
-                        to="/"
+                        to="/groups"
                         color="foreground"
                         size="lg"
                         isBlock
                         as={Link}
                         className="transition-colors-opacity"
+                        activeProps={{ className: "text-focus" }}
                     >
                         Groups
                     </HeroUILink>
                 </NavbarItem>
-                <NavbarItem isActive={location.pathname === "/my-ip"}>
+                <NavbarItem>
                     <HeroUILink
                         to="/my-ip"
                         color="foreground"
@@ -75,6 +97,7 @@ export default function Navigation() {
                         isBlock
                         as={Link}
                         className="transition-colors-opacity"
+                        activeProps={{ className: "text-focus" }}
                     >
                         My IP
                     </HeroUILink>
@@ -122,51 +145,12 @@ export default function Navigation() {
                         >
                             <Icon
                                 path={mdiCog}
-                                className="w-full animate-[spin_3s_linear_infinite] hover:[animation-play-state:running] [animation-play-state:paused] group-data-[active=true]/settings:[animation-play-state:running]"
+                                className="w-full animate-[spin_3s_linear_infinite] [animation-play-state:paused] group-data-[active=true]/settings:[animation-play-state:running] group-hover/settings:[animation-play-state:running]"
                             />
                         </Button>
                     </Tooltip>
                 </NavbarItem>
             </NavbarContent>
-            <NavbarMenu
-                id="navbar-menu"
-                className="transition-colors-opacity"
-                style={
-                    {
-                        "--navbar-height":
-                            environment === Environment.WINDOWS
-                                ? "6rem"
-                                : "4rem",
-                    } as React.CSSProperties
-                }
-            >
-                <NavbarItem isActive={location.pathname === "/"}>
-                    <HeroUILink
-                        to="/"
-                        color="foreground"
-                        size="lg"
-                        isBlock
-                        as={Link}
-                        className="transition-colors-opacity text-medium"
-                        onPress={() => setIsMenuOpen(false)}
-                    >
-                        Groups
-                    </HeroUILink>
-                </NavbarItem>
-                <NavbarItem isActive={location.pathname === "/my-ip"}>
-                    <HeroUILink
-                        to="/my-ip"
-                        color="foreground"
-                        size="lg"
-                        isBlock
-                        as={Link}
-                        className="transition-colors-opacity text-medium"
-                        onPress={() => setIsMenuOpen(false)}
-                    >
-                        My IP
-                    </HeroUILink>
-                </NavbarItem>
-            </NavbarMenu>
         </Navbar>
     );
 }

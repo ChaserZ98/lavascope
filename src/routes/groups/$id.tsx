@@ -239,7 +239,7 @@ function Rules() {
                     </p>
                 </div>
             </div>
-            <div className="flex flex-col w-full relative justify-between bg-content1 p-4 overflow-auto rounded-large shadow-small shadow-content1 transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow] ease-[ease] duration-250 max-w-fit min-h-60">
+            <div className="flex flex-col w-full relative bg-content1 p-4 overflow-auto rounded-large shadow-small shadow-content1 transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow] ease-[ease] duration-250 max-w-fit min-h-60">
                 <Tabs
                     aria-label="Options"
                     isVertical={screenSize === Screen.SM ? false : true}
@@ -248,11 +248,12 @@ function Rules() {
                     size={screenSize === Screen.SM ? "sm" : "md"}
                     variant="solid"
                     classNames={{
-                        base: "w-full justify-center md:w-auto",
-                        tabList: "transition-colors-opacity bg-content2",
+                        base: "flex justify-center md:px-2",
+                        tabList:
+                            "transition-colors-opacity bg-content2 my-auto",
                         cursor: "transition-colors-opacity",
                         tab: "transition-colors-opacity",
-                        panel: "w-full flex justify-center py-2 md:py-3",
+                        panel: "overflow-auto md:px-0",
                     }}
                 >
                     <Tab key="IPv4" title="IPv4">

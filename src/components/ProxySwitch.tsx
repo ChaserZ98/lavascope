@@ -1,7 +1,7 @@
 import { Switch } from "@heroui/react";
+import { useAtomValue, useSetAtom } from "jotai";
 
 import { setSettingsAtom, settingsAtom } from "@/store/settings";
-import { useAtomValue, useSetAtom } from "jotai";
 
 export default function ProxySwitch() {
     const settings = useAtomValue(settingsAtom);

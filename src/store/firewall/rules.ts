@@ -3,6 +3,7 @@ import { atomFamily } from "jotai/utils";
 import { toast } from "react-toastify";
 
 import logging from "@/utils/log";
+
 import { Version as IPVersion } from "../ip";
 import { firewallAtom } from "./firewall";
 
@@ -179,13 +180,14 @@ export function newRuleStateToCreateRule(
         newRuleState.sourceType === SourceType.CLOUDFLARE
             ? "cloudflare"
             : newRuleState.sourceType === SourceType.LOAD_BALANCER
-            ? "load balancer"
-            : "";
+              ? "load balancer"
+              : "";
     if (
         newRuleState.sourceType === SourceType.CLOUDFLARE ||
         newRuleState.sourceType === SourceType.LOAD_BALANCER
     ) {
-        (subnet = ""), (subnet_size = 0);
+        subnet = "";
+        subnet_size = 0;
     } else {
         const s = newRuleState.source.split("/");
         if (s.length == 1) {

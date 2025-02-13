@@ -8,12 +8,14 @@ import {
     type ToOptions,
     useRouter,
 } from "@tanstack/react-router";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
+import { DevTools as JotaiDevTools } from "jotai-devtools";
 import { lazy, Suspense, useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 
-import Navbar from "@/components/Navbar";
+import Navbar, { BottomNavigation } from "@/components/Navbar";
 import TauriTitleBar from "@/components/TauriTitleBar";
+import { environmentAtom } from "@/store/environment";
 import { addScreenSizeListener, screenSizeAtom } from "@/store/screen";
 import checkCompatibility from "@/utils/compatibility";
 
@@ -36,12 +38,17 @@ const TanStackRouterDevtools = import.meta.env.PROD
           }))
       );
 
+if (import.meta.env.PROD) {
+    import("jotai-devtools/styles.css");
+}
+
 function App() {
     const router = useRouter();
     const setScreenSize = useSetAtom(screenSizeAtom);
+    const environment = useAtomValue(environmentAtom);
 
     useEffect(() => {
-        checkCompatibility();
+        checkCompatibility(environment);
         const removeScreenSizeListener = addScreenSizeListener(setScreenSize);
         return () => removeScreenSizeListener();
     }, []);
@@ -56,8 +63,11 @@ function App() {
                     <TauriTitleBar />
                     <Navbar />
                 </div>
-                <div className="flex-1 overflow-auto ">
+                <div className="flex-1 pt-4 overflow-auto ">
                     <Outlet />
+                </div>
+                <div className="w-full sticky bottom-0 md:hidden">
+                    <BottomNavigation />
                 </div>
                 <ToastContainer
                     position="bottom-left"
@@ -70,6 +80,7 @@ function App() {
             <Suspense>
                 <TanStackRouterDevtools />
             </Suspense>
+            <JotaiDevTools />
         </HeroUIProvider>
     );
 }

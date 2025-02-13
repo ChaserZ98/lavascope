@@ -3,14 +3,15 @@ import { atomFamily } from "jotai/utils";
 import { toast } from "react-toastify";
 
 import logging from "@/utils/log";
+
 import { Version as IPVersion } from "../ip";
 import { firewallAtom } from "./firewall";
 import {
-    NewRuleState,
-    RuleState,
-    RulesMeta,
     initialNewRuleIPv4,
     initialNewRuleIPv6,
+    NewRuleState,
+    RulesMeta,
+    RuleState,
 } from "./rules";
 
 const endpoint = new URL("https://api.vultr.com/v2/firewalls");
@@ -105,18 +106,21 @@ export const refreshGroupsAtom = atom(
                     );
                     set(firewallAtom, (state) => {
                         state.meta = res.data.meta;
-                        state.groups = firewall_groups.reduce((acc, group) => {
-                            acc[group.id] =
-                                group.id in state.groups &&
-                                state.groups[group.id].date_modified ===
-                                    group.date_modified
-                                    ? state.groups[group.id]
-                                    : {
-                                          ...initialGroupState,
-                                          ...group,
-                                      };
-                            return acc;
-                        }, {} as Record<string, GroupState>);
+                        state.groups = firewall_groups.reduce(
+                            (acc, group) => {
+                                acc[group.id] =
+                                    group.id in state.groups &&
+                                    state.groups[group.id].date_modified ===
+                                        group.date_modified
+                                        ? state.groups[group.id]
+                                        : {
+                                              ...initialGroupState,
+                                              ...group,
+                                          };
+                                return acc;
+                            },
+                            {} as Record<string, GroupState>
+                        );
                     });
                 } else if (res.status < 500)
                     throw new Error(

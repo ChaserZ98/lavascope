@@ -1,36 +1,45 @@
-export default function checkCompatibility() {
-    check([
-        "AbortSignal",
-        "AbortController",
-        "AbortSignal.timeout",
-        "AbortSignal.any",
-    ]);
-    check(["fetch"]);
-    check(["Promise", "Promise.any"]);
-}
+import { toast } from "react-toastify";
 
-class CompatibilityError extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "CompatibilityError";
-    }
-}
+import { Environment } from "@/store/environment";
 
-function check(tests: string[]) {
-    const checked = new Set();
-    for (const test of tests) {
-        const parts = test.split(".");
-        let cur: any = window;
-        let allPart = parts[0];
-        for (const part of parts) {
-            if (!checked.has(allPart) && cur[part] === undefined)
-                throw new CompatibilityError(
-                    `Your browser/webview does not support ${test}. Please update your browser/webview and try again.`
+import logging from "./log";
+import supportedBrowsers from "./supportedBrowsers";
+
+export default function checkCompatibility(environment: Environment) {
+    const isSupported = supportedBrowsers.test(navigator.userAgent);
+    switch (environment) {
+        // browserslist currently has no support for macos webview
+        // so we will always assume that it is supported
+        case Environment.MACOS:
+            logging.info(`WebView support: OK`);
+            break;
+        case Environment.WEB:
+            if (isSupported) {
+                logging.info(`Browser support: OK`);
+            } else {
+                logging.error(`Browser support: Not OK`);
+                toast.warning(
+                    `Your browser may not be supported. Some features may not work as expected. Please try updating your browser or using a different one.`,
+                    {
+                        autoClose: false,
+                        closeButton: false,
+                    }
                 );
-
-            checked.add(allPart);
-            allPart += `.${part}`;
-            cur = cur[part];
-        }
+            }
+            break;
+        default:
+            if (isSupported) {
+                logging.info(`WebView support: OK`);
+            } else {
+                logging.error(`WebView support: Not OK`);
+                toast.warning(
+                    `Your webview may not be supported. Some features may not work as expected. Please try updating your webview.`,
+                    {
+                        autoClose: false,
+                        closeButton: false,
+                    }
+                );
+            }
+            break;
     }
 }

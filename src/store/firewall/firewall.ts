@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { atomWithImmer } from "jotai-immer";
-import { type GroupState, type GroupsMeta } from "./groups";
+
+import { type GroupsMeta, type GroupState } from "./groups";
 
 export type FirewallState = {
     groups: Record<string, GroupState>;

@@ -83,6 +83,7 @@ export default function GroupTable() {
                     base:
                         "overflow-x-auto" + (refreshing ? "animate-pulse" : ""),
                 }}
+                isKeyboardNavigationDisabled
             >
                 <TableHeader>
                     <TableColumn align="center">ID</TableColumn>

@@ -1,10 +1,19 @@
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import legacy from "@vitejs/plugin-legacy";
 import viteReact from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-    plugins: [TanStackRouterVite({ autoCodeSplitting: true }), viteReact()],
+    plugins: [
+        TanStackRouterVite({ autoCodeSplitting: true }),
+        viteReact({
+            babel: {
+                presets: ["jotai/babel/preset"],
+            },
+        }),
+        legacy(),
+    ],
     resolve: {
         alias: {
             "@": "/src",

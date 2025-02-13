@@ -8,6 +8,7 @@ export type Settings = {
     apiToken: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function isSettings(settings: any): settings is Settings {
     return (
         typeof settings.proxyAddress === "string" &&

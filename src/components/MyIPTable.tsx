@@ -1,5 +1,3 @@
-import { useCallback } from "react";
-
 import {
     Button,
     Table,
@@ -13,19 +11,21 @@ import {
 import { mdiContentCopy, mdiRefresh } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback } from "react";
 import { toast } from "react-toastify";
 
 import useFetch from "@/hooks/fetch";
 import { Environment, environmentAtom } from "@/store/environment";
 import {
-    Version as IPVersion,
     ipv4Atom,
     ipv6Atom,
     refreshAtom,
+    Version as IPVersion,
 } from "@/store/ip";
 import { settingsAtom } from "@/store/settings";
 import clipboard from "@/utils/clipboard";
 import logging from "@/utils/log";
+
 import ProxySwitch from "./ProxySwitch";
 
 export default function MyIPTable() {
@@ -123,8 +123,8 @@ export default function MyIPTable() {
                                             ? "Refreshing..."
                                             : ipv4.value || "Unknown"
                                         : ipv6.refreshing
-                                        ? "Refreshing..."
-                                        : ipv6.value || "Unknown"}
+                                          ? "Refreshing..."
+                                          : ipv6.value || "Unknown"}
                                 </span>
                             </TableCell>
                             <TableCell className="sm:flex sm:justify-center">

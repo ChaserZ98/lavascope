@@ -7,7 +7,10 @@ export enum Theme {
 
 function createInitialTheme(): Theme {
     let cachedTheme: string | null = localStorage.getItem("theme");
-    if (!cachedTheme || !(<any>Object).values(Theme).includes(cachedTheme)) {
+    if (
+        !cachedTheme ||
+        !(Object.values(Theme) as string[]).includes(cachedTheme)
+    ) {
         cachedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
             ? Theme.DARK
             : Theme.LIGHT;

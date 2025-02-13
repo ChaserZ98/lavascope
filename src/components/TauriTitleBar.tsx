@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-
 import { Image } from "@heroui/react";
+import appIcon from "@img/app-icon.png";
 import {
     mdiWindowClose,
     mdiWindowMaximize,
@@ -8,14 +7,13 @@ import {
     mdiWindowRestore,
 } from "@mdi/js";
 import Icon from "@mdi/react";
-import { Window, getCurrentWindow } from "@tauri-apps/api/window";
+import { getCurrentWindow, Window } from "@tauri-apps/api/window";
+import { useAtomValue } from "jotai";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import tauriNotify from "@/hooks/notification";
 import { Environment, environmentAtom } from "@/store/environment";
 import logging from "@/utils/log";
-
-import appIcon from "@img/app-icon.png";
-import { useAtomValue } from "jotai";
 
 const mainWindowLabel = "main";
 
@@ -80,18 +78,13 @@ export default function TauriTitleBar() {
 
             const window = getCurrentWindow();
             if (window.label === mainWindowLabel) {
-                window
-                    .hide()
-                    .then(() => {
-                        if (!isFirstClosed.current) return null;
-                        return tauriNotify(
-                            "The application is still running in the background."
-                        );
-                    })
-                    .then((task) => {
-                        if (!task) return;
-                        isFirstClosed.current = false;
-                    });
+                window.hide().then(async () => {
+                    if (!isFirstClosed.current) return;
+                    await tauriNotify(
+                        "The application is still running in the background."
+                    );
+                    isFirstClosed.current = false;
+                });
             } else {
                 window.close().catch((err) => logging.error(`${err}`));
             }
