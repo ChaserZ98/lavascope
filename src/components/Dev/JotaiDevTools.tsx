@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { DevTools } from "jotai-devtools";
+import { lazy, Suspense } from "react";
 
 import { showDevPanelAtom } from "@/store/settings";
 
@@ -10,5 +10,19 @@ if (!import.meta.env.PROD) {
 export default function JotaiDevTools() {
     const showDevPanel = useAtomValue(showDevPanelAtom);
     if (!showDevPanel.jotai) return null;
-    return <DevTools />;
+
+    const DevTools =
+        !import.meta.env.PROD && showDevPanel.jotai
+            ? lazy(() =>
+                  import("jotai-devtools").then((res) => ({
+                      default: res.DevTools,
+                  }))
+              )
+            : () => null;
+
+    return (
+        <Suspense>
+            <DevTools />
+        </Suspense>
+    );
 }
