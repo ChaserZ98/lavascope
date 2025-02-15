@@ -4,6 +4,8 @@ import {
     Select,
     SelectItem,
     SelectSection,
+    TableCell,
+    TableRow,
     Textarea,
     Tooltip,
 } from "@heroui/react";
@@ -19,7 +21,7 @@ import {
 } from "@/store/firewall/rules";
 import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@/store/ip";
 
-const protocols = [
+export const protocols = [
     {
         title: "Protocols",
         items: [
@@ -106,7 +108,8 @@ const protocols = [
         ],
     },
 ];
-const sourceTypes: { title: string; value: SourceType }[] = [
+
+export const sourceTypes: { title: string; value: SourceType }[] = [
     {
         title: "My IP",
         value: SourceType.MY_IP,
@@ -129,7 +132,7 @@ const sourceTypes: { title: string; value: SourceType }[] = [
     },
 ];
 
-function getProtocolPort(protocol: ProtocolSelection): string {
+export function getProtocolPort(protocol: ProtocolSelection): string {
     switch (protocol) {
         case "ssh":
             return "22";
@@ -154,7 +157,7 @@ function getProtocolPort(protocol: ProtocolSelection): string {
     }
 }
 
-function getSource(
+export function getSource(
     sourceType: SourceType,
     ipVersion: IPVersion,
     ipv4: string,
@@ -187,12 +190,8 @@ export default function NewRule(props: NewRuleProps) {
     const myIPv6 = useAtomValue(ipv6Atom);
 
     return (
-        <tr
-            className={`group outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 ${
-                props.isLoading ? "animate-pulse" : ""
-            }`}
-        >
-            <td className="py-2 px-3 relative align-top whitespace-normal text-small font-normal [&>*]:z-1 [&>*]:relative outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 before:content-[''] before:absolute before:z-0 before:inset-0 before:opacity-0 data-[selected=true]:before:opacity-100 group-data-[disabled=true]:text-foreground-300 group-data-[disabled=true]:cursor-not-allowed before:bg-default/60 data-[selected=true]:text-default-foreground first:before:rounded-l-lg rtl:first:before:rounded-r-lg rtl:first:before:rounded-l-[unset] last:before:rounded-r-lg rtl:last:before:rounded-l-lg rtl:last:before:rounded-r-[unset] text-start">
+        <TableRow>
+            <TableCell>
                 <Select
                     items={protocols}
                     isDisabled={props.isLoading}
@@ -249,8 +248,8 @@ export default function NewRule(props: NewRuleProps) {
                         </SelectSection>
                     )}
                 </Select>
-            </td>
-            <td className="py-2 px-3 relative align-top whitespace-normal text-small font-normal [&>*]:z-1 [&>*]:relative outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 before:content-[''] before:absolute before:z-0 before:inset-0 before:opacity-0 data-[selected=true]:before:opacity-100 group-data-[disabled=true]:text-foreground-300 group-data-[disabled=true]:cursor-not-allowed before:bg-default/60 data-[selected=true]:text-default-foreground first:before:rounded-l-lg rtl:first:before:rounded-r-lg rtl:first:before:rounded-l-[unset] last:before:rounded-r-lg rtl:last:before:rounded-l-lg rtl:last:before:rounded-r-[unset] text-start before:transition-colors-opacity">
+            </TableCell>
+            <TableCell>
                 <Input
                     placeholder="Port"
                     aria-label="Port"
@@ -258,7 +257,7 @@ export default function NewRule(props: NewRuleProps) {
                     isDisabled={
                         (props.newRule.protocol !== Protocol.TCP &&
                             props.newRule.protocol !== Protocol.UDP) ||
-                        props.isLoading
+                        props.newRule.creating
                     }
                     value={props.newRule.port}
                     onChange={(e) =>
@@ -275,10 +274,10 @@ export default function NewRule(props: NewRuleProps) {
                         input: "text-foreground transition-colors-opacity",
                     }}
                 />
-            </td>
-            <td className="py-2 px-3 relative align-top whitespace-normal text-small font-normal [&>*]:z-1 [&>*]:relative outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 before:content-[''] before:absolute before:z-0 before:inset-0 before:opacity-0 data-[selected=true]:before:opacity-100 group-data-[disabled=true]:text-foreground-300 group-data-[disabled=true]:cursor-not-allowed before:bg-default/60 data-[selected=true]:text-default-foreground first:before:rounded-l-lg rtl:first:before:rounded-r-lg rtl:first:before:rounded-l-[unset] last:before:rounded-r-lg rtl:last:before:rounded-l-lg rtl:last:before:rounded-r-[unset] text-start">
+            </TableCell>
+            <TableCell>
                 <Select
-                    isDisabled={props.isLoading}
+                    isDisabled={props.newRule.creating}
                     items={
                         (props.newRule.ip_type === IPVersion.V4 &&
                             myIPv4.value) ||
@@ -323,12 +322,12 @@ export default function NewRule(props: NewRuleProps) {
                         </SelectItem>
                     )}
                 </Select>
-            </td>
-            <td className="py-2 px-3 relative align-top whitespace-normal text-small font-normal [&>*]:z-1 [&>*]:relative outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 before:content-[''] before:absolute before:z-0 before:inset-0 before:opacity-0 data-[selected=true]:before:opacity-100 group-data-[disabled=true]:text-foreground-300 group-data-[disabled=true]:cursor-not-allowed before:bg-default/60 data-[selected=true]:text-default-foreground first:before:rounded-l-lg rtl:first:before:rounded-r-lg rtl:first:before:rounded-l-[unset] last:before:rounded-r-lg rtl:last:before:rounded-l-lg rtl:last:before:rounded-r-[unset] text-start before:transition-colors-opacity">
+            </TableCell>
+            <TableCell>
                 <Textarea
                     isDisabled={
                         props.newRule.sourceType !== SourceType.CUSTOM ||
-                        props.isLoading
+                        props.newRule.creating
                     }
                     minRows={1}
                     maxRows={4}
@@ -353,8 +352,8 @@ export default function NewRule(props: NewRuleProps) {
                         });
                     }}
                 />
-            </td>
-            <td className="py-2 px-3 relative align-top whitespace-normal text-small font-normal [&>*]:z-1 [&>*]:relative outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 before:content-[''] before:absolute before:z-0 before:inset-0 before:opacity-0 data-[selected=true]:before:opacity-100 group-data-[disabled=true]:text-foreground-300 group-data-[disabled=true]:cursor-not-allowed before:bg-default/60 data-[selected=true]:text-default-foreground first:before:rounded-l-lg rtl:first:before:rounded-r-lg rtl:first:before:rounded-l-[unset] last:before:rounded-r-lg rtl:last:before:rounded-l-lg rtl:last:before:rounded-r-[unset] text-start">
+            </TableCell>
+            <TableCell>
                 <Textarea
                     isDisabled={props.isLoading}
                     minRows={1}
@@ -375,8 +374,8 @@ export default function NewRule(props: NewRuleProps) {
                         })
                     }
                 />
-            </td>
-            <td className="py-2 px-3 relative align-top whitespace-normal text-small font-normal [&>*]:z-1 [&>*]:relative outline-none data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-focus data-[focus-visible=true]:outline-offset-2 before:content-[''] before:absolute before:z-0 before:inset-0 before:opacity-0 data-[selected=true]:before:opacity-100 group-data-[disabled=true]:text-foreground-300 group-data-[disabled=true]:cursor-not-allowed before:bg-default/60 data-[selected=true]:text-default-foreground first:before:rounded-l-lg rtl:first:before:rounded-r-lg rtl:first:before:rounded-l-[unset] last:before:rounded-r-lg rtl:last:before:rounded-l-lg rtl:last:before:rounded-r-[unset]">
+            </TableCell>
+            <TableCell>
                 <div className="flex w-full h-full items-center justify-center py-1">
                     <Tooltip
                         delay={500}
@@ -386,7 +385,7 @@ export default function NewRule(props: NewRuleProps) {
                         color="primary"
                     >
                         <Button
-                            isDisabled={props.isLoading}
+                            isDisabled={props.newRule.creating}
                             isIconOnly
                             size="sm"
                             variant="light"
@@ -401,7 +400,7 @@ export default function NewRule(props: NewRuleProps) {
                         </Button>
                     </Tooltip>
                 </div>
-            </td>
-        </tr>
+            </TableCell>
+        </TableRow>
     );
 }
