@@ -53,7 +53,7 @@ export default function GroupTable() {
     );
 
     const selectedGroupId = useRef<string | null>(null);
-    const deleteTimeoutId = useRef<number | null>(null);
+    const deleteTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
     const deleteModal = useDisclosure();
 
