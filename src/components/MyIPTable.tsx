@@ -8,6 +8,7 @@ import {
     TableRow,
     Tooltip,
 } from "@heroui/react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiContentCopy, mdiRefresh } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -15,58 +16,118 @@ import { useCallback } from "react";
 import { toast } from "react-toastify";
 
 import useFetch from "@/hooks/fetch";
-import { Environment, environmentAtom } from "@/store/environment";
 import {
     ipv4Atom,
+    ipv4EndpointsAtom,
     ipv6Atom,
-    refreshAtom,
+    ipv6EndpointsAtom,
+    refreshAPI,
+    setIPAtom,
     Version as IPVersion,
 } from "@/store/ip";
-import { settingsAtom } from "@/store/settings";
+import { proxyAddressAtom, useProxyAtom } from "@/store/settings";
 import clipboard from "@/utils/clipboard";
 import logging from "@/utils/log";
 
 import ProxySwitch from "./ProxySwitch";
 
 export default function MyIPTable() {
-    const environment = useAtomValue(environmentAtom);
     const ipv4 = useAtomValue(ipv4Atom);
     const ipv6 = useAtomValue(ipv6Atom);
-    const refreshIP = useSetAtom(refreshAtom);
-    const settings = useAtomValue(settingsAtom);
+    const ipv4Endpoints = useAtomValue(ipv4EndpointsAtom);
+    const ipv6Endpoints = useAtomValue(ipv6EndpointsAtom);
+    const useProxy = useAtomValue(useProxyAtom);
+    const proxyAddress = useAtomValue(proxyAddressAtom);
+
+    const setIP = useSetAtom(setIPAtom);
+
+    const { t } = useLingui();
 
     const fetchClient = useFetch(
-        settings.useProxy
+        useProxy
             ? {
                   proxy: {
-                      http: settings.proxyAddress,
-                      https: settings.proxyAddress,
+                      http: proxyAddress,
+                      https: proxyAddress,
                   },
               }
             : undefined
     );
 
     const refresh = useCallback(
-        (version: IPVersion, fetchClient: typeof fetch) => {
-            if (settings.useProxy && settings.proxyAddress === "") {
+        (
+            version: IPVersion,
+            endpoints: string[],
+            fetchClient: typeof fetch,
+            useProxy: boolean,
+            proxyAddress: string
+        ) => {
+            if (endpoints.length === 0) {
                 toast.error(
                     <>
-                        <p>Proxy address is not set.</p>
-                        <p>Please set it in settings before using a proxy.</p>
+                        <p>
+                            <Trans>No {version} endpoint is set.</Trans>
+                        </p>
+                        <p>
+                            <Trans>
+                                Please add at least one {version} endpoint.
+                            </Trans>
+                        </p>
                     </>
                 );
                 return;
             }
-            refreshIP(version, fetchClient);
+            if (useProxy && proxyAddress === "") {
+                toast.error(
+                    <>
+                        <p>
+                            <Trans>Proxy address is not set.</Trans>
+                        </p>
+                        <p>
+                            <Trans>
+                                Please set it in settings before using a proxy.
+                            </Trans>
+                        </p>
+                    </>
+                );
+                return;
+            }
+            setIP(version, {
+                value: "",
+                refreshing: true,
+            });
+            refreshAPI(version, endpoints, fetchClient)
+                .then((res) => {
+                    setIP(version, {
+                        value: res.ip,
+                        refreshing: false,
+                    });
+                    logging.info(
+                        `Fetched ${version} address ${res.ip} from ${res.endpoint}`
+                    );
+                })
+                .catch((err) => {
+                    setIP(version, {
+                        value: "",
+                        refreshing: false,
+                    });
+                    logging.error(
+                        `Failed to fetch ${version} address: ${
+                            err.name === "AggregateError"
+                                ? "All requests failed"
+                                : err
+                        }`
+                    );
+                    toast.error(t`Failed to fetch ${version} address.`);
+                });
         },
-        [settings]
+        []
     );
-
     const copy = useCallback((ip: string) => {
         clipboard
             .writeText(ip)
             .then(() =>
-                toast.success("Copied to clipboard", {
+                toast.success(t`Copied to clipboard`, {
                     autoClose: 1000,
                     hideProgressBar: true,
                     pauseOnHover: false,
@@ -77,14 +138,14 @@ export default function MyIPTable() {
             )
             .catch((e) => {
                 logging.error(`Failed to copy to clipboard: ${e}`);
-                toast.error("Failed to copy to clipboard");
+                toast.error(t`Failed to copy to clipboard`);
             });
     }, []);
 
     return (
-        <div className="flex flex-col px-8 gap-4 items-center select-none">
+        <div className="flex flex-col px-8 py-4 gap-4 items-center select-none">
             <h2 className="text-lg font-bold text-foreground transition-colors-opacity sm:text-2xl">
-                My Public IP Addresses
+                <Trans>My Public IP Addresses</Trans>
             </h2>
             <Table
                 aria-label="IP Table"
@@ -96,10 +157,14 @@ export default function MyIPTable() {
                 }}
             >
                 <TableHeader>
-                    <TableColumn align="center">Version</TableColumn>
-                    <TableColumn align="center">Address</TableColumn>
+                    <TableColumn align="center">
+                        <Trans>Version</Trans>
+                    </TableColumn>
+                    <TableColumn align="center">
+                        <Trans>Address</Trans>
+                    </TableColumn>
                     <TableColumn align="center" width={64}>
-                        Action
+                        <Trans>Action</Trans>
                     </TableColumn>
                 </TableHeader>
                 <TableBody>
@@ -134,9 +199,11 @@ export default function MyIPTable() {
                                         (version === IPVersion.V6 &&
                                             ipv6.value)) && (
                                         <Tooltip
-                                            content="Copy"
-                                            delay={1000}
-                                            closeDelay={100}
+                                            delay={500}
+                                            closeDelay={150}
+                                            content={t`Copy`}
+                                            size="sm"
+                                            color="primary"
                                         >
                                             <Button
                                                 isIconOnly
@@ -161,9 +228,11 @@ export default function MyIPTable() {
                                         </Tooltip>
                                     )}
                                     <Tooltip
-                                        content="Refresh"
-                                        delay={1000}
-                                        closeDelay={100}
+                                        delay={500}
+                                        closeDelay={150}
+                                        content={t`Refresh`}
+                                        size="sm"
+                                        color="primary"
                                     >
                                         <Button
                                             isIconOnly
@@ -172,7 +241,15 @@ export default function MyIPTable() {
                                             color="primary"
                                             className="text-default-400 transition-colors-opacity hover:text-primary-500"
                                             onPress={() =>
-                                                refresh(version, fetchClient)
+                                                refresh(
+                                                    version,
+                                                    version === IPVersion.V4
+                                                        ? ipv4Endpoints
+                                                        : ipv6Endpoints,
+                                                    fetchClient,
+                                                    useProxy,
+                                                    proxyAddress
+                                                )
                                             }
                                             disabled={
                                                 (version === IPVersion.V4 &&
@@ -201,7 +278,7 @@ export default function MyIPTable() {
                     ))}
                 </TableBody>
             </Table>
-            {environment !== Environment.WEB && <ProxySwitch />}
+            <ProxySwitch />
         </div>
     );
 }

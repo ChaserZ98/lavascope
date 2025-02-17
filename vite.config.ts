@@ -1,3 +1,4 @@
+import { lingui } from "@lingui/vite-plugin";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import legacy from "@vitejs/plugin-legacy";
 import viteReact from "@vitejs/plugin-react";
@@ -10,8 +11,10 @@ export default defineConfig(async () => ({
         viteReact({
             babel: {
                 presets: ["jotai/babel/preset"],
+                plugins: ["@lingui/babel-plugin-lingui-macro"],
             },
         }),
+        lingui(),
         legacy(),
     ],
     resolve: {
@@ -20,6 +23,7 @@ export default defineConfig(async () => ({
             "@css": "/src/assets/css",
             "@svg": "/src/assets/svg",
             "@img": "/src/assets/img",
+            "@locales": "/src/locales",
         },
     },
 

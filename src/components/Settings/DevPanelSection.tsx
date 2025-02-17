@@ -1,4 +1,5 @@
 import { Divider, Switch } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { useAtom } from "jotai";
 
 import { showDevPanelAtom } from "@/store/settings";
@@ -11,8 +12,10 @@ export default function DevPanelSection() {
 
     const [showDevPanel, setShowDevPanel] = useAtom(showDevPanelAtom);
 
+    const { t } = useLingui();
+
     return (
-        <Section header="Dev Panel">
+        <Section header={t`Dev Panel`}>
             <SectionBody>
                 <Switch
                     classNames={{

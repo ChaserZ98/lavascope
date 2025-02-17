@@ -6,6 +6,7 @@ import {
     Textarea,
     Tooltip,
 } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 
@@ -24,6 +25,9 @@ interface RuleProps extends React.ComponentProps<"tr"> {
 
 export default function Rule(props: RuleProps) {
     const rule = props.rule;
+
+    const { t } = useLingui();
+
     return (
         <TableRow>
             <TableCell>
@@ -66,8 +70,8 @@ export default function Rule(props: RuleProps) {
                     value={
                         rule.source ||
                         (rule.subnet === "::" || rule.subnet === "0.0.0.0"
-                            ? "anywhere"
-                            : "custom")
+                            ? t`anywhere`
+                            : t`custom`)
                     }
                     classNames={{
                         base: "min-w-[130px]",
@@ -118,7 +122,7 @@ export default function Rule(props: RuleProps) {
                     <Tooltip
                         delay={500}
                         closeDelay={150}
-                        content="Delete Rule"
+                        content={t`Delete Rule`}
                         color="danger"
                         size="sm"
                     >

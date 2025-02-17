@@ -1,4 +1,5 @@
 import { Input } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
 import { Environment, environmentAtom } from "@/store/environment";
@@ -15,14 +16,16 @@ export default function ProxySection() {
 
     const [proxyAddress, setProxyAddress] = useAtom(proxyAddressAtom);
 
+    const { t } = useLingui();
+
     return (
-        <Section header="Proxy">
+        <Section header={t`Proxy`}>
             <SectionBody>
                 <Input
                     type="text"
-                    label="Address"
+                    label={t`Address`}
                     size={screenSize === "sm" ? "sm" : "md"}
-                    placeholder="Enter http proxy address"
+                    placeholder={t`Enter http proxy address`}
                     value={proxyAddress}
                     onChange={(e) => setProxyAddress(e.target.value)}
                     classNames={{

@@ -9,6 +9,7 @@ import {
     Textarea,
     Tooltip,
 } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useAtomValue } from "jotai";
@@ -109,29 +110,6 @@ export const protocols = [
     },
 ];
 
-export const sourceTypes: { title: string; value: SourceType }[] = [
-    {
-        title: "My IP",
-        value: SourceType.MY_IP,
-    },
-    {
-        title: "Cloudflare",
-        value: SourceType.CLOUDFLARE,
-    },
-    {
-        title: "Custom",
-        value: SourceType.CUSTOM,
-    },
-    {
-        title: "Anywhere",
-        value: SourceType.ANYWHERE,
-    },
-    {
-        title: "Load Balancer",
-        value: SourceType.LOAD_BALANCER,
-    },
-];
-
 export function getProtocolPort(protocol: ProtocolSelection): string {
     switch (protocol) {
         case "ssh":
@@ -188,6 +166,31 @@ type NewRuleProps = {
 export default function NewRule(props: NewRuleProps) {
     const myIPv4 = useAtomValue(ipv4Atom);
     const myIPv6 = useAtomValue(ipv6Atom);
+
+    const { t } = useLingui();
+
+    const sourceTypes = [
+        {
+            title: t`My IP`,
+            value: SourceType.MY_IP,
+        },
+        {
+            title: t`Cloudflare`,
+            value: SourceType.CLOUDFLARE,
+        },
+        {
+            title: t`Custom`,
+            value: SourceType.CUSTOM,
+        },
+        {
+            title: t`Anywhere`,
+            value: SourceType.ANYWHERE,
+        },
+        {
+            title: t`Load Balancer`,
+            value: SourceType.LOAD_BALANCER,
+        },
+    ];
 
     return (
         <TableRow>
@@ -278,6 +281,7 @@ export default function NewRule(props: NewRuleProps) {
             <TableCell>
                 <Select
                     isDisabled={props.newRule.creating}
+                    disallowEmptySelection
                     items={
                         (props.newRule.ip_type === IPVersion.V4 &&
                             myIPv4.value) ||
@@ -293,9 +297,7 @@ export default function NewRule(props: NewRuleProps) {
                     aria-label="Source Type"
                     selectedKeys={new Set([props.newRule.sourceType])}
                     onSelectionChange={(keys) => {
-                        const sourceType =
-                            (keys.currentKey as SourceType) ||
-                            props.newRule.sourceType;
+                        const sourceType = keys.currentKey as SourceType;
                         const source = getSource(
                             sourceType,
                             props.ipVersion,
@@ -358,7 +360,7 @@ export default function NewRule(props: NewRuleProps) {
                     isDisabled={props.isLoading}
                     minRows={1}
                     variant="faded"
-                    placeholder="Add note"
+                    placeholder={t`Enter note here`}
                     value={props.newRule.notes}
                     classNames={{
                         base: "min-w-[120px]",
@@ -380,7 +382,7 @@ export default function NewRule(props: NewRuleProps) {
                     <Tooltip
                         delay={500}
                         closeDelay={150}
-                        content="Add Rule"
+                        content={t`Add Rule`}
                         size="sm"
                         color="primary"
                     >

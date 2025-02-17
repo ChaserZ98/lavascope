@@ -11,7 +11,8 @@
             "@/*": ["./src/*"],
             "@css/*": ["./src/assets/css/*"],
             "@svg/*": ["./src/assets/svg/*"],
-            "@img/*": ["./src/assets/img/*"]
+            "@img/*": ["./src/assets/img/*"],
+            "@locales/*": ["./src/locales/*"]
         },
 
         /* Bundler mode */

@@ -1,4 +1,5 @@
 import { Switch } from "@heroui/react";
+import { Trans } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
 import { Environment, environmentAtom } from "@/store/environment";
@@ -22,7 +23,7 @@ export default function ProxySwitch() {
                 wrapper: "me-2 bg-default-600 group-hover:bg-default-700",
             }}
         >
-            Proxy
+            <Trans>Proxy</Trans>
         </Switch>
     );
 }

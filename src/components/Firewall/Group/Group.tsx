@@ -1,4 +1,5 @@
 import { Button, TableCell, TableRow, Tooltip } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { mdiPencil, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link } from "@tanstack/react-router";
@@ -14,6 +15,8 @@ interface GroupProps extends React.ComponentProps<"tr"> {
 export default function Group(props: GroupProps) {
     const group = props.group;
     const loading = props.refreshing || group.deleting;
+
+    const { t } = useLingui();
 
     return (
         <TableRow className={loading ? "animate-pulse" : ""}>
@@ -33,7 +36,11 @@ export default function Group(props: GroupProps) {
             <TableCell>
                 <div className="flex w-16 items-center justify-end">
                     {!loading && (
-                        <Tooltip content="Edit" delay={1000} closeDelay={100}>
+                        <Tooltip
+                            content={t`Edit`}
+                            delay={1000}
+                            closeDelay={100}
+                        >
                             <Button
                                 isIconOnly
                                 size="sm"
@@ -51,7 +58,7 @@ export default function Group(props: GroupProps) {
                             </Button>
                         </Tooltip>
                     )}
-                    <Tooltip content="Delete" delay={1000} closeDelay={100}>
+                    <Tooltip content={t`Delete`} delay={1000} closeDelay={100}>
                         <Button
                             isIconOnly
                             size="sm"

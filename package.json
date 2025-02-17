@@ -10,10 +10,14 @@
         "tauri": "tauri",
         "generate-routes": "tsr generate",
         "watch-routes": "tsr watch",
-        "supported-browsers": "echo \"export default $(browserslist-useragent-regexp --allowHigherVersions);\" > ./src/utils/supportedBrowsers.ts"
+        "supported-browsers": "echo \"export default $(browserslist-useragent-regexp --allowHigherVersions);\" > ./src/utils/supportedBrowsers.ts",
+        "lingui-extract": "lingui extract --clean --overwrite",
+        "lingui-compile": "lingui compile --typescript"
     },
     "dependencies": {
         "@heroui/react": "^2.6.14",
+        "@lingui/core": "^5.2.0",
+        "@lingui/react": "^5.2.0",
         "@mdi/js": "^7.4.47",
         "@mdi/react": "^1.6.1",
         "@tanstack/react-router": "^1.101.0",
@@ -35,6 +39,8 @@
     },
     "devDependencies": {
         "@eslint/js": "^9.20.0",
+        "@lingui/cli": "^5.2.0",
+        "@lingui/vite-plugin": "^5.2.0",
         "@tanstack/router-cli": "^1.101.0",
         "@tanstack/router-devtools": "^1.101.0",
         "@tanstack/router-plugin": "^1.101.0",
@@ -46,6 +52,7 @@
         "autoprefixer": "^10.4.20",
         "browserslist-useragent-regexp": "^4.1.3",
         "eslint": "^9.20.0",
+        "eslint-plugin-lingui": "^0.10.0",
         "eslint-plugin-react": "^7.37.4",
         "eslint-plugin-simple-import-sort": "^12.1.1",
         "eslint-plugin-unused-imports": "^4.1.4",

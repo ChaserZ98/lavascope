@@ -1,5 +1,4 @@
 import { atom } from "jotai";
-import { toast } from "react-toastify";
 
 import logging from "@/utils/log";
 
@@ -34,113 +33,124 @@ const createIPAtoms = (version: Version) =>
 export const ipv4Atom = createIPAtoms(Version.V4);
 export const ipv6Atom = createIPAtoms(Version.V6);
 
-export const refreshAtom = atom(
+export const setIPAtom = atom(
     null,
-    (
-        _get,
-        set,
-        version: Version,
-        fetchClient: typeof fetch,
-        timeout: number = 5000
-    ) => {
-        const endpoints =
-            version === Version.V4 ? IPv4Endpoints : IPv6Endpoints;
+    (_get, set, version: Version, ip: IPState) => {
         const ipAtom = version === Version.V4 ? ipv4Atom : ipv6Atom;
-        set(ipAtom, {
-            value: "",
-            refreshing: true,
-        });
+        set(ipAtom, ip);
+        localStorage.setItem(`ip${version}`, ip.value);
+    }
+);
 
-        const exclusiveAbortController = new AbortController();
-        const tasks = endpoints.map((endpoint) => {
-            logging.info(`Fetching ${version} address from ${endpoint}.`);
-            const timeoutSignal = AbortSignal.timeout(timeout);
-            const mergedSignal = AbortSignal.any([
-                exclusiveAbortController.signal,
-                timeoutSignal,
-            ]);
+export const refreshAPI = (
+    version: Version,
+    endpoints: string[],
+    fetchClient: typeof fetch,
+    timeout: number = 5000
+) => {
+    const exclusiveAbortController = new AbortController();
+    const tasks = endpoints.map((endpoint) => {
+        logging.info(`Fetching ${version} address from ${endpoint}.`);
+        const timeoutSignal = AbortSignal.timeout(timeout);
+        const mergedSignal = AbortSignal.any([
+            exclusiveAbortController.signal,
+            timeoutSignal,
+        ]);
 
-            return fetchClient(endpoint, { signal: mergedSignal })
-                .then((response) => {
-                    if (response.ok) return response.text();
-                    throw new Error(`Failed to fetch ${version} address.`);
-                })
-                .then((ip) => {
-                    exclusiveAbortController.abort(
-                        "Request aborted due to other successful request"
-                    );
-                    return { ip, endpoint };
-                })
-                .catch((error) => {
-                    if (timeoutSignal.aborted) {
-                        logging.info(
-                            `${endpoint} aborted: ${timeoutSignal.reason}`
-                        );
-                    } else if (exclusiveAbortController.signal.aborted) {
-                        logging.info(
-                            `${endpoint} aborted: ${exclusiveAbortController.signal.reason}`
-                        );
-                    } else {
-                        logging.warn(`${endpoint} failed: ${error}`);
-                    }
-                    throw error;
-                });
-        });
-
-        Promise.any(tasks)
-            .then((res) => {
-                set(ipAtom, {
-                    value: res.ip,
-                    refreshing: false,
-                });
-                localStorage.setItem(`ip${version}`, res.ip);
-                logging.info(
-                    `Fetched ${version} address ${res.ip} from ${res.endpoint}`
-                );
+        return fetchClient(endpoint, { signal: mergedSignal })
+            .then((response) => {
+                if (response.ok) return response.text();
+                throw new Error(`Failed to fetch ${version} address.`);
             })
-            .catch((err) => {
-                set(ipAtom, {
-                    value: "",
-                    refreshing: false,
-                });
-                localStorage.removeItem(`ip${version}`);
-                logging.error(
-                    `Failed to fetch ${version} address: ${
-                        err.name === "AggregateError"
-                            ? "All requests failed"
-                            : err
-                    }`
+            .then((ip) => {
+                exclusiveAbortController.abort(
+                    "Request aborted due to other successful request"
                 );
-                toast.error(`Failed to fetch ${version} address.`);
+                return { ip, endpoint };
+            })
+            .catch((error) => {
+                if (timeoutSignal.aborted) {
+                    logging.info(
+                        `${endpoint} aborted: ${timeoutSignal.reason}`
+                    );
+                } else if (exclusiveAbortController.signal.aborted) {
+                    logging.info(
+                        `${endpoint} aborted: ${exclusiveAbortController.signal.reason}`
+                    );
+                } else {
+                    logging.warn(`${endpoint} failed: ${error}`);
+                }
+                throw error;
             });
+    });
+
+    return Promise.any(tasks);
+};
+
+function createInitialIPEndpoints(version: Version) {
+    let endpoints = version === Version.V4 ? IPv4Endpoints : IPv6Endpoints;
+    const stored = localStorage.getItem(`${version}_endpiont`);
+    if (stored) {
+        try {
+            const storedEndpoints = JSON.parse(stored);
+            if (Array.isArray(storedEndpoints)) {
+                endpoints = storedEndpoints;
+            }
+        } catch (e) {
+            logging.info(`Failed to parse stored endpoints: ${e}`);
+            logging.info(`Using default endpoints instead`);
+        }
     }
-);
+    return endpoints;
+}
 
-export const ipv4EndpointsAtom = atom(IPv4Endpoints);
-export const ipv6EndpointsAtom = atom(IPv6Endpoints);
+export const ipv4EndpointsAtom = atom(createInitialIPEndpoints(Version.V4));
+export const ipv6EndpointsAtom = atom(createInitialIPEndpoints(Version.V6));
 
-export const addIPv4EndpointAtom = atom(null, (_get, set, endpoint: string) => {
-    set(ipv4EndpointsAtom, (prev) => [...prev, endpoint]);
-});
-export const deleteIPv4EndpointAtom = atom(
+export const addIPEndpointAtom = atom(
     null,
-    (_get, set, endpoint: string) => {
-        set(ipv4EndpointsAtom, (prev) => prev.filter((e) => e !== endpoint));
+    (_get, set, version: Version, endpoint: string) => {
+        const atom =
+            version === Version.V4 ? ipv4EndpointsAtom : ipv6EndpointsAtom;
+        set(atom, (prev) => {
+            const newEndpoints = [...prev, endpoint];
+            localStorage.setItem(
+                `${version}_endpiont`,
+                JSON.stringify(newEndpoints)
+            );
+            return newEndpoints;
+        });
     }
 );
-export const resetIPv4EndpointsAtom = atom(null, (_get, set) => {
-    set(ipv4EndpointsAtom, IPv4Endpoints);
-});
-
-export const addIPv6EndpointAtom = atom(null, (_get, set, endpoint: string) => {
-    set(ipv6EndpointsAtom, (prev) => [...prev, endpoint]);
-});
-export const deleteIPv6EndpointAtom = atom(
+export const deleteIPEndpointAtom = atom(
     null,
-    (_get, set, endpoint: string) => {
-        set(ipv6EndpointsAtom, (prev) => prev.filter((e) => e !== endpoint));
+    (_get, set, version: Version, endpoint: string) => {
+        const atom =
+            version === Version.V4 ? ipv4EndpointsAtom : ipv6EndpointsAtom;
+        set(atom, (prev) => {
+            const newEndpoints = prev.filter((e) => e !== endpoint);
+            localStorage.setItem(
+                `${version}_endpiont`,
+                JSON.stringify(newEndpoints)
+            );
+            return newEndpoints;
+        });
     }
 );
-export const resetIPv6EndpointsAtom = atom(null, (_get, set) => {
-    set(ipv6EndpointsAtom, IPv6Endpoints);
-});
+export const resetIPEndpointsAtom = atom(
+    null,
+    (_get, set, version: Version) => {
+        set(
+            version === Version.V4 ? ipv4EndpointsAtom : ipv6EndpointsAtom,
+            () => {
+                const endpoints =
+                    version === Version.V4 ? IPv4Endpoints : IPv6Endpoints;
+                localStorage.setItem(
+                    `${version}_endpiont`,
+                    JSON.stringify(endpoints)
+                );
+                return endpoints;
+            }
+        );
+    }
+);

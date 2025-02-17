@@ -1,8 +1,5 @@
 import { atom } from "jotai";
 import { atomFamily } from "jotai/utils";
-import { toast } from "react-toastify";
-
-import logging from "@/utils/log";
 
 import { Version as IPVersion } from "../ip";
 import { firewallAtom } from "./firewall";
@@ -85,30 +82,6 @@ export type RulesMeta = {
         prev: string;
         next: string;
     };
-};
-
-export type RulesAction = {
-    setNewRule: (groupId: string, rule: NewRuleState) => void;
-    refreshRules: (
-        id: string,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout?: number
-    ) => void;
-    deleteRuleById: (
-        group_id: string,
-        rule_id: number,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout?: number
-    ) => Promise<void>;
-    createRule: (
-        groupId: string,
-        newRule: CreateRule,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout?: number
-    ) => void;
 };
 
 export function protocolPortToDisplayProtocol(
@@ -211,6 +184,55 @@ export function newRuleStateToCreateRule(
     };
 }
 
+export const deleteRuleAPI = (
+    groupId: string,
+    ruleId: number,
+    apiToken: string,
+    fetchClient: typeof fetch,
+    timeoutSignal: AbortSignal
+) => {
+    return fetchClient(endpoint(groupId, ruleId), {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${apiToken}`,
+        },
+        signal: timeoutSignal,
+    });
+};
+
+export const createRuleAPI = (
+    groupId: string,
+    newRule: CreateRule,
+    apiToken: string,
+    fetchClient: typeof fetch,
+    timeoutSignal: AbortSignal
+) => {
+    return fetchClient(endpoint(groupId), {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${apiToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newRule),
+        signal: timeoutSignal,
+    });
+};
+
+export const refreshRulesAPI = (
+    id: string,
+    apiToken: string,
+    fetchClient: typeof fetch,
+    timeoutSignal: AbortSignal
+) => {
+    return fetchClient(endpoint(id), {
+        method: "GET",
+        headers: {
+            Authorization: `Bearer ${apiToken}`,
+        },
+        signal: timeoutSignal,
+    });
+};
+
 export const initialNewRuleIPv4: NewRuleState = {
     ip_type: IPVersion.V4,
     protocol: "ssh",
@@ -236,235 +258,6 @@ export const rulesAtom = atomFamily((id: string) =>
 );
 export const refreshingAtom = atomFamily((id: string) =>
     atom((get) => get(firewallAtom).groups[id]?.refreshing)
-);
-
-export const refreshRulesAtom = atom(
-    null,
-    (
-        _get,
-        set,
-        id: string,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout: number = 5000
-    ) => {
-        logging.info(`Fetching rules for group ${id}.`);
-        set(firewallAtom, (state) => {
-            state.groups[id].refreshing = true;
-        });
-        const timeoutSignal = AbortSignal.timeout(timeout);
-        fetchClient(endpoint(id), {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${apiToken}`,
-            },
-            signal: timeoutSignal,
-        })
-            .then(async (res) => {
-                return {
-                    status: res.status,
-                    statusText: res.statusText,
-                    data: await res.json(),
-                };
-            })
-            .then((res) => {
-                if (res.status < 400) {
-                    const {
-                        firewall_rules,
-                        meta,
-                    }: { firewall_rules: RuleInfo[]; meta: RulesMeta } =
-                        res.data;
-                    logging.info(
-                        `Successfully fetched ${meta.total} rules for group ${id}.`
-                    );
-                    set(firewallAtom, (state) => {
-                        state.groups[id].meta = meta;
-                        state.groups[id].rules = firewall_rules.reduce(
-                            (acc, rule) => {
-                                acc[rule.id] = {
-                                    ...rule,
-                                    deleting: false,
-                                };
-                                return acc;
-                            },
-                            {} as Record<number, RuleState>
-                        );
-                    });
-                } else if (res.status < 500)
-                    throw new Error(
-                        `${res.status} ${
-                            res.data.error ? res.data.error : res.statusText
-                        }`
-                    );
-                else throw new Error(`${res.status} ${res.statusText}`);
-            })
-            .catch((err: Error) => {
-                logging.error(
-                    `Failed to fetch firewall rules for group ${id}: ${
-                        timeoutSignal.aborted ? timeoutSignal.reason : err
-                    }`
-                );
-                toast.error(
-                    `Failed to fetch firewall rules for group ${id}: ${
-                        timeoutSignal.aborted
-                            ? timeoutSignal.reason.message
-                            : err.message
-                    }`
-                );
-                set(firewallAtom, (state) => {
-                    state.groups[id].rules = {};
-                    state.groups[id].meta = null;
-                });
-            })
-            .finally(() =>
-                set(firewallAtom, (state) => {
-                    state.groups[id].refreshing = false;
-                })
-            );
-    }
-);
-
-export const deleteRuleByIdAtom = atom(
-    null,
-    async (
-        _get,
-        set,
-        groupId: string,
-        ruleId: number,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout: number = 5000
-    ) => {
-        logging.info(`Deleting the rule ${ruleId} in group ${groupId}.`);
-        set(firewallAtom, (state) => {
-            state.groups[groupId].rules[ruleId].deleting = true;
-        });
-
-        const timeoutSignal = AbortSignal.timeout(timeout);
-
-        await fetchClient(endpoint(groupId, ruleId), {
-            method: "DELETE",
-            headers: {
-                Authorization: `Bearer ${apiToken}`,
-            },
-            signal: timeoutSignal,
-        })
-            .then(async (res) => {
-                if (!res.ok) {
-                    const data = await res.json();
-                    throw new Error(
-                        `${res.status} ${
-                            data.error ? data.error : res.statusText
-                        }`
-                    );
-                }
-                set(firewallAtom, (state) => {
-                    delete state.groups[groupId].rules[ruleId];
-                });
-                logging.info(
-                    `Successfully deleted the rule ${ruleId} in group ${groupId}.`
-                );
-                toast.success(`Successfully deleted the rule.`);
-            })
-            .catch((err: Error) => {
-                logging.error(
-                    `Failed to delete firewall rule ${ruleId} in group ${groupId}: ${
-                        timeoutSignal.aborted ? timeoutSignal.reason : err
-                    }`
-                );
-                toast.error(
-                    `Failed to delete the firewall rule: ${
-                        timeoutSignal.aborted
-                            ? timeoutSignal.reason.message
-                            : err.message
-                    }`
-                );
-                set(firewallAtom, (state) => {
-                    state.groups[groupId].rules[ruleId].deleting = false;
-                });
-            });
-    }
-);
-
-export const createRuleAtom = atom(
-    null,
-    (
-        _get,
-        set,
-        groupId: string,
-        newRule: CreateRule,
-        apiToken: string,
-        fetchClient: typeof fetch,
-        timeout: number = 5000
-    ) => {
-        logging.info(
-            `Creating a new rule ${JSON.stringify(
-                newRule
-            )} in group ${groupId}.`
-        );
-        set(firewallAtom, (state) => {
-            state.groups[groupId].newRule[newRule.ip_type].creating = true;
-        });
-
-        const timeoutSignal = AbortSignal.timeout(timeout);
-        fetchClient(endpoint(groupId), {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${apiToken}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newRule),
-            signal: timeoutSignal,
-        })
-            .then(async (res) => {
-                const data = await res.json();
-                if (!res.ok) {
-                    throw new Error(
-                        `${res.status} ${
-                            data.error ? data.error : res.statusText
-                        }`
-                    );
-                }
-                logging.info(
-                    `Successfully created the rule ${JSON.stringify(
-                        data
-                    )} in group ${groupId}.`
-                );
-                toast.success("Successfully created the rule.");
-
-                const rule = data.firewall_rule as RuleInfo;
-                set(firewallAtom, (state) => {
-                    state.groups[groupId].rules[rule.id] = {
-                        ...rule,
-                        deleting: false,
-                    };
-                    state.groups[groupId].newRule[newRule.ip_type] =
-                        newRule.ip_type === IPVersion.V4
-                            ? initialNewRuleIPv4
-                            : initialNewRuleIPv6;
-                });
-            })
-            .catch((err: Error) => {
-                logging.error(
-                    `Failed to create the rule ${JSON.stringify(
-                        newRule
-                    )} in group ${groupId}: ${
-                        timeoutSignal.aborted ? timeoutSignal.reason : err
-                    }`
-                );
-                toast.error(
-                    `Failed to create the rule: ${
-                        timeoutSignal.aborted
-                            ? timeoutSignal.reason.message
-                            : err.message
-                    }`
-                );
-                set(firewallAtom, (state) => {
-                    state.groups[groupId].newRule[newRule.ip_type].creating =
-                        false;
-                });
-            });
-    }
 );
 
 export const setNewRuleAtom = atom(

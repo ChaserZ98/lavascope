@@ -5,6 +5,7 @@ import {
     TableColumn,
     TableHeader,
 } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 
 import { NewRuleState, RuleState } from "@/store/firewall/rules";
@@ -26,6 +27,8 @@ export default function RulesTable(props: RulesTableProps) {
     const [page, setPage] = useState(1);
     const rowsPerPage = 5;
     const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
+
+    const { t } = useLingui();
 
     return (
         <Table
@@ -60,12 +63,12 @@ export default function RulesTable(props: RulesTableProps) {
         >
             <TableHeader>
                 {[
-                    "Protocol",
-                    "Port",
-                    "Source Type",
-                    "Source",
-                    "Notes",
-                    "Actions",
+                    t`Protocol`,
+                    t`Port`,
+                    t`Source Type`,
+                    t`Source`,
+                    t`Notes`,
+                    t`Actions`,
                 ].map((head) => (
                     <TableColumn key={head} align="center">
                         {head}

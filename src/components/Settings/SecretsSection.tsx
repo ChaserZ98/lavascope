@@ -1,4 +1,5 @@
 import { Input } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
 import { screenSizeAtom } from "@/store/screen";
@@ -11,14 +12,16 @@ export default function SecretsSection() {
 
     const [apiToken, setApiToken] = useAtom(apiTokenAtom);
 
+    const { t } = useLingui();
+
     return (
-        <Section header="Secrets">
+        <Section header={t`Secrets`}>
             <SectionBody>
                 <Input
                     type="password"
-                    label="API Token"
+                    label={t`API Token`}
                     size={screenSize === "sm" ? "sm" : "md"}
-                    placeholder="Enter token here"
+                    placeholder={t`Enter token here`}
                     value={apiToken}
                     onChange={(e) => setApiToken(e.target.value)}
                     classNames={{

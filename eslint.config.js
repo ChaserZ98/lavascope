@@ -1,4 +1,5 @@
 import pluginJs from "@eslint/js";
+import pluginLingui from "eslint-plugin-lingui";
 import pluginReact from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import unusedImports from "eslint-plugin-unused-imports";
@@ -15,6 +16,7 @@ export default [
     ...tseslint.configs.recommended,
     pluginReact.configs.flat.recommended,
     pluginReact.configs.flat["jsx-runtime"],
+    pluginLingui.configs["flat/recommended"],
     {
         settings: {
             react: {

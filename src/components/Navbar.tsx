@@ -7,6 +7,7 @@ import {
     NavbarItem,
     Tooltip,
 } from "@heroui/react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiCog, mdiIpOutline, mdiThemeLightDark, mdiWall } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link, useLocation } from "@tanstack/react-router";
@@ -30,7 +31,9 @@ export function BottomNavigation() {
                 }}
             >
                 <Icon path={mdiWall} className="w-8" />
-                <p>Groups</p>
+                <p>
+                    <Trans>Groups</Trans>
+                </p>
             </HeroUILink>
             <HeroUILink
                 to="/my-ip"
@@ -44,7 +47,9 @@ export function BottomNavigation() {
                 }}
             >
                 <Icon path={mdiIpOutline} className="w-8" />
-                <p>My IP</p>
+                <p>
+                    <Trans>My IP</Trans>
+                </p>
             </HeroUILink>
         </div>
     );
@@ -55,6 +60,8 @@ export default function Navigation() {
 
     const toggleTheme = useSetAtom(toggleThemeAtom);
     const screenSize = useAtomValue(screenSizeAtom);
+
+    const { t } = useLingui();
 
     return (
         <Navbar
@@ -86,7 +93,7 @@ export default function Navigation() {
                         className="transition-colors-opacity"
                         activeProps={{ className: "text-focus" }}
                     >
-                        Groups
+                        <Trans>Groups</Trans>
                     </HeroUILink>
                 </NavbarItem>
                 <NavbarItem>
@@ -99,7 +106,7 @@ export default function Navigation() {
                         className="transition-colors-opacity"
                         activeProps={{ className: "text-focus" }}
                     >
-                        My IP
+                        <Trans>My IP</Trans>
                     </HeroUILink>
                 </NavbarItem>
             </NavbarContent>
@@ -109,7 +116,7 @@ export default function Navigation() {
             >
                 <NavbarItem>
                     <Tooltip
-                        content="Theme"
+                        content={t`Theme`}
                         delay={500}
                         closeDelay={150}
                         classNames={{
@@ -130,7 +137,7 @@ export default function Navigation() {
                     className="group/settings"
                 >
                     <Tooltip
-                        content="Settings"
+                        content={t`Settings`}
                         delay={500}
                         closeDelay={150}
                         classNames={{
