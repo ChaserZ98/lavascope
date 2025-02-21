@@ -13,32 +13,31 @@ import {
     useDisclosure,
 } from "@heroui/react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 import ProxySwitch from "@/components/ProxySwitch";
-import useFetch from "@/hooks/fetch";
-import { firewallAtom, refreshingAtom } from "@/store/firewall/firewall";
+import { db } from "@/db";
+import { useVultrAPI } from "@/hooks/vultr";
+import { VultrAPI } from "@/lib/vultr";
 import {
-    deleteGroupAPI,
-    GroupInfo,
-    groupsAtom,
-    GroupState,
-    initialGroupState,
-    refreshGroupsAPI,
-} from "@/store/firewall/groups";
-import { apiTokenAtom, proxyAddressAtom, useProxyAtom } from "@/store/settings";
+    firewallAtom,
+    refreshingAtom,
+    shouldUpdateFromDBAtom,
+} from "@/store/firewall/firewall";
+import { groupsAtom } from "@/store/firewall/groups";
+import { initialNewRuleIPv4, initialNewRuleIPv6 } from "@/store/firewall/rules";
+import { Version as IPVersion } from "@/store/ip";
 import logging from "@/utils/log";
 
 import Group from "./Group";
 
 export default function GroupTable() {
-    const apiToken = useAtomValue(apiTokenAtom);
-    const useProxy = useAtomValue(useProxyAtom);
-    const proxyAddress = useAtomValue(proxyAddressAtom);
-    const groups = useAtomValue(groupsAtom);
     const refreshing = useAtomValue(refreshingAtom);
+    const shouldUpdateFromDB = useAtomValue(shouldUpdateFromDBAtom);
+
+    const [groups, setGroups] = useAtom(groupsAtom);
 
     const [page, setPage] = useState(1);
     const rowsPerPage = 5;
@@ -46,16 +45,7 @@ export default function GroupTable() {
 
     const setFirewall = useSetAtom(firewallAtom);
 
-    const fetchClient = useFetch(
-        useProxy
-            ? {
-                  proxy: {
-                      http: proxyAddress,
-                      https: proxyAddress,
-                  },
-              }
-            : undefined
-    );
+    const vultrAPI = useVultrAPI();
 
     const { t } = useLingui();
 
@@ -64,135 +54,175 @@ export default function GroupTable() {
 
     const deleteModal = useDisclosure();
 
-    const fetchGroups = useCallback(
-        (
-            apiToken: string,
-            fetchClient: typeof fetch,
-            timeout: number = 5000
-        ) => {
-            logging.info(`Fetching firewall groups.`);
+    const handleModalClose = useCallback(() => {
+        deleteTimeoutId.current = setTimeout(
+            () => (selectedGroupId.current = null),
+            1000
+        );
+        deleteModal.onClose();
+    }, []);
+    const handleModalConfirm = useCallback(async () => {
+        await handleDeleteGroup(vultrAPI, selectedGroupId.current);
+        handleModalClose();
+    }, []);
+    const handleRefreshGroups = useCallback(async (vultrAPI: VultrAPI) => {
+        try {
+            logging.info(`Fetching firewall groups...`);
             setFirewall((state) => {
                 state.refreshing = true;
             });
-            const timeoutSignal = AbortSignal.timeout(timeout);
-            refreshGroupsAPI(apiToken, fetchClient, timeoutSignal)
-                .then(async (res) => {
-                    return {
-                        status: res.status,
-                        statusText: res.statusText,
-                        data: await res.json(),
-                    };
-                })
-                .then((res) => {
-                    if (res.status < 400) {
-                        const firewall_groups: GroupInfo[] =
-                            res.data.firewall_groups;
-                        logging.info(
-                            `Successfully fetched ${res.data.meta.total} firewall groups.`
-                        );
-                        setFirewall((state) => {
-                            state.meta = res.data.meta;
-                            state.groups = firewall_groups.reduce(
-                                (acc, group) => {
-                                    acc[group.id] =
-                                        group.id in state.groups &&
-                                        state.groups[group.id].date_modified ===
-                                            group.date_modified
-                                            ? state.groups[group.id]
-                                            : {
-                                                  ...initialGroupState,
-                                                  ...group,
-                                              };
-                                    return acc;
-                                },
-                                {} as Record<string, GroupState>
-                            );
-                        });
-                    } else if (res.status < 500)
-                        throw new Error(
-                            `${res.data.error ? res.data.error : res.statusText}`
-                        );
-                    else throw new Error(`${res.status} ${res.statusText}`);
-                })
-                .catch((err: Error) => {
-                    if (timeoutSignal.aborted) {
-                        logging.warn(
-                            `Failed to fetch firewall groups: ${timeoutSignal.reason}`
-                        );
-                    } else {
-                        logging.error(
-                            `Failed to fetch firewall groups: ${err}`
-                        );
-                    }
-                    const reason = timeoutSignal.aborted
-                        ? timeoutSignal.reason.message
-                        : err.message || err;
-                    toast.error(t`Failed to fetch firewall groups: ${reason}`);
-                    setFirewall((state) => {
-                        state.groups = {};
-                        state.meta = null;
-                    });
-                })
-                .finally(() => {
-                    setFirewall((state) => {
-                        state.refreshing = false;
-                    });
-                });
-        },
-        []
-    );
-    const deleteGroup = useCallback(
-        (
-            id: string,
-            apiToken: string,
-            fetchClient: typeof fetch,
-            timeout: number = 5000
-        ) => {
-            logging.info(`Deleting group with ID ${id}.`);
-            setFirewall((state) => {
-                state.groups[id].deleting = true;
-            });
-            const timeoutSignal = AbortSignal.timeout(timeout);
-            deleteGroupAPI(id, apiToken, fetchClient, timeoutSignal)
-                .then(async (res) => {
-                    if (!res.ok) {
-                        const data = await res.json();
-                        throw new Error(
-                            `${res.status} ${data.error ? data.error : res.statusText}`
-                        );
-                    }
 
-                    setFirewall((state) => {
-                        delete state.groups[id];
-                    });
-                    logging.info(`Successfully deleted group with ID ${id}`);
-                    toast.success(t`Successfully deleted group with ID ${id}`);
-                })
-                .catch((err: Error) => {
-                    if (timeoutSignal.aborted) {
-                        logging.error(
-                            `Failed to delete group: ${timeoutSignal.reason}`
-                        );
-                        toast.error(
-                            `Failed to delete group: ${timeoutSignal.reason.message}`
-                        );
-                    } else {
-                        logging.error(`Failed to delete group: ${err}`);
-                        const message = err.message;
-                        toast.error(t`Failed to delete group: ${message}`);
-                    }
-                    setFirewall((state) => {
-                        state.groups[id].deleting = false;
-                    });
+            logging.info(`Clearing local database...`);
+            await db.groups.clear();
+            setGroups({});
+            await db.rules.clear();
+            const { firewall_groups } = await vultrAPI.firewall.listGroups();
+            logging.info(
+                `Successfully fetched ${firewall_groups.length} firewall groups.`
+            );
+            setGroups((state) => {
+                firewall_groups.forEach((group) => {
+                    state[group.id] = {
+                        group,
+                        deleting: false,
+                        shouldUpdateFromDB: false,
+                        isRulesOutdated: true,
+                        refreshing: false,
+                        newRule: {
+                            [IPVersion.V4]: initialNewRuleIPv4,
+                            [IPVersion.V6]: initialNewRuleIPv6,
+                        },
+                    };
                 });
+            });
+            await db.groups.bulkPut(firewall_groups);
+            logging.info(`Successfully added firewall groups to DB.`);
+        } catch (err) {
+            if (err instanceof DOMException) {
+                if (err.name === "TimeoutError") {
+                    logging.warn(
+                        `Failed to fetch firewall groups: request timed out`
+                    );
+                    toast.error(
+                        t`Failed to fetch firewall groups: request timed out`
+                    );
+                } else if (err.name === "AbortError") {
+                    logging.warn(
+                        "Failed to fetch firewall groups: request aborted."
+                    );
+                } else {
+                    logging.error(`Failed to fetch firewall groups: ${err}`);
+                    toast.error(
+                        t`Failed to fetch firewall groups: unknown error`
+                    );
+                }
+            } else if (err instanceof TypeError) {
+                logging.error(`Failed to fetch firewall groups: ${err}`);
+                toast.error(t`Failed to fetch firewall groups: network error`);
+            } else if (err instanceof Error) {
+                logging.error(`Failed to fetch firewall groups: ${err}`);
+                const message = err.message || err;
+                toast.error(
+                    <>
+                        <p>
+                            <Trans>Failed to fetch firewall groups</Trans>
+                        </p>
+                        <p>{message.toString()}</p>
+                    </>
+                );
+            } else {
+                logging.error(`Failed to fetch firewall groups: ${err}`);
+                toast.error(t`Failed to fetch firewall groups: unknown error`);
+            }
+            setGroups({});
+        } finally {
+            setFirewall((state) => {
+                state.refreshing = false;
+            });
+        }
+    }, []);
+    const handleDeleteGroup = useCallback(
+        async (vultrAPI: VultrAPI, groupId: string | null) => {
+            if (!groupId) {
+                logging.warn(`Delete group operation failed: Group ID is null`);
+                toast.error(`Delete group operation failed: Group ID is null`);
+                return;
+            }
+
+            logging.info(`Deleting group with ID ${groupId}.`);
+            setGroups((state) => {
+                state[groupId].deleting = true;
+            });
+            try {
+                await vultrAPI.firewall.deleteGroup({
+                    "firewall-group-id": groupId,
+                });
+                logging.info(
+                    `Successfully deleted group with ID ${groupId} from Vultr API.`
+                );
+                await db.groups.delete(groupId);
+                logging.info(
+                    `Successfully deleted group with ID ${groupId} from local database.`
+                );
+                setGroups((state) => {
+                    delete state[groupId];
+                });
+                logging.info(`Successfully deleted group with ID ${groupId}`);
+                toast.success(t`Successfully deleted group with ID ${groupId}`);
+            } catch (err) {
+                logging.error(`Failed to delete group: ${err}`);
+                const message =
+                    err instanceof Error ? err.message : "unknown error";
+                toast.error(t`Failed to delete group: ${message}`);
+                setGroups((state) => {
+                    state[groupId].deleting = false;
+                });
+            }
         },
         []
     );
 
     useEffect(() => {
-        if (groups === undefined && apiToken)
-            fetchGroups(apiToken, fetchClient);
-    }, [groups, fetchClient, apiToken]);
+        if (shouldUpdateFromDB) {
+            const restoreFromDB = async () => {
+                try {
+                    logging.info(`Restoring firewall groups from DB...`);
+                    setFirewall((state) => {
+                        state.refreshing = true;
+                    });
+                    setGroups({});
+                    const groups = await db.groups.toArray();
+                    setGroups((state) => {
+                        groups.forEach((group) => {
+                            state[group.id] = {
+                                group,
+                                deleting: false,
+                                shouldUpdateFromDB: true,
+                                isRulesOutdated: false,
+                                refreshing: false,
+                                newRule: {
+                                    [IPVersion.V4]: initialNewRuleIPv4,
+                                    [IPVersion.V6]: initialNewRuleIPv6,
+                                },
+                            };
+                        });
+                    });
+                    setFirewall((state) => {
+                        state.shouldUpdateFromDB = false;
+                    });
+                } catch (err) {
+                    logging.error(
+                        `Error restoring firewall groups from DB: ${err}`
+                    );
+                } finally {
+                    setFirewall((state) => {
+                        state.refreshing = false;
+                    });
+                }
+            };
+            restoreFromDB();
+        }
+    }, [shouldUpdateFromDB]);
 
     return (
         <div className="flex flex-col w-full max-w-fit gap-4 select-none md:px-8">
@@ -243,16 +273,17 @@ export default function GroupTable() {
                     ))}
                 </TableHeader>
                 <TableBody emptyContent="Empty">
-                    {Object.values(groups).map((group, index) =>
+                    {Object.values(groups).map((groupState, index) =>
                         Group({
                             key: index,
-                            group,
+                            groupState,
                             onGroupDelete: (id: string) => {
                                 selectedGroupId.current = id;
                                 if (deleteTimeoutId.current)
                                     clearTimeout(deleteTimeoutId.current);
                                 deleteModal.onOpen();
                             },
+                            t,
                             refreshing,
                         })
                     )}
@@ -261,122 +292,93 @@ export default function GroupTable() {
             <Modal
                 backdrop="transparent"
                 isOpen={deleteModal.isOpen}
-                onClose={() => {
-                    deleteTimeoutId.current = setTimeout(
-                        () => (selectedGroupId.current = null),
-                        1000
-                    );
-                    deleteModal.onClose();
-                }}
+                onClose={handleModalClose}
                 classNames={{
                     base: "select-none",
                 }}
             >
                 <ModalContent>
-                    {(onClose) => (
-                        <>
-                            <ModalHeader className="flex flex-col gap-1 text-danger-400">
-                                <Trans>Delete Firewall Group</Trans>
-                            </ModalHeader>
-                            <ModalBody>
-                                <p>
-                                    <Trans>
-                                        Are you sure you want to delete this
-                                        firewall group?
-                                    </Trans>
-                                </p>
-                                <div className="text-warning">
-                                    <p>
-                                        <span>
-                                            <Trans>ID: </Trans>
-                                        </span>
-                                        <span className="font-mono">
-                                            {selectedGroupId.current}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>
-                                            <Trans>Description: </Trans>
-                                        </span>
-                                        <span className="font-mono uppercase">
-                                            {selectedGroupId.current &&
-                                                groups[selectedGroupId.current]
-                                                    ?.description}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>
-                                            <Trans>Date Created: </Trans>
-                                        </span>
-                                        <span className="font-mono">
-                                            {selectedGroupId.current &&
-                                                new Date(
-                                                    groups[
-                                                        selectedGroupId.current
-                                                    ]?.date_created
-                                                ).toLocaleString()}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>
-                                            <Trans>Rules: </Trans>
-                                        </span>
-                                        <span className="font-mono">
-                                            {selectedGroupId.current &&
-                                                groups[selectedGroupId.current]
-                                                    ?.rule_count}
-                                        </span>
-                                    </p>
-                                    <p>
-                                        <span>
-                                            <Trans>Instances: </Trans>
-                                        </span>
-                                        <span className="font-mono">
-                                            {selectedGroupId.current &&
-                                                groups[selectedGroupId.current]
-                                                    ?.instance_count}
-                                        </span>
-                                    </p>
-                                </div>
-                            </ModalBody>
-                            <ModalFooter>
-                                <Button
-                                    color="primary"
-                                    onPress={() => {
-                                        if (!selectedGroupId.current) {
-                                            logging.warn(
-                                                `Delete group operation failed: Group ID is null`
-                                            );
-                                            toast.error(
-                                                `Delete group operation failed: Group ID is null`
-                                            );
-                                            return;
-                                        }
-                                        deleteGroup(
-                                            selectedGroupId.current,
-                                            apiToken,
-                                            fetchClient
-                                        );
-                                        onClose();
-                                    }}
-                                >
-                                    <Trans>Confirm</Trans>
-                                </Button>
-                                <Button
-                                    color="danger"
-                                    variant="light"
-                                    onPress={onClose}
-                                >
-                                    <Trans>Cancel</Trans>
-                                </Button>
-                            </ModalFooter>
-                        </>
-                    )}
+                    <ModalHeader className="flex flex-col gap-1 text-danger-400">
+                        <Trans>Delete Firewall Group</Trans>
+                    </ModalHeader>
+                    <ModalBody>
+                        <p>
+                            <Trans>
+                                Are you sure you want to delete this firewall
+                                group?
+                            </Trans>
+                        </p>
+                        <div className="text-warning">
+                            <p>
+                                <span>
+                                    <Trans>ID: </Trans>
+                                </span>
+                                <span className="font-mono">
+                                    {selectedGroupId.current}
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <Trans>Description: </Trans>
+                                </span>
+                                <span className="font-mono uppercase">
+                                    {selectedGroupId.current &&
+                                        groups[selectedGroupId.current].group
+                                            .description}
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <Trans>Date Created: </Trans>
+                                </span>
+                                <span className="font-mono">
+                                    {selectedGroupId.current &&
+                                        new Date(
+                                            groups[
+                                                selectedGroupId.current
+                                            ].group.date_created
+                                        ).toLocaleString()}
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <Trans>Rules: </Trans>
+                                </span>
+                                <span className="font-mono">
+                                    {selectedGroupId.current &&
+                                        groups[selectedGroupId.current].group
+                                            .rule_count}
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <Trans>Instances: </Trans>
+                                </span>
+                                <span className="font-mono">
+                                    {selectedGroupId.current &&
+                                        groups[selectedGroupId.current].group
+                                            .instance_count}
+                                </span>
+                            </p>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="primary" onPress={handleModalConfirm}>
+                            <Trans>Confirm</Trans>
+                        </Button>
+                        <Button
+                            color="danger"
+                            variant="light"
+                            onPress={handleModalClose}
+                        >
+                            <Trans>Cancel</Trans>
+                        </Button>
+                    </ModalFooter>
                 </ModalContent>
             </Modal>
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
-                    onPress={() => fetchGroups(apiToken, fetchClient)}
+                    onPress={() => handleRefreshGroups(vultrAPI)}
                     isLoading={refreshing}
                     className="bg-default hover:bg-default-100"
                 >

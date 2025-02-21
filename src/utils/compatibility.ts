@@ -1,19 +1,19 @@
 import { toast } from "react-toastify";
 
-import { Environment } from "@/store/environment";
+import { Platform } from "@/store/environment";
 
 import logging from "./log";
 import supportedBrowsers from "./supportedBrowsers";
 
-export default function checkCompatibility(environment: Environment) {
+export default function checkCompatibility(platform: Platform) {
     const isSupported = supportedBrowsers.test(navigator.userAgent);
-    switch (environment) {
+    switch (platform) {
         // browserslist currently has no support for macos webview
         // so we will always assume that it is supported
-        case Environment.MACOS:
+        case Platform.MACOS:
             logging.info(`WebView support: OK`);
             break;
-        case Environment.WEB:
+        case Platform.WEB:
             if (isSupported) {
                 logging.info(`Browser support: OK`);
             } else {

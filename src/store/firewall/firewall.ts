@@ -1,20 +1,23 @@
 import { atom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { atomWithImmer } from "jotai-immer";
 
-import { type GroupsMeta, type GroupState } from "./groups";
-
 export type FirewallState = {
-    groups: Record<string, GroupState>;
-    meta: GroupsMeta | undefined | null; // undefined -> not fetched, null -> failed to fetch
+    shouldUpdateFromDB: boolean;
     refreshing: boolean;
 };
 
-const initialState: FirewallState = {
-    groups: {},
-    meta: undefined,
+export const firewallAtom = atomWithImmer<FirewallState>({
+    shouldUpdateFromDB: true,
     refreshing: false,
-};
+});
 
-export const firewallAtom = atomWithImmer(initialState);
+export const apiTokenAtom = atomWithStorage("apiToken", "", undefined, {
+    getOnInit: true,
+});
 
 export const refreshingAtom = atom((get) => get(firewallAtom).refreshing);
+
+export const shouldUpdateFromDBAtom = atom(
+    (get) => get(firewallAtom).shouldUpdateFromDB
+);

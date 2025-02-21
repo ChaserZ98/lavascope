@@ -18,8 +18,8 @@ export const languageAtom = atom(createInitialLanguage());
 
 export const changeLanguageAtom = atom(
     null,
-    (_get, set, newLanguage: Locales) => {
-        dynamicActivate(newLanguage);
+    async (_get, set, newLanguage: Locales) => {
+        await dynamicActivate(newLanguage);
         localStorage.setItem("language", newLanguage);
         set(languageAtom, newLanguage);
     }

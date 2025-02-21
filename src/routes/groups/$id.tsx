@@ -13,36 +13,30 @@ import {
 } from "@heroui/react";
 import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import Dexie from "dexie";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import ProxySwitch from "@/components/ProxySwitch";
-import useFetch from "@/hooks/fetch";
-import { firewallAtom } from "@/store/firewall/firewall";
-import { groupAtom } from "@/store/firewall/groups";
+import { db } from "@/db";
+import { useVultrAPI } from "@/hooks/vultr";
+import { groupAtom, groupsAtom, setNewRuleAtom } from "@/store/firewall/groups";
 import {
     CreateRule,
-    createRuleAPI,
-    deleteRuleAPI,
     initialNewRuleIPv4,
     initialNewRuleIPv6,
     NewRuleState,
-    newRuleStateToCreateRule,
-    protocolPortToDisplayProtocol,
-    refreshingAtom,
-    refreshRulesAPI,
     RuleInfo,
     rulesAtom,
-    RulesMeta,
     RuleState,
-    setNewRuleAtom,
+    toCreateRule,
+    toProtocolDisplay,
 } from "@/store/firewall/rules";
 import { Version as IPVersion } from "@/store/ip";
 import { languageAtom } from "@/store/language";
 import { Screen, screenSizeAtom } from "@/store/screen";
-import { apiTokenAtom, proxyAddressAtom, useProxyAtom } from "@/store/settings";
 import logging from "@/utils/log";
 
 export const Route = createFileRoute("/groups/$id")({
@@ -83,15 +77,17 @@ function RelativeTime({ date }: { date: string }) {
 
 function DeleteModal({
     modal,
-    rule,
+    ruleState,
     onClose,
     onConfirm,
 }: {
     modal: ReturnType<typeof useDisclosure>;
-    rule: RuleState;
+    ruleState: RuleState | null;
     onClose?: () => void;
-    onConfirm?: (() => void) | ((onClose: () => void) => void);
+    onConfirm?: () => void;
 }) {
+    if (!ruleState) return null;
+    const rule = ruleState.rule;
     return (
         <Modal
             backdrop="transparent"
@@ -102,247 +98,222 @@ function DeleteModal({
             }}
         >
             <ModalContent>
-                {(onModalClose) => (
-                    <>
-                        <ModalHeader className="flex flex-col gap-1 text-danger-400">
-                            <Trans>Delete Firewall Rule</Trans>
-                        </ModalHeader>
-                        <ModalBody>
-                            <p>
-                                <Trans>
-                                    Are you sure you want to delete this rule?
-                                </Trans>
-                            </p>
-                            <div className="text-warning">
-                                <p>
-                                    <span>
-                                        <Trans>IP Version: </Trans>
-                                    </span>
-                                    <span className="font-mono">
-                                        {rule.ip_type === IPVersion.V4
-                                            ? "IPv4"
-                                            : "IPv6"}
-                                    </span>
-                                </p>
-                                <p>
-                                    <span>
-                                        <Trans>Protocol: </Trans>
-                                    </span>
-                                    <span className="font-mono uppercase">
-                                        {protocolPortToDisplayProtocol(
-                                            rule.protocol,
-                                            rule.port
-                                        )}
-                                    </span>
-                                </p>
-                                <p>
-                                    <span>
-                                        <Trans>Port: </Trans>
-                                    </span>
-                                    <span className="font-mono">
-                                        {rule.port}
-                                    </span>
-                                </p>
-                                <p>
-                                    <span>
-                                        <Trans>Source Type: </Trans>
-                                    </span>
-                                    <span className="font-mono capitalize">
-                                        {rule.source}
-                                    </span>
-                                </p>
-                                <p>
-                                    <span>
-                                        <Trans>Source Address: </Trans>
-                                    </span>
-                                    <span className="font-mono">
-                                        {`${rule.subnet}/${rule.subnet_size}`}
-                                    </span>
-                                </p>
-                                <p>
-                                    <span>
-                                        <Trans>Notes: </Trans>
-                                    </span>
-                                    <span className="font-mono">
-                                        {rule.notes}
-                                    </span>
-                                </p>
-                            </div>
-                        </ModalBody>
-                        <ModalFooter>
-                            <Button
-                                color="primary"
-                                isLoading={rule.deleting}
-                                onPress={() =>
-                                    onConfirm && onConfirm(onModalClose)
-                                }
-                            >
-                                <Trans>Confirm</Trans>
-                            </Button>
-                            <Button
-                                color="danger"
-                                variant="light"
-                                onPress={onClose}
-                            >
-                                <Trans>Cancel</Trans>
-                            </Button>
-                        </ModalFooter>
-                    </>
-                )}
+                <ModalHeader className="flex flex-col gap-1 text-danger-400">
+                    <Trans>Delete Firewall Rule</Trans>
+                </ModalHeader>
+                <ModalBody>
+                    <p>
+                        <Trans>
+                            Are you sure you want to delete this rule?
+                        </Trans>
+                    </p>
+                    <div className="text-warning">
+                        <p>
+                            <span>
+                                <Trans>IP Version: </Trans>
+                            </span>
+                            <span className="font-mono">
+                                {rule.ip_type === IPVersion.V4
+                                    ? "IPv4"
+                                    : "IPv6"}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Protocol: </Trans>
+                            </span>
+                            <span className="font-mono uppercase">
+                                {toProtocolDisplay(rule.protocol, rule.port)}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Port: </Trans>
+                            </span>
+                            <span className="font-mono">{rule.port}</span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Source Type: </Trans>
+                            </span>
+                            <span className="font-mono capitalize">
+                                {rule.source}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Source Address: </Trans>
+                            </span>
+                            <span className="font-mono">
+                                {`${rule.subnet}/${rule.subnet_size}`}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Notes: </Trans>
+                            </span>
+                            <span className="font-mono">{rule.notes}</span>
+                        </p>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        color="primary"
+                        isLoading={ruleState.deleting}
+                        onPress={onConfirm}
+                    >
+                        <Trans>Confirm</Trans>
+                    </Button>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                        <Trans>Cancel</Trans>
+                    </Button>
+                </ModalFooter>
             </ModalContent>
         </Modal>
     );
 }
 
 function Rules() {
-    const { id = "" } = Route.useParams();
+    const { id: groupId = "" } = Route.useParams();
 
     const navigate = useNavigate();
 
+    const { t } = useLingui();
+
     const screenSize = useAtomValue(screenSizeAtom);
-    const apiToken = useAtomValue(apiTokenAtom);
-    const proxyAddress = useAtomValue(proxyAddressAtom);
-    const useProxy = useAtomValue(useProxyAtom);
-    const group = useAtomValue(groupAtom(id));
-    const rules = useAtomValue(rulesAtom(id));
-    const refreshing = useAtomValue(refreshingAtom(id));
+    const groupState = useAtomValue(groupAtom(groupId));
+    const rules = useAtomValue(rulesAtom)[groupId];
     const language = useAtomValue(languageAtom);
 
-    const setFirewall = useSetAtom(firewallAtom);
-    const setNewRule = useSetAtom(setNewRuleAtom);
+    if (!groupState) {
+        logging.warn(`Group with ID ${groupId} not found`);
+        toast.error(t`Group with ID ${groupId} not found`);
+        navigate({
+            to: "/",
+        });
+        return;
+    }
 
-    const fetchClient = useFetch(
-        useProxy
-            ? {
-                  proxy: {
-                      http: proxyAddress,
-                      https: proxyAddress,
-                  },
-              }
-            : undefined
+    const group = groupState.group;
+    const refreshing = groupState.refreshing;
+    const shouldUpdateFromDB = groupState.shouldUpdateFromDB;
+    const isRulesOutdated = groupState.isRulesOutdated;
+    const ipv4Rules = Object.values(rules || {}).filter(
+        (state) => state.rule.ip_type === IPVersion.V4
+    );
+    const ipv6Rules = Object.values(rules || {}).filter(
+        (state) => state.rule.ip_type === IPVersion.V6
     );
 
-    const deleteModal = useDisclosure();
+    const setNewRule = useSetAtom(setNewRuleAtom);
+    const setGroups = useSetAtom(groupsAtom);
+    const setRules = useSetAtom(rulesAtom);
 
-    const { t } = useLingui();
+    const vultrAPI = useVultrAPI();
+
+    const deleteModal = useDisclosure();
 
     const selectedRule = useRef<RuleState | null>(null);
     const deleteTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
-    const refresh = useCallback(
-        (
-            id: string,
-            apiToken: string,
-            fetchClient: typeof fetch,
-            timeout: number = 5000
-        ) => {
-            if (!id) {
-                toast.error(t`Empty group ID`);
+    const handleModalClose = useCallback(() => {
+        deleteTimeoutId.current = setTimeout(() => {
+            selectedRule.current = null;
+        }, 1500);
+        deleteModal.onClose();
+    }, []);
+    const handleModalConfirm = useCallback(async () => {
+        await handleDelete(group.id, selectedRule.current?.rule.id);
+        handleModalClose();
+    }, []);
+
+    const handleRefresh = useCallback(async (groupId: string) => {
+        try {
+            logging.info(`Fetching firewall rules for group ${groupId}.`);
+            setGroups((state) => {
+                state[groupId]!.refreshing = true;
+            });
+            await db.rules
+                .where("[group_id+id]")
+                .between([groupId, Dexie.minKey], [groupId, Dexie.maxKey])
+                .delete();
+            logging.info(
+                `Successfully cleared rules in local database for group ${groupId}.`
+            );
+            const { firewall_rules: rules } = await vultrAPI.firewall.listRules(
+                {
+                    "firewall-group-id": groupId,
+                }
+            );
+            setRules((state) => {
+                state[groupId] = {};
+                rules.forEach((rule) => {
+                    state[groupId][rule.id] = {
+                        rule: rule as RuleInfo,
+                        deleting: false,
+                    };
+                });
+            });
+            await db.rules.bulkPut(
+                rules.map((rule) => ({
+                    ...(rule as RuleInfo),
+                    group_id: groupId,
+                }))
+            );
+            logging.info(
+                `Successfully added rules of group ${groupId} to local database.`
+            );
+        } catch (err) {
+            logging.error(
+                `Failed to fetch firewall rules for group ${groupId}: ${err}`
+            );
+            const message =
+                err instanceof Error ? err.message : "Unknown error";
+            toast.error(
+                t`Failed to fetch firewall rules for group ${groupId}: ${message}`
+            );
+            setRules((state) => {
+                delete state[groupId];
+            });
+        } finally {
+            setGroups((state) => {
+                state[groupId].refreshing = false;
+            });
+        }
+    }, []);
+    const handleDelete = useCallback(
+        async (groupId: string, ruleId: number | undefined) => {
+            if (!ruleId) {
+                logging.warn(`Delete rule operation failed: Rule ID is null`);
+                toast.error(t`Delete rule operation failed: Rule ID is null`);
                 return;
             }
-            logging.info(`Fetching rules for group ${id}.`);
-            setFirewall((state) => {
-                state.groups[id].refreshing = true;
-            });
-
-            const timeoutSignal = AbortSignal.timeout(timeout);
-            refreshRulesAPI(id, apiToken, fetchClient, timeoutSignal)
-                .then(async (res) => {
-                    return {
-                        status: res.status,
-                        statusText: res.statusText,
-                        data: await res.json(),
-                    };
-                })
-                .then((res) => {
-                    if (res.status < 400) {
-                        const {
-                            firewall_rules,
-                            meta,
-                        }: {
-                            firewall_rules: RuleInfo[];
-                            meta: RulesMeta;
-                        } = res.data;
-                        setFirewall((state) => {
-                            state.groups[id].meta = meta;
-                            state.groups[id].rules = firewall_rules.reduce(
-                                (acc, rule) => {
-                                    acc[rule.id] = {
-                                        ...rule,
-                                        deleting: false,
-                                    };
-                                    return acc;
-                                },
-                                {} as Record<number, RuleState>
-                            );
-                        });
-                        logging.info(
-                            `Successfully fetched ${meta.total} rules for group ${id}.`
-                        );
-                    } else if (res.status < 500)
-                        throw new Error(
-                            `${res.status} ${
-                                res.data.error ? res.data.error : res.statusText
-                            }`
-                        );
-                    else throw new Error(`${res.status} ${res.statusText}`);
-                })
-                .catch((err: Error) => {
-                    logging.error(
-                        `Failed to fetch firewall rules for group ${id}: ${
-                            timeoutSignal.aborted ? timeoutSignal.reason : err
-                        }`
-                    );
-                    const reason = timeoutSignal.aborted
-                        ? timeoutSignal.reason.message
-                        : err.message;
-                    toast.error(
-                        `Failed to fetch firewall rules for group ${id}: ${reason}`
-                    );
-                    setFirewall((state) => {
-                        state.groups[id].rules = {};
-                        state.groups[id].meta = null;
-                    });
-                })
-                .finally(() => {
-                    setFirewall((state) => {
-                        state.groups[id].refreshing = false;
-                    });
-                });
-        },
-        []
-    );
-    const deleteRule = useCallback(
-        async (
-            groupId: string,
-            ruleId: number,
-            apiToken: string,
-            fetchClient: typeof fetch,
-            timeout: number = 5000
-        ) => {
             logging.info(`Deleting the rule ${ruleId} in group ${groupId}.`);
-            setFirewall((state) => {
-                state.groups[groupId].rules[ruleId].deleting = true;
+            setRules((state) => {
+                state[groupId][ruleId].deleting = true;
             });
 
-            const timeoutSignal = AbortSignal.timeout(timeout);
+            await vultrAPI.firewall
+                .deleteRule({
+                    "firewall-group-id": groupId,
+                    "firewall-rule-id": ruleId.toString(),
+                })
+                .then(() =>
+                    logging.info(
+                        `Successfully deleted the rule ${ruleId} in group ${groupId} from Vultr API.`
+                    )
+                )
+                .then(() => db.rules.delete([groupId, ruleId]))
+                .then(() => {
+                    logging.info(
+                        `Successfully deleted the rule ${ruleId} in group ${groupId} from local database.`
+                    );
 
-            await deleteRuleAPI(
-                groupId,
-                ruleId,
-                apiToken,
-                fetchClient,
-                timeoutSignal
-            )
-                .then(async (res) => {
-                    if (!res.ok) {
-                        const data = await res.json();
-                        throw new Error(
-                            `${res.status} ${data.error ? data.error : res.statusText}`
-                        );
-                    }
-                    setFirewall((state) => {
-                        delete state.groups[groupId].rules[ruleId];
+                    setRules((state) => {
+                        delete state[groupId][ruleId];
+                    });
+                    setGroups((state) => {
+                        state[groupId].group.rule_count -= 1;
                     });
                     logging.info(
                         `Successfully deleted the rule ${ruleId} in group ${groupId}.`
@@ -351,103 +322,79 @@ function Rules() {
                 })
                 .catch((err: Error) => {
                     logging.error(
-                        `Failed to delete firewall rule ${ruleId} in group ${groupId}: ${
-                            timeoutSignal.aborted ? timeoutSignal.reason : err
-                        }`
+                        `Failed to delete the rule ${ruleId} in group ${groupId}: ${err}`
                     );
-                    const reason = timeoutSignal.aborted
-                        ? timeoutSignal.reason.message
-                        : err.message;
-                    toast.error(
-                        t`Failed to delete the firewall rule: ${reason}`
-                    );
-                })
-                .finally(() => {
-                    setFirewall((state) => {
-                        if (state.groups[groupId].rules[ruleId]) {
-                            state.groups[groupId].rules[ruleId].deleting =
-                                false;
+                    const message = err.message;
+                    toast.error(t`Failed to delete the rule: ${message}`);
+                    setRules((state) => {
+                        if (state[groupId] && state[groupId][ruleId]) {
+                            state[groupId][ruleId].deleting = false;
                         }
                     });
                 });
         },
         []
     );
-    const createRule = useCallback(
-        (
-            groupId: string,
-            newRule: CreateRule,
-            apiToken: string,
-            fetchClient: typeof fetch,
-            timeout: number = 5000
-        ) => {
-            logging.info(
-                `Creating a new rule ${JSON.stringify(
-                    newRule
-                )} in group ${groupId}.`
-            );
-            setFirewall((state) => {
-                state.groups[groupId].newRule[newRule.ip_type].creating = true;
-            });
-
-            const timeoutSignal = AbortSignal.timeout(timeout);
-            createRuleAPI(
-                groupId,
-                newRule,
-                apiToken,
-                fetchClient,
-                timeoutSignal
-            )
-                .then(async (res) => {
-                    const data = await res.json();
-                    if (!res.ok) {
-                        throw new Error(
-                            `${res.status} ${
-                                data.error ? data.error : res.statusText
-                            }`
-                        );
-                    }
-
-                    const rule = data.firewall_rule as RuleInfo;
-                    setFirewall((state) => {
-                        state.groups[groupId].rules[rule.id] = {
-                            ...rule,
-                            deleting: false,
-                        };
-                        state.groups[groupId].newRule[newRule.ip_type] =
-                            newRule.ip_type === IPVersion.V4
-                                ? initialNewRuleIPv4
-                                : initialNewRuleIPv6;
-                    });
-
-                    logging.info(
-                        `Successfully created the rule ${JSON.stringify(
-                            data
-                        )} in group ${groupId}.`
-                    );
-                    toast.success(t`Successfully created the rule.`);
-                })
-                .catch((err: Error) => {
-                    logging.error(
-                        `Failed to create the rule ${JSON.stringify(
-                            newRule
-                        )} in group ${groupId}: ${
-                            timeoutSignal.aborted ? timeoutSignal.reason : err
-                        }`
-                    );
-
-                    const reason = timeoutSignal.aborted
-                        ? timeoutSignal.reason.message
-                        : err.message;
-                    toast.error(t`Failed to create the rule: ${reason}`);
-                })
-                .finally(() => {
-                    setFirewall((state) => {
-                        state.groups[groupId].newRule[
-                            newRule.ip_type
-                        ].creating = false;
-                    });
+    const handleCreate = useCallback(
+        async (groupId: string, newRule: CreateRule) => {
+            try {
+                logging.info(
+                    `Creating a new rule ${JSON.stringify(
+                        newRule
+                    )} in group ${groupId}.`
+                );
+                setGroups((state) => {
+                    state[groupId].newRule[newRule.ip_type].creating = true;
                 });
+                const { firewall_rule: rule } =
+                    await vultrAPI.firewall.createRule({
+                        "firewall-group-id": groupId,
+                        ...newRule,
+                    });
+                logging.info(
+                    `Successfully created the rule ${rule.id} in group ${groupId}`
+                );
+                await db.rules.add({
+                    ...(rule as RuleInfo),
+                    group_id: groupId,
+                });
+                logging.info(
+                    `Successfully added the new rule to local database.`
+                );
+                setRules((state) => {
+                    state[groupId][rule.id] = {
+                        rule: {
+                            ...newRule,
+                            id: rule.id,
+                            action: "accept",
+                        },
+                        deleting: false,
+                    };
+                });
+                setGroups((state) => {
+                    state[groupId].group.rule_count += 1;
+                    state[groupId].newRule[newRule.ip_type] =
+                        newRule.ip_type === IPVersion.V4
+                            ? initialNewRuleIPv4
+                            : initialNewRuleIPv6;
+                });
+                logging.info(
+                    `Successfully created the rule ${rule.id} in group ${groupId}.`
+                );
+                toast.success(t`Successfully created the rule.`);
+            } catch (err) {
+                logging.error(
+                    `Failed to create the rule ${JSON.stringify(
+                        newRule
+                    )} in group ${groupId}: ${err}`
+                );
+                const message =
+                    err instanceof Error ? err.message : "Unknown error";
+                toast.error(t`Failed to create the rule: ${message}`);
+                setGroups((state) => {
+                    state[groupId].newRule[newRule.ip_type].creating = false;
+                });
+            }
         },
         []
     );
@@ -456,38 +403,53 @@ function Rules() {
         selectedRule.current = rule;
         deleteModal.onOpen();
     }, []);
-    const onRuleCreate = useCallback(
-        (rule: NewRuleState) => {
-            const newRule = newRuleStateToCreateRule(rule);
-            createRule(group.id, newRule, apiToken, fetchClient);
-        },
-        [fetchClient, apiToken]
-    );
+    const onRuleCreate = useCallback((rule: NewRuleState) => {
+        const newRule = toCreateRule(rule);
+        handleCreate(group.id, newRule);
+    }, []);
     const onRuleChange = useCallback((rule: NewRuleState) => {
         setNewRule(group.id, rule);
     }, []);
 
-    if (!group) {
-        logging.warn(`Group with ID ${id} not found`);
-        toast.error(t`Group with ID ${id} not found`);
-        navigate({
-            to: "/",
-        });
-        return;
-    }
+    useEffect(() => {
+        if (shouldUpdateFromDB) {
+            const restoreRulesFromDB = async () => {
+                try {
+                    setGroups((state) => {
+                        state[groupId].refreshing = true;
+                    });
+                    const rules = await db.rules.toArray();
+                    setRules((state) => {
+                        state[groupId] = {};
+                        rules.forEach((rule) => {
+                            state[groupId][rule.id] = {
+                                rule,
+                                deleting: false,
+                            };
+                        });
+                        setGroups((state) => {
+                            state[groupId].shouldUpdateFromDB = false;
+                        });
+                    });
+                } catch (err) {
+                    logging.error(
+                        `Failed to fetch firewall rules from DB: ${err}`
+                    );
+                } finally {
+                    setGroups((state) => {
+                        state[groupId].refreshing = false;
+                    });
+                }
+            };
+            restoreRulesFromDB();
+        }
+    }, [shouldUpdateFromDB]);
 
     useEffect(() => {
-        if (!group.id) {
-            logging.warn(`Group with ID ${id} not found`);
-            toast.error(t`Group with ID ${id} not found`);
-            navigate({
-                to: "/",
-            });
-            return;
+        if (isRulesOutdated) {
+            handleRefresh(groupId);
         }
-        if (group.id && group.meta === undefined)
-            refresh(group.id, apiToken, fetchClient);
-    }, [group, fetchClient, apiToken]);
+    }, [isRulesOutdated]);
 
     return (
         <div className="flex flex-col px-8 pb-4 gap-4 items-center select-none">
@@ -499,7 +461,7 @@ function Rules() {
                     <span>
                         <Trans>Group ID: </Trans>
                     </span>
-                    <span className="font-bold font-mono">{id}</span>
+                    <span className="font-bold font-mono">{groupId}</span>
                 </div>
                 <div className="text-xs md:text-sm">
                     <span>
@@ -602,11 +564,9 @@ function Rules() {
                     <Tab key="IPv4" title="IPv4">
                         <RulesTable
                             ipVersion={IPVersion.V4}
-                            rules={Object.values(rules).filter(
-                                (rule) => rule.ip_type === IPVersion.V4
-                            )}
-                            newRule={group.newRule[IPVersion.V4]}
-                            refreshing={group.refreshing}
+                            rules={ipv4Rules}
+                            newRule={groupState.newRule[IPVersion.V4]}
+                            refreshing={refreshing}
                             onRuleDelete={onRuleDelete}
                             onRuleCreate={onRuleCreate}
                             onRuleChange={onRuleChange}
@@ -615,11 +575,9 @@ function Rules() {
                     <Tab key="IPv6" title="IPv6">
                         <RulesTable
                             ipVersion={IPVersion.V6}
-                            rules={Object.values(rules).filter(
-                                (rule) => rule.ip_type === IPVersion.V6
-                            )}
-                            newRule={group.newRule[IPVersion.V6]}
-                            refreshing={group.refreshing}
+                            rules={ipv6Rules}
+                            newRule={groupState.newRule[IPVersion.V6]}
+                            refreshing={refreshing}
                             onRuleDelete={onRuleDelete}
                             onRuleCreate={onRuleCreate}
                             onRuleChange={onRuleChange}
@@ -628,36 +586,14 @@ function Rules() {
                 </Tabs>
                 <DeleteModal
                     modal={deleteModal}
-                    rule={selectedRule.current!}
-                    onClose={() => {
-                        deleteTimeoutId.current = setTimeout(() => {
-                            selectedRule.current = null;
-                        }, 1500);
-                        deleteModal.onClose();
-                    }}
-                    onConfirm={(onClose) => {
-                        if (!selectedRule.current) {
-                            logging.warn(
-                                `Delete rule operation failed: Rule ID is null`
-                            );
-                            toast.error(
-                                t`Delete rule operation failed: Rule ID is null`
-                            );
-                            return;
-                        }
-                        selectedRule.current.deleting = true;
-                        deleteRule(
-                            group.id,
-                            selectedRule.current.id,
-                            apiToken,
-                            fetchClient
-                        ).finally(() => onClose());
-                    }}
+                    ruleState={selectedRule.current}
+                    onClose={handleModalClose}
+                    onConfirm={handleModalConfirm}
                 />
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
-                    onPress={() => refresh(id, apiToken, fetchClient)}
+                    onPress={() => handleRefresh(groupId)}
                     isLoading={refreshing}
                 >
                     <Trans>Refresh</Trans>

@@ -2,15 +2,15 @@ import { Input } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
-import { Environment, environmentAtom } from "@/store/environment";
+import { Platform, platformAtom } from "@/store/environment";
+import { proxyAddressAtom } from "@/store/proxy";
 import { screenSizeAtom } from "@/store/screen";
-import { proxyAddressAtom } from "@/store/settings";
 
 import { Section, SectionBody } from "./Section";
 
 export default function ProxySection() {
-    const environment = useAtomValue(environmentAtom);
-    if (environment === Environment.WEB) return null;
+    const platform = useAtomValue(platformAtom);
+    if (platform === Platform.WEB) return null;
 
     const screenSize = useAtomValue(screenSizeAtom);
 

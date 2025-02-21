@@ -13,98 +13,102 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/Firewall/Group/Group.tsx:40
-msgid "Edit"
-msgstr "Edit"
+#: src/components/Firewall/Group/GroupTable.tsx:107
+msgid "Failed to fetch firewall groups: request timed out"
+msgstr "Failed to fetch firewall groups: request timed out"
 
-#: src/components/Firewall/Group/Group.tsx:61
-#: src/components/IPEndpointsTable.tsx:162
-msgid "Delete"
-msgstr "Delete"
+#: src/components/Firewall/Group/GroupTable.tsx:116
+#: src/components/Firewall/Group/GroupTable.tsx:135
+msgid "Failed to fetch firewall groups: unknown error"
+msgstr "Failed to fetch firewall groups: unknown error"
 
-#: src/components/Firewall/Group/GroupTable.tsx:130
-msgid "Failed to fetch firewall groups: {reason}"
-msgstr "Failed to fetch firewall groups: {reason}"
+#: src/components/Firewall/Group/GroupTable.tsx:121
+msgid "Failed to fetch firewall groups: network error"
+msgstr "Failed to fetch firewall groups: network error"
 
-#: src/components/Firewall/Group/GroupTable.tsx:169
-msgid "Successfully deleted group with ID {id}"
-msgstr "Successfully deleted group with ID {id}"
+#: src/components/Firewall/Group/GroupTable.tsx:128
+msgid "Failed to fetch firewall groups"
+msgstr "Failed to fetch firewall groups"
 
-#: src/components/Firewall/Group/GroupTable.tsx:182
+#: src/components/Firewall/Group/GroupTable.tsx:171
+msgid "Successfully deleted group with ID {groupId}"
+msgstr "Successfully deleted group with ID {groupId}"
+
+#: src/components/Firewall/Group/GroupTable.tsx:176
 msgid "Failed to delete group: {message}"
 msgstr "Failed to delete group: {message}"
 
-#: src/components/Firewall/Group/GroupTable.tsx:200
+#: src/components/Firewall/Group/GroupTable.tsx:230
 msgid "Firewall Groups"
 msgstr "Firewall Groups"
 
-#: src/components/Firewall/Group/GroupTable.tsx:233
+#: src/components/Firewall/Group/GroupTable.tsx:263
 msgid "ID"
 msgstr "ID"
 
-#: src/components/Firewall/Group/GroupTable.tsx:234
-#: src/routes/groups/$id.tsx:548
+#: src/components/Firewall/Group/GroupTable.tsx:264
+#: src/routes/groups/$id.tsx:510
 msgid "Description"
 msgstr "Description"
 
-#: src/components/Firewall/Group/GroupTable.tsx:235
+#: src/components/Firewall/Group/GroupTable.tsx:265
 msgid "Date Created"
 msgstr "Date Created"
 
-#: src/components/Firewall/Group/GroupTable.tsx:236
+#: src/components/Firewall/Group/GroupTable.tsx:266
 msgid "Rules"
 msgstr "Rules"
 
-#: src/components/Firewall/Group/GroupTable.tsx:237
+#: src/components/Firewall/Group/GroupTable.tsx:267
 msgid "Instances"
 msgstr "Instances"
 
-#: src/components/Firewall/Group/GroupTable.tsx:238
-#: src/components/MyIPTable.tsx:167
+#: src/components/Firewall/Group/GroupTable.tsx:268
+#: src/components/MyIPTable.tsx:168
 msgid "Action"
 msgstr "Action"
 
-#: src/components/Firewall/Group/GroupTable.tsx:279
+#: src/components/Firewall/Group/GroupTable.tsx:302
 msgid "Delete Firewall Group"
 msgstr "Delete Firewall Group"
 
-#: src/components/Firewall/Group/GroupTable.tsx:283
+#: src/components/Firewall/Group/GroupTable.tsx:306
 msgid "Are you sure you want to delete this firewall group?"
 msgstr "Are you sure you want to delete this firewall group?"
 
-#: src/components/Firewall/Group/GroupTable.tsx:291
+#: src/components/Firewall/Group/GroupTable.tsx:314
 msgid "ID: "
 msgstr "ID: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:299
+#: src/components/Firewall/Group/GroupTable.tsx:322
 msgid "Description: "
 msgstr "Description: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:309
+#: src/components/Firewall/Group/GroupTable.tsx:332
 msgid "Date Created: "
 msgstr "Date Created: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:322
+#: src/components/Firewall/Group/GroupTable.tsx:345
 msgid "Rules: "
 msgstr "Rules: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:332
+#: src/components/Firewall/Group/GroupTable.tsx:355
 msgid "Instances: "
 msgstr "Instances: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:363
-#: src/routes/groups/$id.tsx:180
+#: src/components/Firewall/Group/GroupTable.tsx:367
+#: src/routes/groups/$id.tsx:165
 msgid "Confirm"
 msgstr "Confirm"
 
-#: src/components/Firewall/Group/GroupTable.tsx:370
-#: src/routes/groups/$id.tsx:187
+#: src/components/Firewall/Group/GroupTable.tsx:374
+#: src/routes/groups/$id.tsx:168
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/Firewall/Group/GroupTable.tsx:383
-#: src/components/MyIPTable.tsx:233
-#: src/routes/groups/$id.tsx:663
+#: src/components/Firewall/Group/GroupTable.tsx:385
+#: src/components/MyIPTable.tsx:234
+#: src/routes/groups/$id.tsx:599
 msgid "Refresh"
 msgstr "Refresh"
 
@@ -138,18 +142,6 @@ msgstr "Enter note here"
 msgid "Add Rule"
 msgstr "Add Rule"
 
-#: src/components/Firewall/Rules/Rule.tsx:73
-msgid "anywhere"
-msgstr "anywhere"
-
-#: src/components/Firewall/Rules/Rule.tsx:74
-msgid "custom"
-msgstr "custom"
-
-#: src/components/Firewall/Rules/Rule.tsx:125
-msgid "Delete Rule"
-msgstr "Delete Rule"
-
 #: src/components/Firewall/Rules/RulesTable.tsx:66
 msgid "Protocol"
 msgstr "Protocol"
@@ -171,86 +163,110 @@ msgid "Notes"
 msgstr "Notes"
 
 #: src/components/Firewall/Rules/RulesTable.tsx:71
-#: src/components/IPEndpointsTable.tsx:106
+#: src/components/IPEndpointsTable.tsx:169
 msgid "Actions"
 msgstr "Actions"
 
-#: src/components/IPEndpointsTable.tsx:56
+#: src/components/IPEndpointsTable.tsx:58
+msgid "Failed to reset {version} endpoints: {message}"
+msgstr "Failed to reset {version} endpoints: {message}"
+
+#: src/components/IPEndpointsTable.tsx:66
 msgid "Endpoint URL cannot be empty"
 msgstr "Endpoint URL cannot be empty"
 
-#: src/components/IPEndpointsTable.tsx:61
+#: src/components/IPEndpointsTable.tsx:71
 msgid "Endpoint URL already exists"
 msgstr "Endpoint URL already exists"
 
-#: src/components/IPEndpointsTable.tsx:82
-#: src/components/IPEndpointsTable.tsx:91
+#: src/components/IPEndpointsTable.tsx:84
+msgid "Failed to add endpoint URL: {message}"
+msgstr "Failed to add endpoint URL: {message}"
+
+#: src/components/IPEndpointsTable.tsx:101
+msgid "Failed to delete the endpoint {endpoint}: {message}"
+msgstr "Failed to delete the endpoint {endpoint}: {message}"
+
+#: src/components/IPEndpointsTable.tsx:135
+msgid "Failed to restore {version} endpoints: {message}"
+msgstr "Failed to restore {version} endpoints: {message}"
+
+#: src/components/IPEndpointsTable.tsx:145
+#: src/components/IPEndpointsTable.tsx:154
 msgid "IPv4 Endpoints"
 msgstr "IPv4 Endpoints"
 
-#: src/components/IPEndpointsTable.tsx:84
-#: src/components/IPEndpointsTable.tsx:92
+#: src/components/IPEndpointsTable.tsx:147
+#: src/components/IPEndpointsTable.tsx:155
 msgid "IPv6 Endpoints"
 msgstr "IPv6 Endpoints"
 
-#: src/components/IPEndpointsTable.tsx:103
+#: src/components/IPEndpointsTable.tsx:166
 msgid "URL"
 msgstr "URL"
 
-#: src/components/IPEndpointsTable.tsx:113
+#: src/components/IPEndpointsTable.tsx:176
 msgid "Enter endpoint URL here"
 msgstr "Enter endpoint URL here"
 
-#: src/components/IPEndpointsTable.tsx:130
+#: src/components/IPEndpointsTable.tsx:193
 msgid "Add endpoint"
 msgstr "Add endpoint"
 
-#: src/components/IPEndpointsTable.tsx:196
+#: src/components/IPEndpointsTable.tsx:221
+msgid "Delete"
+msgstr "Delete"
+
+#: src/components/IPEndpointsTable.tsx:252
 msgid "Reset"
 msgstr "Reset"
 
-#: src/components/MyIPTable.tsx:69
+#: src/components/MyIPTable.tsx:59
 msgid "No {version} endpoint is set."
 msgstr "No {version} endpoint is set."
 
-#: src/components/MyIPTable.tsx:72
+#: src/components/MyIPTable.tsx:62
 msgid "Please add at least one {version} endpoint."
 msgstr "Please add at least one {version} endpoint."
 
-#: src/components/MyIPTable.tsx:84
+#: src/components/MyIPTable.tsx:74
 msgid "Proxy address is not set."
 msgstr "Proxy address is not set."
 
-#: src/components/MyIPTable.tsx:87
+#: src/components/MyIPTable.tsx:77
 msgid "Please set it in settings before using a proxy."
 msgstr "Please set it in settings before using a proxy."
 
-#: src/components/MyIPTable.tsx:121
-msgid "Failed to fetch {version} address."
-msgstr "Failed to fetch {version} address."
+#: src/components/MyIPTable.tsx:108
+msgid "Failed to fetch {version} address: All requests to endpoints failed."
+msgstr "Failed to fetch {version} address: All requests to endpoints failed."
 
-#: src/components/MyIPTable.tsx:130
+#: src/components/MyIPTable.tsx:113
+msgid "Failed to fetch {version} address: unknown error"
+msgstr "Failed to fetch {version} address: unknown error"
+
+#: src/components/MyIPTable.tsx:123
 msgid "Copied to clipboard"
 msgstr "Copied to clipboard"
 
-#: src/components/MyIPTable.tsx:141
+#: src/components/MyIPTable.tsx:138
 msgid "Failed to copy to clipboard"
 msgstr "Failed to copy to clipboard"
 
-#: src/components/MyIPTable.tsx:148
+#: src/components/MyIPTable.tsx:149
 msgid "My Public IP Addresses"
 msgstr "My Public IP Addresses"
 
-#: src/components/MyIPTable.tsx:161
+#: src/components/MyIPTable.tsx:162
 msgid "Version"
 msgstr "Version"
 
-#: src/components/MyIPTable.tsx:164
+#: src/components/MyIPTable.tsx:165
 #: src/components/Settings/ProxySection.tsx:26
 msgid "Address"
 msgstr "Address"
 
-#: src/components/MyIPTable.tsx:204
+#: src/components/MyIPTable.tsx:205
 msgid "Copy"
 msgstr "Copy"
 
@@ -301,119 +317,118 @@ msgstr "API Token"
 msgid "Enter token here"
 msgstr "Enter token here"
 
-#: src/routes/groups/$id.tsx:57
+#: src/routes/groups/$id.tsx:51
 msgid "Just now"
 msgstr "Just now"
 
-#: src/routes/groups/$id.tsx:61
+#: src/routes/groups/$id.tsx:55
 msgid "{minutes, plural, one {# minute ago} other {# minutes ago}}"
 msgstr "{minutes, plural, one {# minute ago} other {# minutes ago}}"
 
-#: src/routes/groups/$id.tsx:66
+#: src/routes/groups/$id.tsx:60
 msgid "{hours, plural, one {# hour ago} other {# hours ago}}"
 msgstr "{hours, plural, one {# hour ago} other {# hours ago}}"
 
-#: src/routes/groups/$id.tsx:70
+#: src/routes/groups/$id.tsx:64
 msgid "{days, plural, one {# day ago} other {# days ago}}"
 msgstr "{days, plural, one {# day ago} other {# days ago}}"
 
-#: src/routes/groups/$id.tsx:74
+#: src/routes/groups/$id.tsx:68
 msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
 msgstr "{weeks, plural, one {# week ago} other {# weeks ago}}"
 
-#: src/routes/groups/$id.tsx:78
+#: src/routes/groups/$id.tsx:72
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {# month ago} other {# months ago}}"
 
-#: src/routes/groups/$id.tsx:81
+#: src/routes/groups/$id.tsx:75
 msgid "{years, plural, one {# year ago} other {# years ago}}"
 msgstr "{years, plural, one {# year ago} other {# years ago}}"
 
-#: src/routes/groups/$id.tsx:108
+#: src/routes/groups/$id.tsx:102
 msgid "Delete Firewall Rule"
 msgstr "Delete Firewall Rule"
 
-#: src/routes/groups/$id.tsx:112
+#: src/routes/groups/$id.tsx:106
 msgid "Are you sure you want to delete this rule?"
 msgstr "Are you sure you want to delete this rule?"
 
-#: src/routes/groups/$id.tsx:119
+#: src/routes/groups/$id.tsx:113
 msgid "IP Version: "
 msgstr "IP Version: "
 
-#: src/routes/groups/$id.tsx:129
+#: src/routes/groups/$id.tsx:123
 msgid "Protocol: "
 msgstr "Protocol: "
 
-#: src/routes/groups/$id.tsx:140
+#: src/routes/groups/$id.tsx:131
 msgid "Port: "
 msgstr "Port: "
 
-#: src/routes/groups/$id.tsx:148
+#: src/routes/groups/$id.tsx:137
 msgid "Source Type: "
 msgstr "Source Type: "
 
-#: src/routes/groups/$id.tsx:156
+#: src/routes/groups/$id.tsx:145
 msgid "Source Address: "
 msgstr "Source Address: "
 
-#: src/routes/groups/$id.tsx:164
+#: src/routes/groups/$id.tsx:153
 msgid "Notes: "
 msgstr "Notes: "
 
-#: src/routes/groups/$id.tsx:240
-msgid "Empty group ID"
-msgstr "Empty group ID"
+#: src/routes/groups/$id.tsx:190
+msgid "Group with ID {groupId} not found"
+msgstr "Group with ID {groupId} not found"
 
-#: src/routes/groups/$id.tsx:350
+#: src/routes/groups/$id.tsx:273
+msgid "Failed to fetch firewall rules for group {groupId}: {message}"
+msgstr "Failed to fetch firewall rules for group {groupId}: {message}"
+
+#: src/routes/groups/$id.tsx:288
+msgid "Delete rule operation failed: Rule ID is null"
+msgstr "Delete rule operation failed: Rule ID is null"
+
+#: src/routes/groups/$id.tsx:321
 msgid "Successfully deleted the rule."
 msgstr "Successfully deleted the rule."
 
-#: src/routes/groups/$id.tsx:362
-msgid "Failed to delete the firewall rule: {reason}"
-msgstr "Failed to delete the firewall rule: {reason}"
+#: src/routes/groups/$id.tsx:328
+msgid "Failed to delete the rule: {message}"
+msgstr "Failed to delete the rule: {message}"
 
-#: src/routes/groups/$id.tsx:428
+#: src/routes/groups/$id.tsx:384
 msgid "Successfully created the rule."
 msgstr "Successfully created the rule."
 
-#: src/routes/groups/$id.tsx:442
-msgid "Failed to create the rule: {reason}"
-msgstr "Failed to create the rule: {reason}"
+#: src/routes/groups/$id.tsx:393
+msgid "Failed to create the rule: {message}"
+msgstr "Failed to create the rule: {message}"
 
-#: src/routes/groups/$id.tsx:472
-#: src/routes/groups/$id.tsx:482
-msgid "Group with ID {id} not found"
-msgstr "Group with ID {id} not found"
-
-#: src/routes/groups/$id.tsx:495
+#: src/routes/groups/$id.tsx:457
 msgid "Edit Firewall Group"
 msgstr "Edit Firewall Group"
 
-#: src/routes/groups/$id.tsx:500
+#: src/routes/groups/$id.tsx:462
 msgid "Group ID: "
 msgstr "Group ID: "
 
-#: src/routes/groups/$id.tsx:506
+#: src/routes/groups/$id.tsx:468
 msgid "Created: "
 msgstr "Created: "
 
-#: src/routes/groups/$id.tsx:526
+#: src/routes/groups/$id.tsx:488
 msgid "Last Modified: "
 msgstr "Last Modified: "
 
-#: src/routes/groups/$id.tsx:554
+#: src/routes/groups/$id.tsx:516
 msgid "[Empty]"
 msgstr "[Empty]"
 
-#: src/routes/groups/$id.tsx:564
+#: src/routes/groups/$id.tsx:526
 msgid "Group Rules"
 msgstr "Group Rules"
 
-#: src/routes/groups/$id.tsx:578
+#: src/routes/groups/$id.tsx:540
 msgid "Linked Instances"
 msgstr "Linked Instances"
-
-#: src/routes/groups/$id.tsx:644
-msgid "Delete rule operation failed: Rule ID is null"
-msgstr "Delete rule operation failed: Rule ID is null"

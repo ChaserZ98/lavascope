@@ -12,13 +12,13 @@ import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import tauriNotify from "@/hooks/notification";
-import { Environment, environmentAtom } from "@/store/environment";
+import { Platform, platformAtom } from "@/store/environment";
 import logging from "@/utils/log";
 
 const mainWindowLabel = "main";
 
 export default function TauriTitleBar() {
-    const environment = useAtomValue(environmentAtom);
+    const platform = useAtomValue(platformAtom);
 
     const mainWindowRef = useRef<Window | null>(null);
     const unlistenCloseRef = useRef(() => {});
@@ -96,15 +96,11 @@ export default function TauriTitleBar() {
         const currentMode = import.meta.env.MODE;
         const isModeDev = currentMode === "development";
 
-        logging.info(`Current Platform: ${environment}`);
+        logging.info(`Current Platform: ${platform}`);
         logging.info(`User Agent: ${navigator.userAgent}`);
         logging.info(`Current Mode: ${currentMode}`);
 
-        if (
-            [Environment.IOS, Environment.ANDROID, Environment.WEB].includes(
-                environment
-            )
-        )
+        if ([Platform.IOS, Platform.ANDROID, Platform.WEB].includes(platform))
             return;
 
         Window.getByLabel(mainWindowLabel).then((window) => {
@@ -166,7 +162,7 @@ export default function TauriTitleBar() {
         };
     }, []);
 
-    if (environment !== Environment.WINDOWS) {
+    if (platform !== Platform.WINDOWS) {
         return <></>;
     }
 

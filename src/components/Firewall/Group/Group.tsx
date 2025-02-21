@@ -7,19 +7,20 @@ import { Link } from "@tanstack/react-router";
 import { GroupState } from "@/store/firewall/groups";
 
 interface GroupProps extends React.ComponentProps<"tr"> {
-    group: GroupState;
+    groupState: GroupState;
     refreshing: boolean;
     onGroupDelete: (id: string) => void;
+    t: ReturnType<typeof useLingui>["t"];
 }
 
 export default function Group(props: GroupProps) {
-    const group = props.group;
-    const loading = props.refreshing || group.deleting;
-
-    const { t } = useLingui();
+    const groupState = props.groupState;
+    const loading = props.refreshing || groupState.deleting;
+    const group = groupState.group;
+    const t = props.t;
 
     return (
-        <TableRow className={loading ? "animate-pulse" : ""}>
+        <TableRow className={loading ? "animate-pulse" : ""} key={props.key}>
             <TableCell>{group.id}</TableCell>
             <TableCell>{group.description}</TableCell>
             <TableCell>

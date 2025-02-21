@@ -1,17 +1,9 @@
 import { atom } from "jotai";
 import { atomFamily } from "jotai/utils";
+import { atomWithImmer } from "jotai-immer";
 
 import { Version as IPVersion } from "../ip";
-import { firewallAtom } from "./firewall";
-import {
-    initialNewRuleIPv4,
-    initialNewRuleIPv6,
-    NewRuleState,
-    RulesMeta,
-    RuleState,
-} from "./rules";
-
-const endpoint = new URL("https://api.vultr.com/v2/firewalls");
+import { initialNewRuleIPv4, initialNewRuleIPv6, NewRuleState } from "./rules";
 
 export type GroupInfo = {
     id: string;
@@ -33,63 +25,40 @@ const initialGroupInfo = {
     max_rule_count: 0,
 };
 
-export type GroupState = GroupInfo & {
+export type GroupState = {
+    group: GroupInfo;
     deleting: boolean;
     refreshing: boolean;
+    shouldUpdateFromDB: boolean;
+    isRulesOutdated: boolean;
     newRule: Record<IPVersion, NewRuleState>;
-    rules: Record<number, RuleState>;
-    meta: RulesMeta | undefined | null;
 };
 
 export const initialGroupState: GroupState = {
-    ...initialGroupInfo,
+    group: initialGroupInfo,
     deleting: false,
     refreshing: false,
+    shouldUpdateFromDB: true,
+    isRulesOutdated: false,
     newRule: {
         [IPVersion.V4]: initialNewRuleIPv4,
         [IPVersion.V6]: initialNewRuleIPv6,
     },
-    rules: {},
-    meta: undefined,
 };
 
-export type GroupsMeta = {
-    links: {
-        prev: string;
-        next: string;
-    };
-    total: number;
-};
-
-export const refreshGroupsAPI = (
-    apiToken: string,
-    fetchClient: typeof fetch,
-    timeoutSignal: AbortSignal
-) => {
-    return fetchClient(endpoint, {
-        method: "GET",
-        headers: { Authorization: `Bearer ${apiToken}` },
-        signal: timeoutSignal,
-    });
-};
-
-export const deleteGroupAPI = (
-    id: string,
-    apiToken: string,
-    fetchClient: typeof fetch,
-    timeoutSignal: AbortSignal
-) => {
-    return fetchClient(new URL(`${endpoint}/${id}`), {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${apiToken}`,
-        },
-        signal: timeoutSignal,
-    });
-};
-
-export const groupsAtom = atom((get) => get(firewallAtom).groups);
+export const groupsAtom = atomWithImmer<Record<string, GroupState>>({});
 
 export const groupAtom = atomFamily((id: string) =>
-    atom((get) => get(firewallAtom).groups[id])
+    atom((get) => get(groupsAtom)[id])
+);
+
+export const setNewRuleAtom = atom(
+    null,
+    (_get, set, groupId: string, rule: NewRuleState) => {
+        set(groupsAtom, (state) => {
+            if (state[groupId]) {
+                state[groupId].newRule[rule.ip_type] = rule;
+            }
+        });
+    }
 );

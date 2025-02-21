@@ -12,15 +12,16 @@ import {
 import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiPlus, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import { db } from "@/db";
 import {
     addIPEndpointAtom,
     deleteIPEndpointAtom,
-    ipv4EndpointsAtom,
-    ipv6EndpointsAtom,
+    ipv4EndpointStateAtom,
+    ipv6EndpointStateAtom,
     resetIPEndpointsAtom,
     Version,
 } from "@/store/ip";
@@ -31,9 +32,12 @@ interface IPEndpointsTableProps {
 }
 
 export default function IPEndpointsTable(props: IPEndpointsTableProps) {
-    const endpoints = useAtomValue(
-        props.version === Version.V4 ? ipv4EndpointsAtom : ipv6EndpointsAtom
+    const { version } = props;
+    const [endpointState, setEndpointState] = useAtom(
+        version === Version.V4 ? ipv4EndpointStateAtom : ipv6EndpointStateAtom
     );
+    const endpoints = endpointState.endpoints;
+    const shouldUpdateFromDB = endpointState.shouldUpdateFromDB;
 
     const resetEndpoints = useSetAtom(resetIPEndpointsAtom);
     const addEndpoint = useSetAtom(addIPEndpointAtom);
@@ -43,13 +47,19 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
 
     const { t } = useLingui();
 
-    const onReset = useCallback((version: Version) => {
-        logging.info(`Resetting ${version} endpoints`);
-        resetEndpoints(version);
-        logging.info(`Reset ${version} endpoints done`);
+    const onReset = useCallback(async (version: Version) => {
+        try {
+            await resetEndpoints(version);
+            logging.info(`Reset ${version} endpoints`);
+        } catch (err) {
+            logging.error(`Failed to reset ${version} endpoints: ${err}`);
+            const message =
+                err instanceof Error ? err.message : "unknown error";
+            toast.error(t`Failed to reset ${version} endpoints: ${message}`);
+        }
     }, []);
     const onAdd = useCallback(
-        (version: Version, endpoint: string, endpoints: string[]) => {
+        async (version: Version, endpoint: string, endpoints: string[]) => {
             const value = endpoint.trim();
             if (value === "") {
                 logging.warn(`Endpoint URL cannot be empty`);
@@ -61,24 +71,77 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                 toast.warn(t`Endpoint URL already exists`);
                 return;
             }
-
-            logging.info(`Adding ${value} to ${version} endpoints`);
-            addEndpoint(version, value);
-            logging.info(`Add ${value} to ${version} endpoints done`);
-            setNewEndpoint("");
+            try {
+                await addEndpoint(version, value);
+                setNewEndpoint("");
+                logging.info(`Added endpoint ${value} to ${version} endpoints`);
+            } catch (err) {
+                logging.error(
+                    `Failed to add ${value} to ${version} endpoints: ${err}`
+                );
+                const message =
+                    err instanceof Error ? err.message : "unknown error";
+                toast.error(t`Failed to add endpoint URL: ${message}`);
+            }
         },
         []
     );
-    const onDelete = useCallback((version: Version, endpoint: string) => {
+    const onDelete = useCallback(async (version: Version, endpoint: string) => {
         logging.info(`Deleting ${version} endpoint ${endpoint}`);
-        deleteEndpoints(version, endpoint);
-        logging.info(`Delete ${version} endpoint ${endpoint} done`);
+        try {
+            await deleteEndpoints(version, endpoint);
+            logging.info(`Deleted ${version} endpoint ${endpoint}.`);
+        } catch (err) {
+            logging.error(
+                `Failed to delete ${version} endpoint ${endpoint}: ${err}`
+            );
+            const message =
+                err instanceof Error ? err.message : "unknown error";
+            toast.error(
+                t`Failed to delete the endpoint ${endpoint}: ${message}`
+            );
+        }
     }, []);
+
+    useEffect(() => {
+        if (shouldUpdateFromDB) {
+            const update = async () => {
+                logging.info(`Restoring ${version} endpoints from DB`);
+                const count = await db.endpointFlag.count();
+                if (count === 0) {
+                    logging.info(`No ${version} endpoints found in DB`);
+                    await db.endpointFlag.clear();
+                    await db.endpoints.clear();
+                    await db.endpoints.bulkPut(
+                        endpoints.map((endpoint) => ({
+                            ip_type: version,
+                            endpoint,
+                        }))
+                    );
+                    await db.endpointFlag.put({ ip_type: version });
+                }
+                const dbEndpoints = await db.endpoints
+                    .where({ ip_type: version })
+                    .toArray();
+                setEndpointState((state) => {
+                    state.endpoints = dbEndpoints.map((e) => e.endpoint);
+                    state.shouldUpdateFromDB = false;
+                });
+            };
+            update().catch((err: Error) => {
+                logging.error(`Failed to restore ${version} endpoints: ${err}`);
+                const message = err.message;
+                toast.error(
+                    t`Failed to restore ${version} endpoints: ${message}`
+                );
+            });
+        }
+    }, [shouldUpdateFromDB]);
 
     return (
         <div className="flex flex-col px-8 py-4 gap-4 items-center select-none">
             <h2 className="text-lg font-bold text-foreground transition-colors-opacity sm:text-2xl">
-                {props.version === Version.V4 ? (
+                {version === Version.V4 ? (
                     <Trans>IPv4 Endpoints</Trans>
                 ) : (
                     <Trans>IPv6 Endpoints</Trans>
@@ -87,7 +150,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
             <Table
                 isKeyboardNavigationDisabled
                 aria-label={
-                    props.version === Version.V4
+                    version === Version.V4
                         ? t`IPv4 Endpoints`
                         : t`IPv6 Endpoints`
                 }
@@ -139,11 +202,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                                     isDisabled={newEndpoint.length === 0}
                                     className="text-default-400 transition-colors-opacity hover:text-primary-400"
                                     onPress={() =>
-                                        onAdd(
-                                            props.version,
-                                            newEndpoint,
-                                            endpoints
-                                        )
+                                        onAdd(version, newEndpoint, endpoints)
                                     }
                                 >
                                     <Icon path={mdiPlus} size={0.75} />
@@ -170,10 +229,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                                             color="danger"
                                             className="text-default-400 transition-colors-opacity hover:text-danger-400"
                                             onPress={() =>
-                                                onDelete(
-                                                    props.version,
-                                                    endpoint
-                                                )
+                                                onDelete(version, endpoint)
                                             }
                                         >
                                             <Icon
@@ -190,7 +246,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
             </Table>
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
-                    onPress={() => onReset(props.version)}
+                    onPress={() => onReset(version)}
                     className="bg-default hover:bg-default-100"
                 >
                     <Trans>Reset</Trans>

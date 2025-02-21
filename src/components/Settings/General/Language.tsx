@@ -18,9 +18,9 @@ export default function LanguageBlock() {
             disallowEmptySelection
             label={t`language`}
             selectedKeys={new Set([language])}
-            onSelectionChange={(keys) => {
-                changeLanguage(keys.currentKey as Locales);
-            }}
+            onSelectionChange={(keys) =>
+                changeLanguage(keys.currentKey as Locales)
+            }
             classNames={{
                 trigger: "px-4 transition-colors-opacity",
                 value: "transition-colors-opacity",

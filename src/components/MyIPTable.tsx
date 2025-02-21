@@ -15,6 +15,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
 
+import useClipboard from "@/hooks/clipboard";
 import useFetch from "@/hooks/fetch";
 import {
     ipv4Atom,
@@ -25,8 +26,7 @@ import {
     setIPAtom,
     Version as IPVersion,
 } from "@/store/ip";
-import { proxyAddressAtom, useProxyAtom } from "@/store/settings";
-import clipboard from "@/utils/clipboard";
+import { proxyAddressAtom, useProxyAtom } from "@/store/proxy";
 import logging from "@/utils/log";
 
 import ProxySwitch from "./ProxySwitch";
@@ -42,25 +42,15 @@ export default function MyIPTable() {
     const setIP = useSetAtom(setIPAtom);
 
     const { t } = useLingui();
+    const clipboard = useClipboard();
 
-    const fetchClient = useFetch(
-        useProxy
-            ? {
-                  proxy: {
-                      http: proxyAddress,
-                      https: proxyAddress,
-                  },
-              }
-            : undefined
-    );
+    const fetchClient = useFetch();
 
     const refresh = useCallback(
-        (
+        async (
             version: IPVersion,
             endpoints: string[],
-            fetchClient: typeof fetch,
-            useProxy: boolean,
-            proxyAddress: string
+            fetchClient: typeof fetch
         ) => {
             if (endpoints.length === 0) {
                 toast.error(
@@ -96,50 +86,61 @@ export default function MyIPTable() {
                 value: "",
                 refreshing: true,
             });
-            refreshAPI(version, endpoints, fetchClient)
-                .then((res) => {
-                    setIP(version, {
-                        value: res.ip,
-                        refreshing: false,
-                    });
-                    logging.info(
-                        `Fetched ${version} address ${res.ip} from ${res.endpoint}`
-                    );
-                })
-                .catch((err) => {
-                    setIP(version, {
-                        value: "",
-                        refreshing: false,
-                    });
-                    logging.error(
-                        `Failed to fetch ${version} address: ${
-                            err.name === "AggregateError"
-                                ? "All requests failed"
-                                : err
-                        }`
-                    );
-                    toast.error(t`Failed to fetch ${version} address.`);
+            try {
+                const res = await refreshAPI(version, endpoints, fetchClient);
+                setIP(version, {
+                    value: res.ip,
+                    refreshing: false,
                 });
+                logging.info(
+                    `Fetched ${version} address ${res.ip} from ${res.endpoint}`
+                );
+            } catch (err) {
+                setIP(version, {
+                    value: "",
+                    refreshing: false,
+                });
+                if (err instanceof AggregateError) {
+                    logging.error(
+                        `All requests failed: ${(err as AggregateError).errors}`
+                    );
+                    toast.error(
+                        t`Failed to fetch ${version} address: All requests to endpoints failed.`
+                    );
+                } else {
+                    logging.error(`Failed to fetch ${version} address: ${err}`);
+                    toast.error(
+                        t`Failed to fetch ${version} address: unknown error`
+                    );
+                }
+            }
         },
         []
     );
-    const copy = useCallback((ip: string) => {
-        clipboard
-            .writeText(ip)
-            .then(() =>
-                toast.success(t`Copied to clipboard`, {
-                    autoClose: 1000,
-                    hideProgressBar: true,
-                    pauseOnHover: false,
-                    pauseOnFocusLoss: false,
-                    closeOnClick: false,
-                    closeButton: false,
-                })
-            )
-            .catch((e) => {
-                logging.error(`Failed to copy to clipboard: ${e}`);
-                toast.error(t`Failed to copy to clipboard`);
+    const copy = useCallback(async (ip: string) => {
+        try {
+            await clipboard.writeText(ip);
+            toast.success(t`Copied to clipboard`, {
+                autoClose: 1000,
+                hideProgressBar: true,
+                pauseOnHover: false,
+                pauseOnFocusLoss: false,
+                closeOnClick: false,
+                closeButton: false,
             });
+        } catch (err) {
+            logging.error(`Failed to copy to clipboard: ${err}`);
+            const message =
+                err instanceof Error ? err.message : "Unknown error";
+            toast.error(
+                <>
+                    <p>
+                        <Trans>Failed to copy to clipboard</Trans>
+                    </p>
+                    <p>{message}</p>
+                </>
+            );
+        }
     }, []);
 
     return (
@@ -246,9 +247,7 @@ export default function MyIPTable() {
                                                     version === IPVersion.V4
                                                         ? ipv4Endpoints
                                                         : ipv6Endpoints,
-                                                    fetchClient,
-                                                    useProxy,
-                                                    proxyAddress
+                                                    fetchClient
                                                 )
                                             }
                                             disabled={

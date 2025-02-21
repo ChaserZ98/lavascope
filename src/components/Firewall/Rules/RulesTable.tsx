@@ -83,12 +83,13 @@ export default function RulesTable(props: RulesTableProps) {
                     onRuleChange: props.onRuleChange,
                 })}
                 <>
-                    {props.rules.map((rule, index) =>
+                    {props.rules.map((ruleState, index) =>
                         Rule({
                             key: index,
-                            rule,
+                            rule: ruleState.rule,
                             onDelete: props.onRuleDelete,
                             loading: props.refreshing,
+                            t,
                         })
                     )}
                 </>

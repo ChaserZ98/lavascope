@@ -1,15 +1,8 @@
 import { atom } from "jotai";
 import { atomFamily } from "jotai/utils";
+import { atomWithImmer } from "jotai-immer";
 
 import { Version as IPVersion } from "../ip";
-import { firewallAtom } from "./firewall";
-
-const endpoint = (groupId: string, ruleId?: number) =>
-    new URL(
-        `https://api.vultr.com/v2/firewalls/${groupId}/rules${
-            ruleId ? `/${ruleId}` : ""
-        }`
-    );
 
 export enum Protocol {
     ICMP = "icmp",
@@ -72,7 +65,8 @@ export type NewRuleState = {
     creating: boolean;
 };
 
-export type RuleState = RuleInfo & {
+export type RuleState = {
+    rule: RuleInfo;
     deleting: boolean;
 };
 
@@ -84,10 +78,7 @@ export type RulesMeta = {
     };
 };
 
-export function protocolPortToDisplayProtocol(
-    protocol: Protocol,
-    port: string
-): string {
+export function toProtocolDisplay(protocol: Protocol, port: string): string {
     if (port === "53") return "DNS";
     if (protocol === Protocol.TCP) {
         switch (port) {
@@ -118,7 +109,7 @@ export function protocolPortToDisplayProtocol(
     return protocol.toUpperCase();
 }
 
-function toRuleProtocol(protocol: ProtocolSelection): Protocol {
+function toProtocol(protocol: ProtocolSelection): Protocol {
     switch (protocol) {
         case "ssh":
             return Protocol.TCP;
@@ -143,10 +134,8 @@ function toRuleProtocol(protocol: ProtocolSelection): Protocol {
     }
 }
 
-export function newRuleStateToCreateRule(
-    newRuleState: NewRuleState
-): CreateRule {
-    const protocol = toRuleProtocol(newRuleState.protocol);
+export function toCreateRule(newRuleState: NewRuleState): CreateRule {
+    const protocol = toProtocol(newRuleState.protocol);
     let subnet = "";
     let subnet_size = 0;
     const source =
@@ -184,55 +173,6 @@ export function newRuleStateToCreateRule(
     };
 }
 
-export const deleteRuleAPI = (
-    groupId: string,
-    ruleId: number,
-    apiToken: string,
-    fetchClient: typeof fetch,
-    timeoutSignal: AbortSignal
-) => {
-    return fetchClient(endpoint(groupId, ruleId), {
-        method: "DELETE",
-        headers: {
-            Authorization: `Bearer ${apiToken}`,
-        },
-        signal: timeoutSignal,
-    });
-};
-
-export const createRuleAPI = (
-    groupId: string,
-    newRule: CreateRule,
-    apiToken: string,
-    fetchClient: typeof fetch,
-    timeoutSignal: AbortSignal
-) => {
-    return fetchClient(endpoint(groupId), {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${apiToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newRule),
-        signal: timeoutSignal,
-    });
-};
-
-export const refreshRulesAPI = (
-    id: string,
-    apiToken: string,
-    fetchClient: typeof fetch,
-    timeoutSignal: AbortSignal
-) => {
-    return fetchClient(endpoint(id), {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${apiToken}`,
-        },
-        signal: timeoutSignal,
-    });
-};
-
 export const initialNewRuleIPv4: NewRuleState = {
     ip_type: IPVersion.V4,
     protocol: "ssh",
@@ -253,18 +193,21 @@ export const initialNewRuleIPv6: NewRuleState = {
     creating: false,
 };
 
-export const rulesAtom = atomFamily((id: string) =>
-    atom((get) => get(firewallAtom).groups[id]?.rules)
-);
-export const refreshingAtom = atomFamily((id: string) =>
-    atom((get) => get(firewallAtom).groups[id]?.refreshing)
+export const rulesAtom = atomWithImmer<
+    Record<string, Record<number, RuleState>>
+>({});
+
+export const ruleAtom = atomFamily(
+    (param: { groupId: string; ruleId: number }) =>
+        atom((get) => {
+            return get(rulesAtom)[param.groupId]?.[param.ruleId];
+        })
 );
 
-export const setNewRuleAtom = atom(
-    null,
-    (_get, set, groupId: string, rule: NewRuleState) => {
-        set(firewallAtom, (state) => {
-            state.groups[groupId].newRule[rule.ip_type] = rule;
-        });
-    }
+export const refreshingAtom = atomFamily(
+    (param: { groupId: string; ruleId: number }) =>
+        atom((get) => {
+            const rule = get(rulesAtom)[param.groupId]?.[param.ruleId];
+            return rule?.deleting || false;
+        })
 );

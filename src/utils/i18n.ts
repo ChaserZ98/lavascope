@@ -21,13 +21,13 @@ export function toLocalString(locale: Locales): string {
     }
 }
 
-export function dynamicActivate(locale: string) {
-    import(`../locales/${locale}.po`)
-        .then(({ messages }) => {
-            i18n.load(locale, messages);
-            i18n.activate(locale);
-        })
-        .catch((error) => {
-            logging.error(`Failed to activate locale ${locale}: ${error}`);
-        });
+export async function dynamicActivate(locale: string) {
+    try {
+        const { messages } = await import(`../locales/${locale}.po`);
+        i18n.load(locale, messages);
+        i18n.activate(locale);
+        logging.info(`Activated locale ${locale}`);
+    } catch (error) {
+        logging.error(`Failed to activate locale ${locale}: ${error}`);
+    }
 }

@@ -11,35 +11,32 @@ import { mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 
 import {
-    protocolPortToDisplayProtocol,
     RuleInfo,
     RuleState,
     SourceType,
+    toProtocolDisplay,
 } from "@/store/firewall/rules";
 
 interface RuleProps extends React.ComponentProps<"tr"> {
     rule: RuleInfo;
     loading: boolean;
     onDelete: (rule: RuleState) => void;
+    t: ReturnType<typeof useLingui>["t"];
 }
 
 export default function Rule(props: RuleProps) {
     const rule = props.rule;
-
-    const { t } = useLingui();
+    const t = props.t;
 
     return (
-        <TableRow>
+        <TableRow key={props.key}>
             <TableCell>
                 <Input
                     isReadOnly
                     placeholder="Protocol"
                     aria-label="Protocol"
                     variant="faded"
-                    value={protocolPortToDisplayProtocol(
-                        rule.protocol,
-                        rule.port
-                    )}
+                    value={toProtocolDisplay(rule.protocol, rule.port)}
                     classNames={{
                         base: "min-w-[150px]",
                         inputWrapper: "transition-colors-opacity !duration-250",
@@ -135,15 +132,7 @@ export default function Rule(props: RuleProps) {
                             className="text-default-400 transition-colors-opacity hover:text-danger-400"
                             onPress={() =>
                                 props.onDelete({
-                                    id: rule.id,
-                                    ip_type: rule.ip_type,
-                                    action: rule.action,
-                                    protocol: rule.protocol,
-                                    port: rule.port,
-                                    source: rule.source,
-                                    subnet: rule.subnet,
-                                    subnet_size: rule.subnet_size,
-                                    notes: rule.notes,
+                                    rule,
                                     deleting: false,
                                 })
                             }

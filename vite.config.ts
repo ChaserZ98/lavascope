@@ -24,6 +24,7 @@ export default defineConfig(async () => ({
             "@svg": "/src/assets/svg",
             "@img": "/src/assets/img",
             "@locales": "/src/locales",
+            "@store": "/src/store",
         },
     },
 

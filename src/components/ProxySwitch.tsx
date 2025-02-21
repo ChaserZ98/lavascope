@@ -2,12 +2,12 @@ import { Switch } from "@heroui/react";
 import { Trans } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
-import { Environment, environmentAtom } from "@/store/environment";
-import { useProxyAtom } from "@/store/settings";
+import { Platform, platformAtom } from "@/store/environment";
+import { useProxyAtom } from "@/store/proxy";
 
 export default function ProxySwitch() {
-    const environment = useAtomValue(environmentAtom);
-    if (environment === Environment.WEB) return null;
+    const platform = useAtomValue(platformAtom);
+    if (platform === Platform.WEB) return null;
 
     const [useProxy, setUseProxy] = useAtom(useProxyAtom);
 

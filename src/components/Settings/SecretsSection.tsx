@@ -2,8 +2,8 @@ import { Input } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
+import { apiTokenAtom } from "@/store/firewall/firewall";
 import { screenSizeAtom } from "@/store/screen";
-import { apiTokenAtom } from "@/store/settings";
 
 import { Section, SectionBody } from "./Section";
 

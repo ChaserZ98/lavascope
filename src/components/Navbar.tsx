@@ -18,19 +18,19 @@ import { toggleThemeAtom } from "@/store/theme";
 
 export function BottomNavigation() {
     return (
-        <div className="flex bottom-0 right-0 border-t-1 border-divider w-full h-28 bg-content1 transition-colors-opacity md:hidden">
+        <div className="flex bottom-0 right-0 border-t-1 border-divider w-full h-16 bg-content1 transition-colors-opacity md:hidden">
             <HeroUILink
                 to="/groups"
                 color="foreground"
                 size="lg"
                 isBlock
                 as={Link}
-                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-medium"
+                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-sm text-foreground"
                 activeProps={{
                     className: "text-primary",
                 }}
             >
-                <Icon path={mdiWall} className="w-8" />
+                <Icon path={mdiWall} className="w-6 h-6" />
                 <p>
                     <Trans>Groups</Trans>
                 </p>
@@ -41,12 +41,12 @@ export function BottomNavigation() {
                 size="lg"
                 isBlock
                 as={Link}
-                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-medium text-foreground"
+                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-sm text-foreground"
                 activeProps={{
                     className: "text-primary",
                 }}
             >
-                <Icon path={mdiIpOutline} className="w-8" />
+                <Icon path={mdiIpOutline} className="w-6 h-6" />
                 <p>
                     <Trans>My IP</Trans>
                 </p>
@@ -55,7 +55,7 @@ export function BottomNavigation() {
     );
 }
 
-export default function Navigation() {
+export function Navigation() {
     const location = useLocation();
 
     const toggleTheme = useSetAtom(toggleThemeAtom);

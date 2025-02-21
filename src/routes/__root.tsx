@@ -16,9 +16,9 @@ import { ToastContainer } from "react-toastify";
 
 import JotaiDevTools from "@/components/Dev/JotaiDevTools";
 import TanStackRouterDevtools from "@/components/Dev/TanStackRouterDevTools";
-import Navbar, { BottomNavigation } from "@/components/Navbar";
+import { BottomNavigation, Navigation } from "@/components/Navbar";
 import TauriTitleBar from "@/components/TauriTitleBar";
-import { environmentAtom } from "@/store/environment";
+import { platformAtom } from "@/store/environment";
 import { languageAtom } from "@/store/language";
 import { addScreenSizeListener, screenSizeAtom } from "@/store/screen";
 import checkCompatibility from "@/utils/compatibility";
@@ -38,14 +38,14 @@ declare module "@react-types/shared" {
 function App() {
     const router = useRouter();
 
-    const environment = useAtomValue(environmentAtom);
+    const platform = useAtomValue(platformAtom);
     const language = useAtomValue(languageAtom);
 
     const setScreenSize = useSetAtom(screenSizeAtom);
 
     useEffect(() => {
         dynamicActivate(language);
-        checkCompatibility(environment);
+        checkCompatibility(platform);
         const removeScreenSizeListener = addScreenSizeListener(setScreenSize);
         return () => removeScreenSizeListener();
     }, []);
@@ -59,7 +59,7 @@ function App() {
                 <div className="flex flex-col w-full h-screen">
                     <div className="w-full sticky top-0">
                         <TauriTitleBar />
-                        <Navbar />
+                        <Navigation />
                     </div>
                     <div className="flex-1 pt-4 overflow-auto ">
                         <Outlet />

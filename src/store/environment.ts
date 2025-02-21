@@ -1,7 +1,7 @@
 import { type } from "@tauri-apps/plugin-os";
 import { atom } from "jotai";
 
-export enum Environment {
+export enum Platform {
     LINUX = "linux",
     MACOS = "macos",
     WINDOWS = "windows",
@@ -10,8 +10,8 @@ export enum Environment {
     WEB = "web",
 }
 
-export const environmentAtom = atom(
-    !("__TAURI_INTERNALS__" in window)
-        ? Environment.WEB
-        : (type() as Environment)
+export const isTauriAtom = atom("__TAURI_INTERNALS__" in window);
+
+export const platformAtom = atom((get) =>
+    get(isTauriAtom) ? (type() as Platform) : Platform.WEB
 );
