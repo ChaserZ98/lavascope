@@ -11,20 +11,20 @@ import { mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 
 import {
-    RuleInfo,
+    Rule,
     RuleState,
     SourceType,
     toProtocolDisplay,
-} from "@/store/firewall/rules";
+} from "@/store/firewall";
 
 interface RuleProps extends React.ComponentProps<"tr"> {
-    rule: RuleInfo;
+    rule: Rule;
     loading: boolean;
     onDelete: (rule: RuleState) => void;
     t: ReturnType<typeof useLingui>["t"];
 }
 
-export default function Rule(props: RuleProps) {
+export default function RuleComponent(props: RuleProps) {
     const rule = props.rule;
     const t = props.t;
 

@@ -4,7 +4,7 @@ import { mdiPencil, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link } from "@tanstack/react-router";
 
-import { GroupState } from "@/store/firewall/groups";
+import { GroupState } from "@/store/firewall";
 
 interface GroupProps extends React.ComponentProps<"tr"> {
     groupState: GroupState;

@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { useDeferredValue, useMemo } from "react";
 
 import { VultrAPI } from "@/lib/vultr";
-import { apiTokenAtom } from "@/store/firewall/firewall";
+import { apiTokenAtom } from "@/store/firewall";
 
 import useFetch from "./fetch";
 

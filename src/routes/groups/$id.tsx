@@ -15,6 +15,7 @@ import { Plural, Trans, useLingui } from "@lingui/react/macro";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Dexie from "dexie";
 import { useAtomValue, useSetAtom } from "jotai";
+import { selectAtom } from "jotai/utils";
 import { useCallback, useEffect, useRef } from "react";
 import { toast } from "react-toastify";
 
@@ -22,18 +23,19 @@ import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import ProxySwitch from "@/components/ProxySwitch";
 import { db } from "@/db";
 import { useVultrAPI } from "@/hooks/vultr";
-import { groupAtom, groupsAtom, setNewRuleAtom } from "@/store/firewall/groups";
 import {
     CreateRule,
+    groupsAtom,
     initialNewRuleIPv4,
     initialNewRuleIPv6,
     NewRuleState,
-    RuleInfo,
+    Rule,
     rulesAtom,
     RuleState,
+    setNewRuleAtom,
     toCreateRule,
     toProtocolDisplay,
-} from "@/store/firewall/rules";
+} from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 import { languageAtom } from "@/store/language";
 import { Screen, screenSizeAtom } from "@/store/screen";
@@ -181,7 +183,12 @@ function Rules() {
     const { t } = useLingui();
 
     const screenSize = useAtomValue(screenSizeAtom);
-    const groupState = useAtomValue(groupAtom(groupId));
+    const groupState = useAtomValue(
+        selectAtom(
+            groupsAtom,
+            useCallback((groups) => groups[groupId], [])
+        )
+    );
     const rules = useAtomValue(rulesAtom)[groupId];
     const language = useAtomValue(languageAtom);
 
@@ -249,14 +256,14 @@ function Rules() {
                 state[groupId] = {};
                 rules.forEach((rule) => {
                     state[groupId][rule.id] = {
-                        rule: rule as RuleInfo,
+                        rule: rule as Rule,
                         deleting: false,
                     };
                 });
             });
             await db.rules.bulkPut(
                 rules.map((rule) => ({
-                    ...(rule as RuleInfo),
+                    ...(rule as Rule),
                     group_id: groupId,
                 }))
             );
@@ -355,7 +362,7 @@ function Rules() {
                     `Successfully created the rule ${rule.id} in group ${groupId}`
                 );
                 await db.rules.add({
-                    ...(rule as RuleInfo),
+                    ...(rule as Rule),
                     group_id: groupId,
                 });
                 logging.info(

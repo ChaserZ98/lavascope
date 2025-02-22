@@ -19,7 +19,7 @@ import {
     Protocol,
     ProtocolSelection,
     SourceType,
-} from "@/store/firewall/rules";
+} from "@/store/firewall";
 import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@/store/ip";
 
 export const protocols = [

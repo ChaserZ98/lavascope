@@ -23,18 +23,19 @@ import { useVultrAPI } from "@/hooks/vultr";
 import { VultrAPI } from "@/lib/vultr";
 import {
     firewallAtom,
-    refreshingAtom,
+    groupsAtom,
+    groupTableRefreshingAtom,
+    initialNewRuleIPv4,
+    initialNewRuleIPv6,
     shouldUpdateFromDBAtom,
-} from "@/store/firewall/firewall";
-import { groupsAtom } from "@/store/firewall/groups";
-import { initialNewRuleIPv4, initialNewRuleIPv6 } from "@/store/firewall/rules";
+} from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 import logging from "@/utils/log";
 
 import Group from "./Group";
 
 export default function GroupTable() {
-    const refreshing = useAtomValue(refreshingAtom);
+    const refreshing = useAtomValue(groupTableRefreshingAtom);
     const shouldUpdateFromDB = useAtomValue(shouldUpdateFromDBAtom);
 
     const [groups, setGroups] = useAtom(groupsAtom);

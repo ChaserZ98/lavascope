@@ -1,82 +1,15 @@
-import { atom } from "jotai";
-import { atomFamily } from "jotai/utils";
 import { atomWithImmer } from "jotai-immer";
 
-import { Version as IPVersion } from "../ip";
+import { Version as IPVersion } from "@/store/ip";
 
-export enum Protocol {
-    ICMP = "icmp",
-    TCP = "tcp",
-    UDP = "udp",
-    GRE = "gre",
-    ESP = "esp",
-    AH = "ah",
-}
-
-export type ProtocolSelection =
-    | "ssh"
-    | "http"
-    | "https"
-    | "http3"
-    | "mysql"
-    | "postgresql"
-    | "dns-udp"
-    | "dns-tcp"
-    | "ms-rdp"
-    | Protocol;
-
-export enum SourceType {
-    MY_IP = "my ip",
-    CUSTOM = "custom",
-    ANYWHERE = "anywhere",
-    CLOUDFLARE = "cloudflare",
-    LOAD_BALANCER = "load balancer",
-}
-
-export type RuleInfo = {
-    id: number;
-    ip_type: IPVersion;
-    action: "accept" | "drop";
-    protocol: Protocol;
-    port: string;
-    subnet: string;
-    subnet_size: number;
-    source: "" | "cloudflare" | string;
-    notes: string;
-};
-
-export type CreateRule = {
-    ip_type: IPVersion;
-    protocol: Protocol;
-    port: string;
-    subnet: string;
-    subnet_size: number;
-    source: "" | "cloudflare" | string;
-    notes: string;
-};
-
-export type NewRuleState = {
-    ip_type: IPVersion;
-    protocol: ProtocolSelection;
-    port: string;
-    sourceType: SourceType;
-    source: string;
-    notes: string;
-    creating: boolean;
-};
-
-export type RuleState = {
-    rule: RuleInfo;
-    deleting: boolean;
-};
-
-export type RulesMeta = {
-    total: number;
-    links: {
-        prev: string;
-        next: string;
-    };
-};
+import {
+    CreateRule,
+    NewRuleState,
+    Protocol,
+    ProtocolSelection,
+    RuleState,
+    SourceType,
+} from "./types";
 
 export function toProtocolDisplay(protocol: Protocol, port: string): string {
     if (port === "53") return "DNS";
@@ -196,18 +129,3 @@ export const initialNewRuleIPv6: NewRuleState = {
 export const rulesAtom = atomWithImmer<
     Record<string, Record<number, RuleState>>
 >({});
-
-export const ruleAtom = atomFamily(
-    (param: { groupId: string; ruleId: number }) =>
-        atom((get) => {
-            return get(rulesAtom)[param.groupId]?.[param.ruleId];
-        })
-);
-
-export const refreshingAtom = atomFamily(
-    (param: { groupId: string; ruleId: number }) =>
-        atom((get) => {
-            const rule = get(rulesAtom)[param.groupId]?.[param.ruleId];
-            return rule?.deleting || false;
-        })
-);

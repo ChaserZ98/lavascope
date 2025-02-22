@@ -8,7 +8,7 @@ import {
 import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 
-import { NewRuleState, RuleState } from "@/store/firewall/rules";
+import { NewRuleState, RuleState } from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 
 import NewRule from "./NewRule";

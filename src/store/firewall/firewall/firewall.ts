@@ -2,10 +2,7 @@ import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { atomWithImmer } from "jotai-immer";
 
-export type FirewallState = {
-    shouldUpdateFromDB: boolean;
-    refreshing: boolean;
-};
+import { FirewallState } from "./types";
 
 export const firewallAtom = atomWithImmer<FirewallState>({
     shouldUpdateFromDB: true,
@@ -16,7 +13,9 @@ export const apiTokenAtom = atomWithStorage("apiToken", "", undefined, {
     getOnInit: true,
 });
 
-export const refreshingAtom = atom((get) => get(firewallAtom).refreshing);
+export const groupTableRefreshingAtom = atom(
+    (get) => get(firewallAtom).refreshing
+);
 
 export const shouldUpdateFromDBAtom = atom(
     (get) => get(firewallAtom).shouldUpdateFromDB

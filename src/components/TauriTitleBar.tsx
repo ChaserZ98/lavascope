@@ -1,5 +1,6 @@
 import { Image } from "@heroui/react";
 import appIcon from "@img/app-icon.png";
+import { useLingui } from "@lingui/react/macro";
 import {
     mdiWindowClose,
     mdiWindowMaximize,
@@ -23,70 +24,85 @@ export default function TauriTitleBar() {
     const mainWindowRef = useRef<Window | null>(null);
     const unlistenCloseRef = useRef(() => {});
     const unlistenResizeRef = useRef<Partial<Record<string, () => void>>>({});
-    const isFirstClosed = useRef(true);
+    const isFirstClosed = useRef<boolean>(true);
 
     const [isMaximized, setIsMaximized] = useState(false);
 
+    const { t } = useLingui();
+
     const onWindowDrag = useCallback(
-        (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        async (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
             if (e.buttons !== 1) return;
 
             e.preventDefault();
-            const currentWindow = getCurrentWindow();
-            if (e.detail === 2) {
-                currentWindow
-                    .toggleMaximize()
-                    .then(() => getCurrentWindow().isMaximized())
-                    .then((maximize) => setIsMaximized(maximize))
-                    .catch((err) => logging.error(`${err}`));
-            } else {
-                currentWindow
-                    .startDragging()
-                    .catch((err) => logging.error(`${err}$`));
+            try {
+                const currentWindow = getCurrentWindow();
+                if (e.detail === 1) {
+                    // Single click -> start dragging
+                    await currentWindow.startDragging();
+                    return;
+                }
+                // Double click or click more than twice -> toggle window maximize
+                await currentWindow.toggleMaximize();
+                const isMaximize = await getCurrentWindow().isMaximized();
+                setIsMaximized(isMaximize);
+            } catch (err) {
+                if (e.detail === 1)
+                    logging.error(`Error while dragging window: ${err}`);
+                else
+                    logging.error(
+                        `Error while toggling window maximize: ${err}`
+                    );
             }
         },
         []
     );
     const onWindowMinimize = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             e.preventDefault();
             e.stopPropagation();
-            getCurrentWindow()
-                .minimize()
-                .catch((err) => logging.error(`${err}`));
+            try {
+                await getCurrentWindow().minimize();
+            } catch (err) {
+                logging.error(`Error while minimizing window: ${err}`);
+            }
         },
         []
     );
     const onWindowMaximize = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             e.preventDefault();
             e.stopPropagation();
 
-            const currentWindow = getCurrentWindow();
-            currentWindow
-                .toggleMaximize()
-                .then(() => currentWindow.isMaximized())
-                .then((maximize) => setIsMaximized(maximize))
-                .catch((err) => logging.error(`${err}`));
+            try {
+                const currentWindow = getCurrentWindow();
+                await currentWindow.toggleMaximize();
+                const isMaximize = await currentWindow.isMaximized();
+                setIsMaximized(isMaximize);
+            } catch (err) {
+                logging.error(`Error while maximizing window: ${err}`);
+            }
         },
         []
     );
     const onWindowClose = useCallback(
-        (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
             e.preventDefault();
             e.stopPropagation();
-
-            const window = getCurrentWindow();
-            if (window.label === mainWindowLabel) {
-                window.hide().then(async () => {
-                    if (!isFirstClosed.current) return;
-                    await tauriNotify(
-                        "The application is still running in the background."
-                    );
-                    isFirstClosed.current = false;
-                });
-            } else {
-                window.close().catch((err) => logging.error(`${err}`));
+            try {
+                const window = getCurrentWindow();
+                if (window.label !== mainWindowLabel) {
+                    await window.close();
+                    return;
+                }
+                await window.hide();
+                if (!isFirstClosed.current) return;
+                await tauriNotify(
+                    t`The application is still running in the background.`
+                );
+                isFirstClosed.current = false;
+            } catch (err) {
+                logging.error(`Error while closing window: ${err}`);
             }
         },
         []
@@ -103,36 +119,36 @@ export default function TauriTitleBar() {
         if ([Platform.IOS, Platform.ANDROID, Platform.WEB].includes(platform))
             return;
 
-        Window.getByLabel(mainWindowLabel).then((window) => {
+        const setInitialMaximizeState = async () => {
+            const currentWindow = getCurrentWindow();
+            const isMaximized = await currentWindow.isMaximized();
+            setIsMaximized(isMaximized);
+        };
+        const addMainWindowOnCloseListener = async () => {
+            const window = await Window.getByLabel(mainWindowLabel);
             mainWindowRef.current = window;
-            window
-                ?.onCloseRequested(async (event) => {
-                    event.preventDefault();
-                    await window.hide();
-                    if (isFirstClosed.current) {
-                        await tauriNotify(
-                            "The application is still running in the background."
-                        );
-                        isFirstClosed.current = false;
+            if (window) {
+                unlistenCloseRef.current = await window.onCloseRequested(
+                    async (event) => {
+                        event.preventDefault();
+                        await window.hide();
+                        if (isFirstClosed.current) {
+                            await tauriNotify(
+                                "The application is still running in the background."
+                            );
+                            isFirstClosed.current = false;
+                        }
                     }
-                })
-                .then((unlisten) => {
-                    unlistenCloseRef.current = unlisten;
-                });
-        });
-
-        const currentWindow = getCurrentWindow();
-
-        currentWindow
-            .isMaximized()
-            .then((isMaximized) => setIsMaximized(isMaximized));
-        currentWindow
-            .onResized(async () => {
-                setIsMaximized(await currentWindow.isMaximized());
-            })
-            .then((unlisten) => {
-                unlistenResizeRef.current[currentWindow.label] = unlisten;
-            });
+                );
+            }
+        };
+        const addWindowResizeListener = async () => {
+            const currentWindow = getCurrentWindow();
+            unlistenResizeRef.current[currentWindow.label] =
+                await currentWindow.onResized(async () =>
+                    setIsMaximized(await currentWindow.isMaximized())
+                );
+        };
 
         const preventContextMenu = isModeDev
             ? () => {}
@@ -145,8 +161,34 @@ export default function TauriTitleBar() {
                       e.preventDefault();
               };
 
-        document.addEventListener("contextmenu", preventContextMenu);
-        document.addEventListener("keydown", preventRefreshKey);
+        const initialTasks = async () => {
+            document.addEventListener("contextmenu", preventContextMenu);
+            document.addEventListener("keydown", preventRefreshKey);
+            try {
+                await addMainWindowOnCloseListener();
+            } catch (err) {
+                logging.error(
+                    `Error while adding main window close listener: ${err}`
+                );
+            }
+            try {
+                await setInitialMaximizeState();
+            } catch (err) {
+                logging.error(
+                    `Error while setting initial maximize state: ${err}`
+                );
+            }
+            try {
+                await addWindowResizeListener();
+            } catch (err) {
+                logging.error(
+                    `Error while adding window resize listener: ${err}`
+                );
+            }
+        };
+
+        const currentWindow = getCurrentWindow();
+        initialTasks();
 
         return () => {
             unlistenCloseRef.current();

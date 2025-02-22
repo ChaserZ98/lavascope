@@ -1,13 +1,12 @@
 import Dexie, { Table } from "dexie";
 
-import { GroupInfo } from "./store/firewall/groups";
-import { RuleInfo } from "./store/firewall/rules";
+import { Group, Rule } from "./store/firewall";
 import { Version as IPVersion } from "./store/ip";
 
 const db = new Dexie("vfw") as Dexie & {
-    groups: Table<GroupInfo, string>;
+    groups: Table<Group, string>;
     rules: Table<
-        RuleInfo & {
+        Rule & {
             group_id: string;
         },
         [string, number]
