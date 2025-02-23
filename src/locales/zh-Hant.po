@@ -262,7 +262,7 @@ msgid "Version"
 msgstr "版本"
 
 #: src/components/MyIPTable.tsx:165
-#: src/components/Settings/ProxySection.tsx:26
+#: src/components/Settings/ProxySection.tsx:27
 msgid "Address"
 msgstr "地址"
 
@@ -293,15 +293,19 @@ msgstr "代理"
 msgid "Dev Panel"
 msgstr "開發者面板"
 
-#: src/components/Settings/General/GeneralSection.tsx:10
+#: src/components/Settings/General/AutoStartBlock.tsx:58
+msgid "Launch at startup"
+msgstr "開機自動啟動"
+
+#: src/components/Settings/General/GeneralSection.tsx:11
 msgid "General"
 msgstr "通用"
 
-#: src/components/Settings/General/Language.tsx:19
+#: src/components/Settings/General/Language.tsx:22
 msgid "language"
 msgstr "語言"
 
-#: src/components/Settings/ProxySection.tsx:28
+#: src/components/Settings/ProxySection.tsx:29
 msgid "Enter http proxy address"
 msgstr "輸入HTTP代理地址"
 
@@ -309,11 +313,11 @@ msgstr "輸入HTTP代理地址"
 msgid "Secrets"
 msgstr "隱私"
 
-#: src/components/Settings/SecretsSection.tsx:22
+#: src/components/Settings/SecretsSection.tsx:23
 msgid "API Token"
 msgstr "API令牌"
 
-#: src/components/Settings/SecretsSection.tsx:24
+#: src/components/Settings/SecretsSection.tsx:25
 msgid "Enter token here"
 msgstr "輸入令牌"
 

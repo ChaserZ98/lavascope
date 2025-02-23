@@ -6,7 +6,7 @@ import { Platform, platformAtom } from "@/store/environment";
 import { proxyAddressAtom } from "@/store/proxy";
 import { screenSizeAtom } from "@/store/screen";
 
-import { Section, SectionBody } from "./Section";
+import { Section, SectionBlock, SectionBody } from "./Section";
 
 export default function ProxySection() {
     const platform = useAtomValue(platformAtom);
@@ -21,18 +21,20 @@ export default function ProxySection() {
     return (
         <Section header={t`Proxy`}>
             <SectionBody>
-                <Input
-                    type="text"
-                    label={t`Address`}
-                    size={screenSize === "sm" ? "sm" : "md"}
-                    placeholder={t`Enter http proxy address`}
-                    value={proxyAddress}
-                    onChange={(e) => setProxyAddress(e.target.value)}
-                    classNames={{
-                        input: "!text-default-500 focus:!text-foreground transition-colors-opacity",
-                        inputWrapper: "px-4",
-                    }}
-                />
+                <SectionBlock>
+                    <Input
+                        type="text"
+                        label={t`Address`}
+                        size={screenSize === "sm" ? "sm" : "md"}
+                        placeholder={t`Enter http proxy address`}
+                        value={proxyAddress}
+                        onChange={(e) => setProxyAddress(e.target.value)}
+                        classNames={{
+                            input: "!text-default-500 focus:!text-foreground transition-colors-opacity",
+                            inputWrapper: "px-4",
+                        }}
+                    />
+                </SectionBlock>
             </SectionBody>
         </Section>
     );

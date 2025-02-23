@@ -51,3 +51,14 @@ export const SectionBody: React.FC<React.ComponentProps<"div">> = (props) => {
         </div>
     );
 };
+
+export const SectionBlock: React.FC<React.ComponentProps<"div">> = (props) => {
+    const blockClassName =
+        props.className ??
+        "flex flex-col overflow-hidden w-full border-b-1 border-default transition-colors first:rounded-t-large last:rounded-b-large last:border-b-0";
+    return (
+        <div {...props} className={blockClassName}>
+            {props.children}
+        </div>
+    );
+};

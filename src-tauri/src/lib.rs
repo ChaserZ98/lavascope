@@ -30,7 +30,11 @@ pub fn run() {
             let handle = app.handle();
             let _ = create_tray(handle)?;
             Ok(())
-        })
+        });
+        builder = builder.plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            None,
+        ))
     }
 
     builder

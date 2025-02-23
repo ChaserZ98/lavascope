@@ -1,6 +1,7 @@
 import { useLingui } from "@lingui/react/macro";
 
 import { Section, SectionBody } from "../Section";
+import AutoStartBlock from "./AutoStartBlock";
 import LanguageBlock from "./Language";
 
 export default function GeneralSection() {
@@ -10,6 +11,7 @@ export default function GeneralSection() {
         <Section header={t`General`}>
             <SectionBody>
                 <LanguageBlock />
+                <AutoStartBlock />
             </SectionBody>
         </Section>
     );

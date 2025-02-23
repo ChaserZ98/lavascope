@@ -262,7 +262,7 @@ msgid "Version"
 msgstr "Version"
 
 #: src/components/MyIPTable.tsx:165
-#: src/components/Settings/ProxySection.tsx:26
+#: src/components/Settings/ProxySection.tsx:27
 msgid "Address"
 msgstr "Address"
 
@@ -293,15 +293,19 @@ msgstr "Proxy"
 msgid "Dev Panel"
 msgstr "Dev Panel"
 
-#: src/components/Settings/General/GeneralSection.tsx:10
+#: src/components/Settings/General/AutoStartBlock.tsx:58
+msgid "Launch at startup"
+msgstr "Launch at startup"
+
+#: src/components/Settings/General/GeneralSection.tsx:11
 msgid "General"
 msgstr "General"
 
-#: src/components/Settings/General/Language.tsx:19
+#: src/components/Settings/General/Language.tsx:22
 msgid "language"
 msgstr "language"
 
-#: src/components/Settings/ProxySection.tsx:28
+#: src/components/Settings/ProxySection.tsx:29
 msgid "Enter http proxy address"
 msgstr "Enter http proxy address"
 
@@ -309,11 +313,11 @@ msgstr "Enter http proxy address"
 msgid "Secrets"
 msgstr "Secrets"
 
-#: src/components/Settings/SecretsSection.tsx:22
+#: src/components/Settings/SecretsSection.tsx:23
 msgid "API Token"
 msgstr "API Token"
 
-#: src/components/Settings/SecretsSection.tsx:24
+#: src/components/Settings/SecretsSection.tsx:25
 msgid "Enter token here"
 msgstr "Enter token here"
 
