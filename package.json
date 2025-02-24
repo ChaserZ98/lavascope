@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "tsc && vite build",
+        "build": "tsr generate && tsc && vite build",
         "preview": "vite preview",
         "tauri": "tauri",
         "generate-routes": "tsr generate",
