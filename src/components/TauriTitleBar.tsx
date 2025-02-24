@@ -134,7 +134,7 @@ export default function TauriTitleBar() {
                         await window.hide();
                         if (isFirstClosed.current) {
                             await tauriNotify(
-                                "The application is still running in the background."
+                                t`The application is still running in the background.`
                             );
                             isFirstClosed.current = false;
                         }
