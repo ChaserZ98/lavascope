@@ -18,14 +18,14 @@ import { toggleThemeAtom } from "@/store/theme";
 
 export function BottomNavigation() {
     return (
-        <div className="flex bottom-0 right-0 border-t-1 border-divider w-full h-16 bg-content1 transition-colors-opacity md:hidden">
+        <div className="fixed flex bottom-0 left-0 border-t-1 border-divider w-full pb-[env(safe-area-inset-bottom)] h-[calc(4rem+env(safe-area-inset-bottom))] bg-content1 transition-colors-opacity md:hidden">
             <HeroUILink
                 to="/groups"
                 color="foreground"
                 size="lg"
                 isBlock
                 as={Link}
-                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-sm text-foreground"
+                className="flex flex-col justify-center items-center py-2 w-1/2 h-full transition-colors-opacity text-sm text-foreground"
                 activeProps={{
                     className: "text-primary",
                 }}
@@ -41,7 +41,7 @@ export function BottomNavigation() {
                 size="lg"
                 isBlock
                 as={Link}
-                className="flex flex-col justify-center items-center w-1/2 h-full transition-colors-opacity text-sm text-foreground"
+                className="flex flex-col justify-center items-center py-2 w-1/2 h-full transition-colors-opacity text-sm text-foreground"
                 activeProps={{
                     className: "text-primary",
                 }}
@@ -67,7 +67,7 @@ export function Navigation() {
         <Navbar
             shouldHideOnScroll
             classNames={{
-                base: "border-b-1 border-divider select-none transition-colors-opacity",
+                base: "pt-[env(safe-area-inset-top)] border-b-1 border-divider select-none transition-colors-opacity",
             }}
         >
             <NavbarBrand className="text-foreground">
@@ -126,7 +126,7 @@ export function Navigation() {
                         <Button
                             isIconOnly
                             onPress={() => toggleTheme()}
-                            className="p-0.5 min-w-8 w-8 h-8 sm:p-1 sm:min-w-10 sm:w-10 sm:h-10 text-default-foreground"
+                            className="p-0.5 min-w-9 w-9 h-9 sm:p-1 sm:min-w-10 sm:w-10 sm:h-10 text-default-foreground"
                         >
                             <Icon path={mdiThemeLightDark} className="w-full" />
                         </Button>
@@ -148,7 +148,7 @@ export function Navigation() {
                             to="/settings"
                             isIconOnly
                             as={Link}
-                            className="p-0.5 min-w-[32px] w-[32px] h-[32px] sm:p-1 sm:min-w-10 sm:w-10 sm:h-10 text-default-foreground"
+                            className="p-0.5 min-w-9 w-9 h-9 sm:p-1 sm:min-w-10 sm:w-10 sm:h-10 text-default-foreground"
                         >
                             <Icon
                                 path={mdiCog}

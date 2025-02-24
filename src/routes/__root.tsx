@@ -56,7 +56,7 @@ function App() {
                 navigate={(to, options) => router.navigate({ to, ...options })}
                 useHref={(to) => router.buildLocation({ to }).href}
             >
-                <div className="flex flex-col w-full h-screen">
+                <div className="flex flex-col pb-[calc(4rem+env(safe-area-inset-bottom))] w-full h-screen md:pb-0">
                     <div className="w-full sticky top-0">
                         <TauriTitleBar />
                         <Navigation />
