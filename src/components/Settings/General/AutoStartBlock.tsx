@@ -13,7 +13,8 @@ const autoStartAtom = atom(false);
 
 export default function AutoStartBlock() {
     const platform = useAtomValue(platformAtom);
-    if (platform === Platform.WEB) return null;
+    if ([Platform.WEB, Platform.IOS, Platform.ANDROID].includes(platform))
+        return null;
 
     const [autoStart, setAutoStart] = useAtom(autoStartAtom);
 
