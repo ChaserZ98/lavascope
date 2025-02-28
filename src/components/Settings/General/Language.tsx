@@ -1,16 +1,26 @@
 import { Select, SelectItem } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
+import { useCallback } from "react";
 
-import { changeLanguageAtom, languageAtom } from "@/store/language";
-import { Locales, toLocalString } from "@/utils/i18n";
+import { Platform, platformAtom } from "@/store/environment";
+import { languageAtom } from "@/store/language";
+import { dynamicActivate, Locale, toLocalString } from "@/utils/i18n";
 
 import { SectionBlock } from "../Section";
 
 export default function LanguageBlock() {
-    const language = useAtomValue(languageAtom);
+    const [language, setLanguage] = useAtom(languageAtom);
+    const platform = useAtomValue(platformAtom);
 
-    const changeLanguage = useSetAtom(changeLanguageAtom);
+    const handleLanguageChange = useCallback(
+        async (locale: Locale, platform: Platform) => {
+            await dynamicActivate(locale, platform);
+            localStorage.setItem("language", locale);
+            setLanguage(locale);
+        },
+        [platform]
+    );
 
     const { t } = useLingui();
 
@@ -22,7 +32,7 @@ export default function LanguageBlock() {
                 label={t`language`}
                 selectedKeys={new Set([language])}
                 onSelectionChange={(keys) =>
-                    changeLanguage(keys.currentKey as Locales)
+                    handleLanguageChange(keys.currentKey as Locale, platform)
                 }
                 classNames={{
                     trigger: "px-4 rounded-none transition-colors-opacity",
@@ -30,7 +40,7 @@ export default function LanguageBlock() {
                     popoverContent: "transition-colors-opacity",
                 }}
             >
-                {Object.values(Locales).map((locale) => (
+                {Object.values(Locale).map((locale) => (
                     <SelectItem key={locale}>
                         {toLocalString(locale)}
                     </SelectItem>

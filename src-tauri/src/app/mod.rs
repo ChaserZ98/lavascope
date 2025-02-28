@@ -1,5 +1,5 @@
-pub mod api;
-pub mod logging;
+pub mod commands;
+pub mod translator;
 pub mod window;
 
 #[cfg(desktop)]

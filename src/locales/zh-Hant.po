@@ -47,7 +47,7 @@ msgid "ID"
 msgstr "ID"
 
 #: src/components/Firewall/Group/GroupTable.tsx:265
-#: src/routes/groups/$id.tsx:517
+#: src/routes/_app/groups/$id.tsx:492
 msgid "Description"
 msgstr "描述"
 
@@ -97,18 +97,18 @@ msgid "Instances: "
 msgstr "實例: "
 
 #: src/components/Firewall/Group/GroupTable.tsx:368
-#: src/routes/groups/$id.tsx:167
+#: src/routes/_app/groups/$id.tsx:159
 msgid "Confirm"
 msgstr "確定"
 
 #: src/components/Firewall/Group/GroupTable.tsx:375
-#: src/routes/groups/$id.tsx:170
+#: src/routes/_app/groups/$id.tsx:162
 msgid "Cancel"
 msgstr "取消"
 
 #: src/components/Firewall/Group/GroupTable.tsx:386
 #: src/components/MyIPTable.tsx:234
-#: src/routes/groups/$id.tsx:606
+#: src/routes/_app/groups/$id.tsx:573
 msgid "Refresh"
 msgstr "刷新"
 
@@ -280,7 +280,7 @@ msgid "Theme"
 msgstr "主題"
 
 #: src/components/Navbar.tsx:140
-#: src/routes/settings.tsx:20
+#: src/routes/_app/settings.tsx:20
 msgid "Settings"
 msgstr "設置"
 
@@ -293,7 +293,7 @@ msgstr "代理"
 msgid "Dev Panel"
 msgstr "開發者面板"
 
-#: src/components/Settings/General/AutoStartBlock.tsx:58
+#: src/components/Settings/General/AutoStartBlock.tsx:59
 msgid "Launch at startup"
 msgstr "開機自動啟動"
 
@@ -301,7 +301,7 @@ msgstr "開機自動啟動"
 msgid "General"
 msgstr "通用"
 
-#: src/components/Settings/General/Language.tsx:22
+#: src/components/Settings/General/Language.tsx:32
 msgid "language"
 msgstr "語言"
 
@@ -322,121 +322,122 @@ msgid "Enter token here"
 msgstr "輸入令牌"
 
 #: src/components/TauriTitleBar.tsx:101
+#: src/components/TauriTitleBar.tsx:137
 msgid "The application is still running in the background."
 msgstr "應用程式仍會在後台運行."
 
-#: src/routes/groups/$id.tsx:53
+#: src/routes/_app/groups/$id.tsx:53
 msgid "Just now"
 msgstr "剛剛"
 
-#: src/routes/groups/$id.tsx:57
+#: src/routes/_app/groups/$id.tsx:56
 msgid "{minutes, plural, one {# minute ago} other {# minutes ago}}"
 msgstr "{minutes, plural, one {#分鐘前} other {#分鐘前}}"
 
-#: src/routes/groups/$id.tsx:62
+#: src/routes/_app/groups/$id.tsx:60
 msgid "{hours, plural, one {# hour ago} other {# hours ago}}"
 msgstr "{hours, plural, one {#小時前} other {#小時前}}"
 
-#: src/routes/groups/$id.tsx:66
+#: src/routes/_app/groups/$id.tsx:64
 msgid "{days, plural, one {# day ago} other {# days ago}}"
 msgstr "{days, plural, one {#天前} other {#天前}}"
 
-#: src/routes/groups/$id.tsx:70
+#: src/routes/_app/groups/$id.tsx:68
 msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
 msgstr "{weeks, plural, one {#周前} other {#周前}}"
 
-#: src/routes/groups/$id.tsx:74
+#: src/routes/_app/groups/$id.tsx:72
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {#個月前} other {#個月前}}"
 
-#: src/routes/groups/$id.tsx:77
+#: src/routes/_app/groups/$id.tsx:75
 msgid "{years, plural, one {# year ago} other {# years ago}}"
 msgstr "{years, plural, one {#年前} other {#年前}}"
 
-#: src/routes/groups/$id.tsx:104
+#: src/routes/_app/groups/$id.tsx:102
 msgid "Delete Firewall Rule"
 msgstr "刪除安全組規則"
 
-#: src/routes/groups/$id.tsx:108
+#: src/routes/_app/groups/$id.tsx:106
 msgid "Are you sure you want to delete this rule?"
 msgstr "你確定要刪除這條規則嗎?"
 
-#: src/routes/groups/$id.tsx:115
+#: src/routes/_app/groups/$id.tsx:111
 msgid "IP Version: "
 msgstr "IP版本: "
 
-#: src/routes/groups/$id.tsx:125
+#: src/routes/_app/groups/$id.tsx:119
 msgid "Protocol: "
 msgstr "協議: "
 
-#: src/routes/groups/$id.tsx:133
+#: src/routes/_app/groups/$id.tsx:127
 msgid "Port: "
 msgstr "端口: "
 
-#: src/routes/groups/$id.tsx:139
+#: src/routes/_app/groups/$id.tsx:133
 msgid "Source Type: "
 msgstr "源類型: "
 
-#: src/routes/groups/$id.tsx:147
+#: src/routes/_app/groups/$id.tsx:139
 msgid "Source Address: "
 msgstr "源地址: "
 
-#: src/routes/groups/$id.tsx:155
+#: src/routes/_app/groups/$id.tsx:147
 msgid "Notes: "
 msgstr "注釋: "
 
-#: src/routes/groups/$id.tsx:197
+#: src/routes/_app/groups/$id.tsx:189
 msgid "Group with ID {groupId} not found"
 msgstr "未找到ID為{groupId}的安全組"
 
-#: src/routes/groups/$id.tsx:280
+#: src/routes/_app/groups/$id.tsx:269
 msgid "Failed to fetch firewall rules for group {groupId}: {message}"
 msgstr "獲取ID為{groupId}的安全組的規則失敗: {message}"
 
-#: src/routes/groups/$id.tsx:295
+#: src/routes/_app/groups/$id.tsx:284
 msgid "Delete rule operation failed: Rule ID is null"
 msgstr "刪除安全組失敗: 規則ID為空"
 
-#: src/routes/groups/$id.tsx:328
+#: src/routes/_app/groups/$id.tsx:317
 msgid "Successfully deleted the rule."
 msgstr "成功刪除安全組規則."
 
-#: src/routes/groups/$id.tsx:335
+#: src/routes/_app/groups/$id.tsx:324
 msgid "Failed to delete the rule: {message}"
 msgstr "刪除安全組規則失敗: {message}"
 
-#: src/routes/groups/$id.tsx:391
+#: src/routes/_app/groups/$id.tsx:375
 msgid "Successfully created the rule."
 msgstr "成功創建安全組規則."
 
-#: src/routes/groups/$id.tsx:400
+#: src/routes/_app/groups/$id.tsx:383
 msgid "Failed to create the rule: {message}"
 msgstr "創建安全組規則失敗: {message}"
 
-#: src/routes/groups/$id.tsx:464
+#: src/routes/_app/groups/$id.tsx:445
 msgid "Edit Firewall Group"
 msgstr "編輯防火墻安全組"
 
-#: src/routes/groups/$id.tsx:469
+#: src/routes/_app/groups/$id.tsx:450
 msgid "Group ID: "
 msgstr "安全組ID: "
 
-#: src/routes/groups/$id.tsx:475
+#: src/routes/_app/groups/$id.tsx:456
 msgid "Created: "
 msgstr "創建日期: "
 
-#: src/routes/groups/$id.tsx:495
+#: src/routes/_app/groups/$id.tsx:473
 msgid "Last Modified: "
 msgstr "最後編輯日期: "
 
-#: src/routes/groups/$id.tsx:523
+#: src/routes/_app/groups/$id.tsx:495
 msgid "[Empty]"
 msgstr "[空]"
 
-#: src/routes/groups/$id.tsx:533
+#: src/routes/_app/groups/$id.tsx:504
 msgid "Group Rules"
 msgstr "安全組規則"
 
-#: src/routes/groups/$id.tsx:547
+#: src/routes/_app/groups/$id.tsx:518
 msgid "Linked Instances"
 msgstr "連接的實例"

@@ -1,8 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_app/")({
     loader: () => {
-        // Redirect to /groups
         throw redirect({
             to: "/groups",
         });

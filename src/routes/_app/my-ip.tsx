@@ -4,7 +4,7 @@ import IPEndpointsTable from "@/components/IPEndpointsTable";
 import MyIPTable from "@/components/MyIPTable";
 import { Version } from "@/store/ip";
 
-export const Route = createFileRoute("/my-ip")({
+export const Route = createFileRoute("/_app/my-ip")({
     component: MyIP,
 });
 

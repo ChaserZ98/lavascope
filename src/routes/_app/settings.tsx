@@ -7,7 +7,7 @@ import GeneralSection from "@/components/Settings/General/GeneralSection";
 import ProxySection from "@/components/Settings/ProxySection";
 import SecretsSection from "@/components/Settings/SecretsSection";
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_app/settings")({
     component: Settings,
 });
 

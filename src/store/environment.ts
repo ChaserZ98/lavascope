@@ -1,3 +1,4 @@
+import { isTauri } from "@tauri-apps/api/core";
 import { type } from "@tauri-apps/plugin-os";
 import { atom } from "jotai";
 
@@ -10,8 +11,6 @@ export enum Platform {
     WEB = "web",
 }
 
-export const isTauriAtom = atom("__TAURI_INTERNALS__" in window);
-
-export const platformAtom = atom((get) =>
-    get(isTauriAtom) ? (type() as Platform) : Platform.WEB
+export const platformAtom = atom(
+    isTauri() ? (type() as Platform) : Platform.WEB
 );
