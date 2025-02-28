@@ -8,9 +8,8 @@ import {
     type ToOptions,
     useRouter,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
-import JotaiDevTools from "@/components/Dev/JotaiDevTools";
+import { JotaiDevTools, TanStackRouterDevtools } from "@/components/Dev";
 
 export const Route = createRootRoute({
     component: App,
