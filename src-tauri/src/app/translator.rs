@@ -2,9 +2,11 @@ use crate::utils::translator::{Locale, Translator};
 use std::{collections::HashMap, sync::Mutex};
 use tauri::{AppHandle, Manager, State};
 
+#[allow(dead_code)]
 pub struct TranslatorState {
     pub translator: Translator,
 }
+
 impl TranslatorState {
     pub fn borrow_from_app(app: &AppHandle) -> Result<State<Mutex<Self>>, String> {
         match app.try_state::<Mutex<Self>>() {

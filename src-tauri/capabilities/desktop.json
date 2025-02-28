@@ -38,7 +38,6 @@
         "log:default",
         "autostart:allow-enable",
         "autostart:allow-disable",
-        "autostart:allow-is-enabled",
-        "process:allow-exit"
+        "autostart:allow-is-enabled"
     ]
 }

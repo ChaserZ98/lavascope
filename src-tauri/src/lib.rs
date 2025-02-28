@@ -1,9 +1,8 @@
 mod app;
 mod utils;
 
-use app::commands::toggle_locale;
 use app::translator::initialize_translator;
-use tauri::Builder;
+use tauri::{generate_handler, Builder};
 use utils::configure_log_builder;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -23,7 +22,6 @@ pub fn run() {
     builder = builder
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_os::init())
-        .plugin(tauri_plugin_process::init())
         .plugin(configure_log_builder().build())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_http::init())
@@ -50,7 +48,13 @@ pub fn run() {
         Ok(())
     });
 
-    builder = builder.invoke_handler(tauri::generate_handler![toggle_locale]);
+    builder = builder.invoke_handler(generate_handler![]);
+
+    #[cfg(all(desktop))]
+    {
+        use app::commands::toggle_locale;
+        builder = builder.invoke_handler(generate_handler![toggle_locale]);
+    }
 
     builder
         .run(tauri::generate_context!())

@@ -1,7 +1,11 @@
-use super::{translator::TranslatorState, tray::MenuState};
+use super::translator::TranslatorState;
 use crate::utils::translator::Locale;
 use tauri::command;
 
+#[cfg(all(desktop))]
+use super::tray::MenuState;
+
+#[cfg(all(desktop))]
 #[command]
 pub fn toggle_locale(app: tauri::AppHandle, locale_string: String) -> Result<(), String> {
     let menu_state = match MenuState::borrow_from_app(&app) {
