@@ -318,6 +318,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           tauriScript: bun run tauri
+          args: "--config src-tauri/build-config/tauri.windows.conf.json"
       - name: Artifact list
         env:
           RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
