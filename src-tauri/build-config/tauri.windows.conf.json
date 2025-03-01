@@ -8,7 +8,7 @@
             "nsis": {
                 "displayLanguageSelector": true,
                 "installMode": "both",
-                "languages": ["English", "SimpChinese"],
+                "languages": ["English", "SimpChinese", "TradChinese"],
                 "installerIcon": "icons/icon.ico"
             }
         }
