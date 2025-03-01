@@ -21,7 +21,7 @@
             "icons/icon.icns",
             "icons/icon.ico"
         ],
-        "copyright": "Copyright (c) 2024 Feiyu Zheng. All rights reserved.\n\nThis work is licensed under the terms of the MIT license.\nFor a copy, see <https://opensource.org/licenses/MIT>.",
+        "copyright": "Copyright (c) 2024-present Feiyu Zheng. All rights reserved.\n\nThis work is licensed under the terms of the MIT license.\nFor a copy, see <https://opensource.org/licenses/MIT>.",
         "category": "Utility"
     },
     "app": {
