@@ -261,14 +261,9 @@ jobs:
             }
       - name: Rename artifacts and move to temp directory
         run: |
-          deb_file_path=$(find . -type f -name "*.deb")
-          rpm_file_path=$(find . -type f -name "*.rpm")
-          appimage_file_path=$(find . -type f -name "*.AppImage")
-          file_list=($deb_file_path $rpm_file_path $appimage_file_path)
-          for file_path in "${file_list[@]}"; do
-            if [ -z "$file_path" ]; then
-              continue
-            fi
+          file_list=$(find . -type f -name *.rpm -o -name *.deb -o -name *.AppImage)
+          IFS=$'\n'
+          for file_path in $file_list; do
             echo "Found artifact: $file_path"
             filename=$(basename "$file_path")
             file_extension="${filename##*.}"
@@ -328,6 +323,7 @@ jobs:
               console.log(`Artifact: ${artifact}`);
             }
       - name: Rename WiX artifacts and move to temp directory
+        shell: bash
         run: |
           file_list=$(find . -type f -name "*.msi")
           IFS=$'\n'
@@ -341,6 +337,7 @@ jobs:
             echo "Renamed MSI: $RUNNER_TEMP/$new_filename"
           done
       - name: Rename NSIS artifact and move to temp directory
+        shell: bash
         run: |
           file_path=$(find . -type f -name "*.exe")
           echo "Found EXE: $file_path"
