@@ -48,70 +48,6 @@ jobs:
           RELEASE_URL: ${{fromJson(steps.create-release.outputs.result).html_url}}
         run: |
           echo "Release url: $RELEASE_URL"
-  build-desktop-release:
-    needs: create-release
-    permissions:
-      contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        build: [linux, macos-x86_64, macos-arm, windows]
-        include:
-          - build: macos-arm
-            os: macos-latest
-            args: "--config src-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
-          - build: macos-x86_64
-            os: macos-latest
-            args: "--config src-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
-          - build: linux
-            os: ubuntu-22.04
-            args: ""
-          - build: windows
-            os: "windows-latest"
-            args: "--config src-tauri/build-config/tauri.windows.conf.json"
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-      - name: Install dependencies (ubuntu only)
-        if: matrix.build == 'linux'
-        run: |
-          sudo apt update
-          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ startsWith(matrix.build, 'macos') && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
-      - name: Install frontend dependencies
-        run: bun install --frozen-lockfile
-      - name: Build Tauri app and upload assets to release
-        id: tauri-build
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        with:
-          tauriScript: bun run tauri
-          releaseId: ${{ needs.create-release.outputs.release_id }}
-          args: ${{ matrix.args }}
-      - name: Actifact list
-        env:
-          RELEASE_ACTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const artifactArray = JSON.parse(process.env.RELEASE_ACTIFACTS);
-            for (const artifact of artifactArray) {
-              console.log(`Artifact: ${artifact}`);
-            }
-      - name: Release url
-        env:
-          RELEASE_URL: ${{needs.create-release.outputs.release_url}}
-        run: |
-          echo "Release url: $RELEASE_URL"
   build-android-release:
     needs: create-release
     permissions:
@@ -168,7 +104,6 @@ jobs:
           for apk in $(find . -type f -name "*.apk"); do
             echo "Found APK: $apk"
             filename=$(basename $apk)
-            directory=$(dirname $apk)
             arch=$(echo $filename | cut -d'-' -f2)
             new_filename=Vultr.Firewall.Watcher_${arch}.apk
             mv $apk $RUNNER_TEMP/$new_filename
@@ -206,6 +141,227 @@ jobs:
               });
             }
             console.log('All files uploaded.');
-          
-      
-      
+  build-macos-release:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [x86_64, aarch64, universal]
+        include:
+          - build: aarch64
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
+          - build: x86_64
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
+          - build: universal
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target universal-apple-darwin"
+    runs-on: ${{ matrix.os }}
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
+      ARCH: ${{ matrix.build }}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.build == 'universal' && 'aarch64-apple-darwin,x86_64-apple-darwin' || ( matrix.build == 'aarch64' && 'aarch64-apple-darwin' || 'x86_64-apple-darwin' ) }}
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+          args: ${{ matrix.args }}
+      - name: Artifact list
+        env:
+          RELEASE_ARTIFACTS: ${{ steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ARTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+      - name: Rename dmg and move to temp directory
+        run: |
+          dmg_file_path=$(find . -type f -name "*.dmg")
+          echo "Found DMG: $dmg_file_path"
+          filename=$(basename "$dmg_file_path")
+          new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_${ARCH}.dmg"
+          mv $dmg_file_path $RUNNER_TEMP/$new_filename
+          echo "Renamed DMG: $RUNNER_TEMP/$new_filename"
+      - name: Upload dmg to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr Firewall Watcher`));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');
+  build-linux-release:
+    needs: create-release
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Tauri dependencies for Linux
+        run: |
+          sudo apt update
+          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+      - name: Artifact list
+        env:
+          RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ARTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+      - name: Rename artifacts and move to temp directory
+        run: |
+          deb_file_path=$(find . -type f -name "*.deb")
+          rpm_file_path=$(find . -type f -name "*.rpm")
+          appimage_file_path=$(find . -type f -name "*.AppImage")
+          file_list=($deb_file_path $rpm_file_path $appimage_file_path)
+          for file_path in "${file_list[@]}"; do
+            if [ -z "$file_path" ]; then
+              continue
+            fi
+            echo "Found artifact: $file_path"
+            filename=$(basename "$file_path")
+            file_extension="${filename##*.}"
+            new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64.${file_extension}"
+            mv $file_path $RUNNER_TEMP/$new_filename
+            echo "Renamed artifact: $RUNNER_TEMP/$new_filename"
+          done
+      - name: Upload artifacts to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr Firewall Watcher`));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');
+  build-windows-release:
+    needs: create-release
+    permissions:
+      contents: write
+    runs-on: windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+      - name: Artifact list
+        env:
+          RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ARTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+      - name: Rename WiX artifacts and move to temp directory
+        run: |
+          file_list=$(find . -type f -name "*.msi")
+          IFS=$'\n'
+          for file_path in $file_list; do
+            echo "Found MSI: $file_path"
+            filename=$(basename "$file_path")
+            filename_no_ext=${filename%.*}
+            locale=$(echo ${filename_no_ext} | cut -d '_' -f 4)
+            new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64_${locale}.msi"
+            mv $file_path $RUNNER_TEMP/$new_filename
+            echo "Renamed MSI: $RUNNER_TEMP/$new_filename"
+          done
+      - name: Rename NSIS artifact and move to temp directory
+        run: |
+          file_path=$(find . -type f -name "*.exe")
+          echo "Found EXE: $file_path"
+          filename=$(basename "$file_path")
+          new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64-setup.exe"
+          mv $file_path $RUNNER_TEMP/$new_filename
+          echo "Renamed EXE: $RUNNER_TEMP/$new_filename"
+      - name: Upload artifacts to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr Firewall Watcher`));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');
