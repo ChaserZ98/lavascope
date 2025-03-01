@@ -105,8 +105,8 @@ jobs:
             echo "Found APK: $apk"
             filename=$(basename $apk)
             arch=$(echo $filename | cut -d'-' -f2)
-            new_filename=Vultr.Firewall.Watcher_${arch}.apk
-            mv $apk $RUNNER_TEMP/$new_filename
+            new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_${arch}.apk"
+            mv "$apk" "$RUNNER_TEMP/$new_filename"
             echo "Renamed APK: $RUNNER_TEMP/$new_filename"
           done
       - name: Build Android universal APK
@@ -121,8 +121,9 @@ jobs:
             exit 1
           fi
           echo "Found universal APK: $universal_apk_path"
-          mv $universal_apk_path ${RUNNER_TEMP}/Vultr.Firewall.Watcher_universal.apk
-          echo "Renamed universal APK: ${RUNNER_TEMP}/Vultr.Firewall.Watcher_universal.apk"
+          new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_universal.apk"
+          mv "$universal_apk_path" "${RUNNER_TEMP}/$new_filename"
+          echo "Renamed universal APK: ${RUNNER_TEMP}/${new_filename}"
       - name: Upload artifacts to release asset
         uses: actions/github-script@v7
         with:
@@ -201,7 +202,7 @@ jobs:
           echo "Found DMG: $dmg_file_path"
           filename=$(basename "$dmg_file_path")
           new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_${ARCH}.dmg"
-          mv $dmg_file_path $RUNNER_TEMP/$new_filename
+          mv "$dmg_file_path" "$RUNNER_TEMP/$new_filename"
           echo "Renamed DMG: $RUNNER_TEMP/$new_filename"
       - name: Upload dmg to release asset
         uses: actions/github-script@v7
@@ -272,7 +273,7 @@ jobs:
             filename=$(basename "$file_path")
             file_extension="${filename##*.}"
             new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64.${file_extension}"
-            mv $file_path $RUNNER_TEMP/$new_filename
+            mv "$file_path" "$RUNNER_TEMP/$new_filename"
             echo "Renamed artifact: $RUNNER_TEMP/$new_filename"
           done
       - name: Upload artifacts to release asset
@@ -336,7 +337,7 @@ jobs:
             filename_no_ext=${filename%.*}
             locale=$(echo ${filename_no_ext} | cut -d '_' -f 4)
             new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64_${locale}.msi"
-            mv $file_path $RUNNER_TEMP/$new_filename
+            mv "$file_path" "$RUNNER_TEMP/$new_filename"
             echo "Renamed MSI: $RUNNER_TEMP/$new_filename"
           done
       - name: Rename NSIS artifact and move to temp directory
@@ -345,7 +346,7 @@ jobs:
           echo "Found EXE: $file_path"
           filename=$(basename "$file_path")
           new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64-setup.exe"
-          mv $file_path $RUNNER_TEMP/$new_filename
+          mv "$file_path" "$RUNNER_TEMP/$new_filename"
           echo "Renamed EXE: $RUNNER_TEMP/$new_filename"
       - name: Upload artifacts to release asset
         uses: actions/github-script@v7
