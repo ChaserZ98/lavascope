@@ -170,7 +170,7 @@ jobs:
             filename=$(basename $apk)
             directory=$(dirname $apk)
             arch=$(echo $filename | cut -d'-' -f2)
-            new_filename=Vultr.Firewall.Watcher_${RELEASE_VERSION}_${arch}.apk
+            new_filename=Vultr.Firewall.Watcher_${arch}.apk
             mv $apk $RUNNER_TEMP/$new_filename
             echo "Renamed APK: $RUNNER_TEMP/$new_filename"
           done
@@ -186,16 +186,15 @@ jobs:
             exit 1
           fi
           echo "Found universal APK: $universal_apk_path"
-          mv $universal_apk_path ${RUNNER_TEMP}/Vultr.Firewall.Watcher_${RELEASE_VERSION}_universal.apk
-          echo "Renamed universal APK: ${RUNNER_TEMP}/Vultr.Firewall.Watcher_${RELEASE_VERSION}_universal.apk"
+          mv $universal_apk_path ${RUNNER_TEMP}/Vultr.Firewall.Watcher_universal.apk
+          echo "Renamed universal APK: ${RUNNER_TEMP}/Vultr.Firewall.Watcher_universal.apk"
       - name: Upload artifacts to release asset
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const version = process.env.RELEASE_VERSION;
-            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr.Firewall.Watcher_${version}`));
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr.Firewall.Watcher`));
             for (const file of files) {
               console.log(`Uploading ${file}...`);
               const { data } = await github.rest.repos.uploadReleaseAsset({
