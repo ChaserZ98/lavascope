@@ -130,7 +130,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr.Firewall.Watcher`));
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(`Vultr Firewall Watcher`));
             for (const file of files) {
               console.log(`Uploading ${file}...`);
               const { data } = await github.rest.repos.uploadReleaseAsset({
