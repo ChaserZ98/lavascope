@@ -227,6 +227,9 @@ jobs:
     permissions:
       contents: write
     runs-on: ubuntu-22.04
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -294,6 +297,9 @@ jobs:
     permissions:
       contents: write
     runs-on: windows-latest
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -339,7 +345,7 @@ jobs:
       - name: Rename NSIS artifact and move to temp directory
         shell: bash
         run: |
-          file_path=$(find . -type f -name "*.exe")
+          file_path=$(find ./src-tauri/target/release/bundle -type f -name "*.exe")
           echo "Found EXE: $file_path"
           filename=$(basename "$file_path")
           new_filename="Vultr Firewall Watcher_${RELEASE_VERSION}_amd64-setup.exe"
