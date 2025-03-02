@@ -7,7 +7,7 @@ edition = "2021"
 
 [lib]
 name = "vultr_firewall_watcher_client_lib"
-crate-type = ["lib", "cdylib", "staticlib"]
+crate-type = ["rlib", "cdylib", "staticlib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -15,13 +15,13 @@ crate-type = ["lib", "cdylib", "staticlib"]
 tauri-build = { version = "2.0.1", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.1", features = ["tray-icon"] }
+tauri = { version = "~2.2", features = ["tray-icon"] }
 tauri-plugin-shell = "2.0.1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tauri-plugin-notification = "2.0.1"
 tauri-plugin-http = "2.0.1"
-tauri-plugin-clipboard-manager = "2.1.0-beta.7"
+tauri-plugin-clipboard-manager = "2.1.0"
 tauri-plugin-os = "2.0.1"
 tauri-plugin-log = "2.0.1"
 log = "0.4"
