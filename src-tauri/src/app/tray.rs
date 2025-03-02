@@ -1,6 +1,6 @@
 use super::translator::TranslatorState;
 use crate::utils::translator::Locale;
-use std::collections::HashMap;
+use std::{collections::HashMap, sync::Mutex};
 use tauri::{
     menu::{Menu, MenuEvent, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent},
@@ -12,8 +12,8 @@ pub struct MenuState {
 }
 
 impl MenuState {
-    pub fn borrow_from_app(app: &AppHandle) -> Result<State<Self>, String> {
-        match app.try_state::<Self>() {
+    pub fn borrow_from_app(app: &AppHandle) -> Result<State<Mutex<Self>>, String> {
+        match app.try_state::<Mutex<Self>>() {
             Some(menu_state) => Ok(menu_state),
             None => Err("Failed to get menu state".to_string()),
         }
@@ -70,12 +70,12 @@ pub fn create_tray(app: &AppHandle) -> Result<TrayIcon, tauri::Error> {
         None::<&str>,
     )?;
     let menu = Menu::with_id_and_items(app, "tray-menu", &[&hide_or_show, &quit])?;
-    app.manage(MenuState { menu });
+    app.manage(Mutex::new(MenuState { menu }));
 
     TrayIconBuilder::with_id("mainTray")
         .tooltip("Vultr Firewall Watcher")
         .icon(app.default_window_icon().unwrap().clone())
-        .menu(&app.state::<MenuState>().menu)
+        .menu(&app.state::<Mutex<MenuState>>().lock().unwrap().menu)
         .show_menu_on_left_click(false)
         .on_menu_event(handle_menu_click)
         .on_tray_icon_event(handle_tray_icon_event)
@@ -159,7 +159,7 @@ fn handle_tray_icon_right_click(tray: &TrayIcon) -> Result<(), tauri::Error> {
             return Err(tauri::Error::AssetNotFound(message));
         }
     };
-    let menu = &menu_state.menu;
+    let menu = &mut menu_state.lock().unwrap().menu;
 
     let translator_state = match TranslatorState::borrow_from_app(app) {
         Ok(translator_state) => translator_state,

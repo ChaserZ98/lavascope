@@ -15,7 +15,7 @@ pub fn toggle_locale(app: tauri::AppHandle, locale_string: String) -> Result<(),
             return Err(message);
         }
     };
-    let menu = &menu_state.menu;
+    let menu = &mut menu_state.lock().unwrap().menu;
 
     let translator_state = match TranslatorState::borrow_from_app(&app) {
         Ok(translator_state) => translator_state,
