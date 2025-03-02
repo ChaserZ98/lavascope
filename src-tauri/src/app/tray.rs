@@ -132,20 +132,18 @@ fn handle_tray_icon_event(tray: &TrayIcon, event: TrayIconEvent) {
 fn handle_tray_icon_left_click(tray: &TrayIcon) -> Result<(), tauri::Error> {
     let app = tray.app_handle();
     if let Some(window) = app.get_webview_window("main") {
-        let is_window_visible = window.is_visible()?;
-        if is_window_visible {
-            window.show()?;
-            window.set_focus()?;
-            return Ok(());
+        match window.is_visible() {
+            Ok(true) => {
+                window.hide()?;
+                return Ok(());
+            }
+            Ok(false) => {
+                window.show()?;
+                window.set_focus()?;
+                return Ok(());
+            }
+            Err(e) => return Err(e),
         }
-
-        let is_window_focused = window.is_focused()?;
-        if is_window_focused {
-            window.hide()?;
-            return Ok(());
-        }
-
-        window.set_focus()?;
     }
     Ok(())
 }
