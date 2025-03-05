@@ -73,7 +73,7 @@ pub fn create_tray(app: &AppHandle) -> Result<TrayIcon, tauri::Error> {
     app.manage(Mutex::new(MenuState { menu }));
 
     TrayIconBuilder::with_id("mainTray")
-        .tooltip("Vultr Firewall Watcher")
+        .tooltip("LavaScope")
         .icon(app.default_window_icon().unwrap().clone())
         .menu(&app.state::<Mutex<MenuState>>().lock().unwrap().menu)
         .show_menu_on_left_click(false)
