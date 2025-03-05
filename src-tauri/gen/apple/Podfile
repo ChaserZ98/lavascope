@@ -1,13 +1,13 @@
 # Uncomment the next line to define a global platform for your project
 
-target 'vultr-firewall-watcher-client_iOS' do
+target 'lavascope_iOS' do
 platform :ios, '13.0'
-  # Pods for vultr-firewall-watcher-client_iOS
+  # Pods for lavascope_iOS
 end
 
-target 'vultr-firewall-watcher-client_macOS' do
+target 'lavascope_macOS' do
 platform :osx, '11.0'
-  # Pods for vultr-firewall-watcher-client_macOS
+  # Pods for lavascope_macOS
 end
 
 # Delete the deployment target for iOS and macOS, causing it to be inherited from the Podfile

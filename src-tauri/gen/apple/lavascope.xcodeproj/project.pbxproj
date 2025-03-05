@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1BE215627271A6F977C3647E /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 00960C0EFDB2CB5C855B1721 /* main.mm */; };
+		3CA21DF06219086955347F5A /* assets in Resources */ = {isa = PBXBuildFile; fileRef = A31E241D83F7B35CB12205A3 /* assets */; };
+		3FC6EDC1293AA988569B0DB0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 820BCB7D1C2234DE41AF4EA2 /* UIKit.framework */; };
+		44FBA2FB86453C5BD9ACA461 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5209E7655021291765D7953F /* Metal.framework */; };
+		5BBC5ED9FA6FDE6AAFDBAA4E /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7402676C2AB7CB638D5434D0 /* MetalKit.framework */; };
+		6D8E490D1C3E3BA183E5BDFF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FCA70DCE1E6A91D17E420D4C /* LaunchScreen.storyboard */; };
+		73BCF7A209ED44DB251767EA /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F59CBE02BA20E0686CC21F0 /* QuartzCore.framework */; };
+		8576CA5D449BE302EE895D08 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4A60031B06C571D857AAB88B /* Security.framework */; };
+		96C963D73AB00CF4BD137D5E /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0CB54172804AE690C94ACF9 /* WebKit.framework */; };
+		A276B5159906A18D63715843 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3640CF227FBF1A9D730A41A6 /* Assets.xcassets */; };
+		A7A8AE9F9EA34002621396D2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 131DC1E0CF21746AA242BBBC /* CoreGraphics.framework */; };
+		D8BC21401A6484C591AA1390 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BA57DAF7BB6D2CE6C4FA205 /* libapp.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		00960C0EFDB2CB5C855B1721 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		099F7C41A3FF88CD1F1B6C6E /* commands.rs */ = {isa = PBXFileReference; path = commands.rs; sourceTree = "<group>"; };
+		131DC1E0CF21746AA242BBBC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		13C12D84D9A82FC1AA8354CF /* lavascope_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = lavascope_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		14C18295C4EAC922C9332A21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		15A4C816C84C7B9DAD5C651F /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		1949E7DFB4D608FEE867FCB4 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		2D100398FF6BF4100353A655 /* translator.rs */ = {isa = PBXFileReference; path = translator.rs; sourceTree = "<group>"; };
+		3062CFEFD868792BC0CCA46B /* tray.rs */ = {isa = PBXFileReference; path = tray.rs; sourceTree = "<group>"; };
+		361ED4B3716C6455FCD32ACF /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
+		3640CF227FBF1A9D730A41A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4259B003732571F6975893BA /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
+		4A60031B06C571D857AAB88B /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		5209E7655021291765D7953F /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		70C73CD0CD96543C152F26D5 /* translator.rs */ = {isa = PBXFileReference; path = translator.rs; sourceTree = "<group>"; };
+		7402676C2AB7CB638D5434D0 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		7BA57DAF7BB6D2CE6C4FA205 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
+		7F54E900EE43CBC80FF41AE8 /* lavascope_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lavascope_iOS.entitlements; sourceTree = "<group>"; };
+		820BCB7D1C2234DE41AF4EA2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		8F59CBE02BA20E0686CC21F0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		A31E241D83F7B35CB12205A3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		D50E278929692A06AD03D137 /* logging.rs */ = {isa = PBXFileReference; path = logging.rs; sourceTree = "<group>"; };
+		E0CB54172804AE690C94ACF9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		F3AB8DC44EF439EC2F24F19F /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		FA3326C4727DC270953B9BCE /* window.rs */ = {isa = PBXFileReference; path = window.rs; sourceTree = "<group>"; };
+		FCA70DCE1E6A91D17E420D4C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		28F740A08304454071A4AE50 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D8BC21401A6484C591AA1390 /* libapp.a in Frameworks */,
+				A7A8AE9F9EA34002621396D2 /* CoreGraphics.framework in Frameworks */,
+				44FBA2FB86453C5BD9ACA461 /* Metal.framework in Frameworks */,
+				5BBC5ED9FA6FDE6AAFDBAA4E /* MetalKit.framework in Frameworks */,
+				73BCF7A209ED44DB251767EA /* QuartzCore.framework in Frameworks */,
+				8576CA5D449BE302EE895D08 /* Security.framework in Frameworks */,
+				3FC6EDC1293AA988569B0DB0 /* UIKit.framework in Frameworks */,
+				96C963D73AB00CF4BD137D5E /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0BA7429C2804E5D30A8652CC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				13C12D84D9A82FC1AA8354CF /* lavascope_iOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		176C5EDC1BE3FF5A9EE34820 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				725ACB89F9DB7E003F36065D /* lavascope */,
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		26E59D12377E17A3804CA64B /* app */ = {
+			isa = PBXGroup;
+			children = (
+				099F7C41A3FF88CD1F1B6C6E /* commands.rs */,
+				15A4C816C84C7B9DAD5C651F /* mod.rs */,
+				2D100398FF6BF4100353A655 /* translator.rs */,
+				3062CFEFD868792BC0CCA46B /* tray.rs */,
+				FA3326C4727DC270953B9BCE /* window.rs */,
+			);
+			path = app;
+			sourceTree = "<group>";
+		};
+		48DB81C6457C9CD249C1F63D /* Externals */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Externals;
+			sourceTree = "<group>";
+		};
+		49680CB8224A927AB5F8D51B = {
+			isa = PBXGroup;
+			children = (
+				A31E241D83F7B35CB12205A3 /* assets */,
+				3640CF227FBF1A9D730A41A6 /* Assets.xcassets */,
+				FCA70DCE1E6A91D17E420D4C /* LaunchScreen.storyboard */,
+				48DB81C6457C9CD249C1F63D /* Externals */,
+				8DAB86176D2B8190F7BA32A9 /* lavascope_iOS */,
+				176C5EDC1BE3FF5A9EE34820 /* Sources */,
+				6B58D7277FD405CBAAD536BB /* src */,
+				4B6FD03829D328564B2A91B9 /* Frameworks */,
+				0BA7429C2804E5D30A8652CC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		4B6FD03829D328564B2A91B9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				131DC1E0CF21746AA242BBBC /* CoreGraphics.framework */,
+				7BA57DAF7BB6D2CE6C4FA205 /* libapp.a */,
+				5209E7655021291765D7953F /* Metal.framework */,
+				7402676C2AB7CB638D5434D0 /* MetalKit.framework */,
+				8F59CBE02BA20E0686CC21F0 /* QuartzCore.framework */,
+				4A60031B06C571D857AAB88B /* Security.framework */,
+				820BCB7D1C2234DE41AF4EA2 /* UIKit.framework */,
+				E0CB54172804AE690C94ACF9 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6B58D7277FD405CBAAD536BB /* src */ = {
+			isa = PBXGroup;
+			children = (
+				F3AB8DC44EF439EC2F24F19F /* lib.rs */,
+				4259B003732571F6975893BA /* main.rs */,
+				26E59D12377E17A3804CA64B /* app */,
+				F0A7DAB57D4A1C5EBA4DFCC7 /* utils */,
+			);
+			name = src;
+			path = ../../src;
+			sourceTree = "<group>";
+		};
+		725ACB89F9DB7E003F36065D /* lavascope */ = {
+			isa = PBXGroup;
+			children = (
+				00960C0EFDB2CB5C855B1721 /* main.mm */,
+				E1D469DD484A2949307E9F10 /* bindings */,
+			);
+			path = lavascope;
+			sourceTree = "<group>";
+		};
+		8DAB86176D2B8190F7BA32A9 /* lavascope_iOS */ = {
+			isa = PBXGroup;
+			children = (
+				14C18295C4EAC922C9332A21 /* Info.plist */,
+				7F54E900EE43CBC80FF41AE8 /* lavascope_iOS.entitlements */,
+			);
+			path = lavascope_iOS;
+			sourceTree = "<group>";
+		};
+		E1D469DD484A2949307E9F10 /* bindings */ = {
+			isa = PBXGroup;
+			children = (
+				361ED4B3716C6455FCD32ACF /* bindings.h */,
+			);
+			path = bindings;
+			sourceTree = "<group>";
+		};
+		F0A7DAB57D4A1C5EBA4DFCC7 /* utils */ = {
+			isa = PBXGroup;
+			children = (
+				D50E278929692A06AD03D137 /* logging.rs */,
+				1949E7DFB4D608FEE867FCB4 /* mod.rs */,
+				70C73CD0CD96543C152F26D5 /* translator.rs */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		87B9928EBD58087F71CAEE8A /* lavascope_iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 80B699E0699FB4B38716A680 /* Build configuration list for PBXNativeTarget "lavascope_iOS" */;
+			buildPhases = (
+				73B2670E0BE70B4BA2741F56 /* Build Rust Code */,
+				083C4540FF4C1356EEC1A6DB /* Sources */,
+				C5B61F0EEC82E65A48C7B176 /* Resources */,
+				28F740A08304454071A4AE50 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = lavascope_iOS;
+			productName = lavascope_iOS;
+			productReference = 13C12D84D9A82FC1AA8354CF /* lavascope_iOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FC58353942CCEB4C3F870790 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = 8EECC527561B0B5B6C3025F6 /* Build configuration list for PBXProject "lavascope" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 49680CB8224A927AB5F8D51B;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				87B9928EBD58087F71CAEE8A /* lavascope_iOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		C5B61F0EEC82E65A48C7B176 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A276B5159906A18D63715843 /* Assets.xcassets in Resources */,
+				6D8E490D1C3E3BA183E5BDFF /* LaunchScreen.storyboard in Resources */,
+				3CA21DF06219086955347F5A /* assets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		73B2670E0BE70B4BA2741F56 /* Build Rust Code */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Rust Code";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
+				"$(SRCROOT)/Externals/arm64-sim/${CONFIGURATION}/libapp.a",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bun tauri ios xcode-script -v --platform ${PLATFORM_DISPLAY_NAME:?} --sdk-root ${SDKROOT:?} --framework-search-paths \"${FRAMEWORK_SEARCH_PATHS:?}\" --header-search-paths \"${HEADER_SEARCH_PATHS:?}\" --gcc-preprocessor-definitions \"${GCC_PREPROCESSOR_DEFINITIONS:-}\" --configuration ${CONFIGURATION:?} ${FORCE_COLOR} ${ARCHS:?}";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		083C4540FF4C1356EEC1A6DB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1BE215627271A6F977C3647E /* main.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		4FF78A1A3407C20D9359BE10 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+					"arm64-sim",
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lavascope_iOS/lavascope_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = lavascope_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaserz98.lavascope;
+				PRODUCT_NAME = LavaScope;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64  arm64-sim";
+			};
+			name = release;
+		};
+		8CFC33AE402894406206D67C /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = debug;
+		};
+		A6B40C3599F12044BF95490F /* debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ARCHS = (
+					arm64,
+					"arm64-sim",
+				);
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = lavascope_iOS/lavascope_iOS.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\".\"",
+				);
+				INFOPLIST_FILE = lavascope_iOS/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.chaserz98.lavascope;
+				PRODUCT_NAME = LavaScope;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = "arm64  arm64-sim";
+			};
+			name = debug;
+		};
+		F5708F47C467E278594AAE62 /* release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		80B699E0699FB4B38716A680 /* Build configuration list for PBXNativeTarget "lavascope_iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6B40C3599F12044BF95490F /* debug */,
+				4FF78A1A3407C20D9359BE10 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+		8EECC527561B0B5B6C3025F6 /* Build configuration list for PBXProject "lavascope" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8CFC33AE402894406206D67C /* debug */,
+				F5708F47C467E278594AAE62 /* release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FC58353942CCEB4C3F870790 /* Project object */;
+}

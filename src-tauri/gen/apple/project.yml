@@ -1,6 +1,6 @@
-name: vultr-firewall-watcher-client
+name: lavascope
 options:
-  bundleIdPrefix: com.chaserz98.vultr-firewall-watcher
+  bundleIdPrefix: com.chaserz98.lavascope
   deploymentTarget:
     iOS: 13.0
 fileGroups: [../../src]
@@ -10,8 +10,8 @@ configs:
 settingGroups:
   app:
     base:
-      PRODUCT_NAME: Vultr Firewall Watcher
-      PRODUCT_BUNDLE_IDENTIFIER: com.chaserz98.vultr-firewall-watcher
+      PRODUCT_NAME: LavaScope
+      PRODUCT_BUNDLE_IDENTIFIER: com.chaserz98.lavascope
 targetTemplates:
   app:
     type: application
@@ -24,20 +24,20 @@ targetTemplates:
     settings:
       groups: [app]
 targets:
-  vultr-firewall-watcher-client_iOS:
+  lavascope_iOS:
     type: application
     platform: iOS
     sources:
       - path: Sources
       - path: Assets.xcassets
       - path: Externals
-      - path: vultr-firewall-watcher-client_iOS
+      - path: lavascope_iOS
       - path: assets
         buildPhase: resources
         type: folder
       - path: LaunchScreen.storyboard
     info:
-      path: vultr-firewall-watcher-client_iOS/Info.plist
+      path: lavascope_iOS/Info.plist
       properties:
         LSRequiresIPhoneOS: true
         UILaunchStoryboardName: LaunchScreen
@@ -54,7 +54,7 @@ targets:
         CFBundleShortVersionString: 0.1.0
         CFBundleVersion: 0.1.0
     entitlements:
-      path: vultr-firewall-watcher-client_iOS/vultr-firewall-watcher-client_iOS.entitlements
+      path: lavascope_iOS/lavascope_iOS.entitlements
     scheme:
       environmentVariables:
         RUST_BACKTRACE: full
