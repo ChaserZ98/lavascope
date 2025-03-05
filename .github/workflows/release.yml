@@ -57,8 +57,8 @@ jobs:
     env:
       RELEASE_ID: ${{needs.create-release.outputs.release_id}}
       RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
-      APP_NAME: "Vultr-Firewall-Watcher"
-      JAVA_DISTRIBUTION: 'adopt'
+      APP_NAME: "LavaScope"
+      JAVA_DISTRIBUTION: "adopt"
       JAVA_VERSION: 17
       NDK_VERSION: 27.1.12297006
     steps:
@@ -89,7 +89,7 @@ jobs:
         with:
           workspaces: "./src-tauri -> target"
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --production
       - name: Setup Android signing
         run: |
           ANDROID_DIRECTORY=src-tauri/gen/android
@@ -99,7 +99,7 @@ jobs:
           echo "storeFile=$RUNNER_TEMP/keystore.jks" >> $ANDROID_DIRECTORY/keystore.properties
       - name: Build Android APK per ABI
         run: |
-            bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
+          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
       - name: Rename APKs and move to temp directory
         run: |
           for apk in $(find . -type f -name "*.apk"); do
@@ -166,7 +166,7 @@ jobs:
     env:
       RELEASE_ID: ${{needs.create-release.outputs.release_id}}
       RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
-      APP_NAME: "Vultr-Firewall-Watcher"
+      APP_NAME: "LavaScope"
       ARCH: ${{ matrix.build }}
     steps:
       - name: Checkout repository code
@@ -180,7 +180,7 @@ jobs:
         with:
           targets: ${{ matrix.build == 'universal' && 'aarch64-apple-darwin,x86_64-apple-darwin' || ( matrix.build == 'aarch64' && 'aarch64-apple-darwin' || 'x86_64-apple-darwin' ) }}
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --production
       - name: Build Tauri app
         id: tauri-build
         uses: tauri-apps/tauri-action@v0
@@ -234,7 +234,7 @@ jobs:
     env:
       RELEASE_ID: ${{needs.create-release.outputs.release_id}}
       RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
-      APP_NAME: "Vultr-Firewall-Watcher"
+      APP_NAME: "LavaScope"
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -249,7 +249,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --production
       - name: Build Tauri app
         id: tauri-build
         uses: tauri-apps/tauri-action@v0
@@ -306,7 +306,7 @@ jobs:
     env:
       RELEASE_ID: ${{needs.create-release.outputs.release_id}}
       RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
-      APP_NAME: "Vultr-Firewall-Watcher"
+      APP_NAME: "LavaScope"
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -317,7 +317,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile
+        run: bun install --frozen-lockfile --production
       - name: Build Tauri app
         id: tauri-build
         uses: tauri-apps/tauri-action@v0

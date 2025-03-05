@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() {
-    vultr_firewall_watcher_client_lib::run()
+    lavascope_lib::run()
 }

@@ -1,7 +1,7 @@
 {
-    "productName": "Vultr Firewall Watcher",
+    "productName": "LavaScope",
     "version": "../package.json",
-    "identifier": "com.chaserz98.vultr-firewall-watcher",
+    "identifier": "com.chaserz98.lavascope",
     "build": {
         "beforeDevCommand": "bun run dev --host",
         "devUrl": "http://127.0.0.1:1420",
@@ -11,8 +11,8 @@
     "bundle": {
         "active": true,
         "targets": "all",
-        "longDescription": "Vultr Firewall Watcher is an application that helps you monitor your Vultr firewall rules.",
-        "shortDescription": "Vultr Firewall Watcher",
+        "longDescription": "LavaScope is an application that helps you monitor your firewall rules.",
+        "shortDescription": "LavaScope",
         "publisher": "Feiyu Zheng",
         "icon": [
             "icons/32x32.png",
@@ -28,7 +28,7 @@
         "windows": [
             {
                 "label": "main",
-                "title": "Vultr Firewall Watcher",
+                "title": "LavaScope",
                 "width": 1280,
                 "height": 720,
                 "fullscreen": false,

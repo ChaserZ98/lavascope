@@ -1,5 +1,5 @@
 {
-    "identifier": "com.chaserz98.vultr-firewall-watcher",
+    "identifier": "com.chaserz98.lavascope",
     "bundle": {
         "macOS": {
             "minimumSystemVersion": "10.13",
@@ -10,7 +10,7 @@
         "windows": [
             {
                 "label": "main",
-                "title": "Vultr Firewall Watcher",
+                "title": "LavaScope",
                 "width": 1280,
                 "height": 720,
                 "fullscreen": false,

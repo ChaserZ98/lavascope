@@ -1,5 +1,5 @@
 {
-    "name": "vultr-firewall-watcher-client",
+    "name": "lavascope",
     "private": true,
     "version": "0.1.0",
     "type": "module",

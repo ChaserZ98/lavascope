@@ -11,11 +11,7 @@ export default function AppError({ error, reset }: ErrorComponentProps) {
     logging.error(`${error}`);
     return (
         <div className="w-full h-screen px-4 flex flex-col items-center justify-center gap-2">
-            <Image
-                alt="Vultr Firewall Watcher Logo"
-                src={appIcon}
-                className="w-20 h-20"
-            />
+            <Image alt="LavaScope Logo" src={appIcon} className="w-20 h-20" />
             <h1 className="text-2xl sm:text-4xl sm:font-bold text-danger">
                 {errorName}
             </h1>

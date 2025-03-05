@@ -17,7 +17,7 @@
         "windows": [
             {
                 "label": "main",
-                "title": "Vultr Firewall Watcher",
+                "title": "LavaScope",
                 "width": 1280,
                 "height": 720,
                 "fullscreen": false,

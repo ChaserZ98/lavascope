@@ -1,10 +1,10 @@
 {
-    "identifier": "com.chaserz98.vultr-firewall-watcher-dev",
+    "identifier": "com.chaserz98.lavascope-dev",
     "app": {
         "windows": [
             {
                 "label": "main",
-                "title": "Vultr Firewall Watcher",
+                "title": "LavaScope",
                 "width": 1280,
                 "height": 720,
                 "fullscreen": false,

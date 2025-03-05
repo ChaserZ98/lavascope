@@ -7,6 +7,8 @@ import {
     NavbarItem,
     Tooltip,
 } from "@heroui/react";
+import { Image } from "@heroui/react";
+import appIcon from "@img/app-icon.png";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiCog, mdiIpOutline, mdiThemeLightDark, mdiWall } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -77,9 +79,16 @@ export function Navigation() {
                     size={screenSize === Screen.SM ? "sm" : "lg"}
                     isBlock
                     as={Link}
-                    className="text-medium text-wrap sm:text-large transition-colors-opacity"
+                    className="flex items-center justify-center"
                 >
-                    Vultr Firewall Watcher
+                    <Image
+                        alt="LavaScope Logo"
+                        src={appIcon}
+                        className="px-1 w-10"
+                    />
+                    <h1 className="text-medium text-wrap sm:text-large transition-colors-opacity">
+                        LavaScope
+                    </h1>
                 </HeroUILink>
             </NavbarBrand>
             <NavbarContent justify="center" className="hidden md:flex gap-4">

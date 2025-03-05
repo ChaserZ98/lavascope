@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Vultr Firewall Watcher</string>
-    <string name="main_activity_title">Vultr Firewall Watcher</string>
+    <string name="app_name">LavaScope</string>
+    <string name="main_activity_title">LavaScope</string>
 </resources>

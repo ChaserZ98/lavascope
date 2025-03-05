@@ -243,12 +243,12 @@ export default function TauriTitleBar() {
             </div>
             <div className="mx-0 flex items-center justify-center gap-1 sm:mx-auto">
                 <Image
-                    alt="Vultr Firewall Watcher Logo"
+                    alt="LavaScope Logo"
                     src={appIcon}
                     className="px-1 w-10"
                 />
                 <h1 className="hidden text-default-400 font-bold text-medium sm:block">
-                    Vultr Firewall Watcher
+                    LavaScope
                 </h1>
             </div>
         </div>
