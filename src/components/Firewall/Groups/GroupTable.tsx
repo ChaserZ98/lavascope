@@ -8,13 +8,16 @@ import {
     Pagination,
     Table,
     TableBody,
+    TableCell,
     TableColumn,
     TableHeader,
+    TableRow,
     useDisclosure,
 } from "@heroui/react";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { selectAtom } from "jotai/utils";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import ProxySwitch from "@/components/ProxySwitch";
@@ -34,6 +37,99 @@ import logging from "@/utils/log";
 
 import Group from "./Group";
 
+function DeleteModal({
+    groupId,
+    isOpen,
+    onClose,
+    onConfirm,
+}: {
+    groupId: string | null;
+    isOpen: boolean;
+    onClose?: () => void;
+    onConfirm?: () => void;
+}) {
+    if (!groupId) return null;
+    const groupState = useAtomValue(
+        selectAtom(
+            groupsAtom,
+            useCallback((state) => state[groupId], [groupId])
+        )
+    );
+    if (!groupState) return null;
+    const group = groupState.group;
+    return (
+        <Modal
+            backdrop="transparent"
+            isOpen={isOpen}
+            onClose={onClose}
+            classNames={{
+                base: "select-none",
+            }}
+        >
+            <ModalContent>
+                <ModalHeader className="flex flex-col gap-1 text-danger-400">
+                    <Trans>Delete Firewall Group</Trans>
+                </ModalHeader>
+                <ModalBody>
+                    <p>
+                        <Trans>
+                            Are you sure you want to delete this firewall group?
+                        </Trans>
+                    </p>
+                    <div className="text-warning">
+                        <p>
+                            <span>
+                                <Trans>ID: </Trans>
+                            </span>
+                            <span className="font-mono">{group.id}</span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Description: </Trans>
+                            </span>
+                            <span className="font-mono uppercase">
+                                {group.description}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Date Created: </Trans>
+                            </span>
+                            <span className="font-mono">
+                                {new Date(group.date_created).toLocaleString()}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Rules: </Trans>
+                            </span>
+                            <span className="font-mono">
+                                {group.rule_count}
+                            </span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Instances: </Trans>
+                            </span>
+                            <span className="font-mono">
+                                {group.instance_count}
+                            </span>
+                        </p>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onPress={onConfirm}>
+                        <Trans>Confirm</Trans>
+                    </Button>
+                    <Button color="danger" variant="light" onPress={onClose}>
+                        <Trans>Cancel</Trans>
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
+}
+
 export default function GroupTable() {
     const refreshing = useAtomValue(groupTableRefreshingAtom);
     const shouldUpdateFromDB = useAtomValue(shouldUpdateFromDBAtom);
@@ -50,22 +146,17 @@ export default function GroupTable() {
 
     const { t } = useLingui();
 
-    const selectedGroupId = useRef<string | null>(null);
-    const deleteTimeoutId = useRef<NodeJS.Timeout | null>(null);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
     const deleteModal = useDisclosure();
 
     const handleModalClose = useCallback(() => {
-        deleteTimeoutId.current = setTimeout(
-            () => (selectedGroupId.current = null),
-            1000
-        );
         deleteModal.onClose();
     }, []);
     const handleModalConfirm = useCallback(async () => {
-        await handleDeleteGroup(vultrAPI, selectedGroupId.current);
+        await handleDeleteGroup(vultrAPI, selectedGroupId);
         handleModalClose();
-    }, []);
+    }, [selectedGroupId]);
     const handleRefreshGroups = useCallback(async (vultrAPI: VultrAPI) => {
         try {
             logging.info(`Fetching firewall groups...`);
@@ -183,6 +274,11 @@ export default function GroupTable() {
         []
     );
 
+    const onGroupDelete = useCallback((id: string) => {
+        setSelectedGroupId(id);
+        deleteModal.onOpen();
+    }, []);
+
     useEffect(() => {
         if (shouldUpdateFromDB) {
             const restoreFromDB = async () => {
@@ -210,12 +306,12 @@ export default function GroupTable() {
                     });
                     setFirewall((state) => {
                         state.shouldUpdateFromDB = false;
+                        state.refreshing = false;
                     });
                 } catch (err) {
                     logging.error(
                         `Error restoring firewall groups from DB: ${err}`
                     );
-                } finally {
                     setFirewall((state) => {
                         state.refreshing = false;
                     });
@@ -274,109 +370,59 @@ export default function GroupTable() {
                     ))}
                 </TableHeader>
                 <TableBody emptyContent="Empty">
-                    {Object.values(groups).map((groupState, index) =>
-                        Group({
-                            key: index,
-                            groupState,
-                            onGroupDelete: (id: string) => {
-                                selectedGroupId.current = id;
-                                if (deleteTimeoutId.current)
-                                    clearTimeout(deleteTimeoutId.current);
-                                deleteModal.onOpen();
-                            },
-                            t,
-                            refreshing,
-                        })
-                    )}
+                    {Object.values(groups).map((groupState, index) => (
+                        <TableRow
+                            className={
+                                refreshing || groupState.deleting
+                                    ? "animate-pulse"
+                                    : ""
+                            }
+                            key={index}
+                        >
+                            <TableCell>
+                                <Group.IdCell value={groupState.group.id} />
+                            </TableCell>
+                            <TableCell>
+                                <Group.DescriptionCell
+                                    value={groupState.group.description}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Group.DateCreatedCell
+                                    value={groupState.group.date_created}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Group.RuleCountCell
+                                    value={groupState.group.rule_count}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Group.InstanceCountCell
+                                    value={groupState.group.instance_count}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Group.ActionCell
+                                    isDisabled={
+                                        refreshing || groupState.deleting
+                                    }
+                                    id={groupState.group.id}
+                                    onDelete={() =>
+                                        onGroupDelete(groupState.group.id)
+                                    }
+                                />
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
             </Table>
-            <Modal
-                backdrop="transparent"
+            <DeleteModal
+                groupId={selectedGroupId}
                 isOpen={deleteModal.isOpen}
                 onClose={handleModalClose}
-                classNames={{
-                    base: "select-none",
-                }}
-            >
-                <ModalContent>
-                    <ModalHeader className="flex flex-col gap-1 text-danger-400">
-                        <Trans>Delete Firewall Group</Trans>
-                    </ModalHeader>
-                    <ModalBody>
-                        <p>
-                            <Trans>
-                                Are you sure you want to delete this firewall
-                                group?
-                            </Trans>
-                        </p>
-                        <div className="text-warning">
-                            <p>
-                                <span>
-                                    <Trans>ID: </Trans>
-                                </span>
-                                <span className="font-mono">
-                                    {selectedGroupId.current}
-                                </span>
-                            </p>
-                            <p>
-                                <span>
-                                    <Trans>Description: </Trans>
-                                </span>
-                                <span className="font-mono uppercase">
-                                    {selectedGroupId.current &&
-                                        groups[selectedGroupId.current].group
-                                            .description}
-                                </span>
-                            </p>
-                            <p>
-                                <span>
-                                    <Trans>Date Created: </Trans>
-                                </span>
-                                <span className="font-mono">
-                                    {selectedGroupId.current &&
-                                        new Date(
-                                            groups[
-                                                selectedGroupId.current
-                                            ].group.date_created
-                                        ).toLocaleString()}
-                                </span>
-                            </p>
-                            <p>
-                                <span>
-                                    <Trans>Rules: </Trans>
-                                </span>
-                                <span className="font-mono">
-                                    {selectedGroupId.current &&
-                                        groups[selectedGroupId.current].group
-                                            .rule_count}
-                                </span>
-                            </p>
-                            <p>
-                                <span>
-                                    <Trans>Instances: </Trans>
-                                </span>
-                                <span className="font-mono">
-                                    {selectedGroupId.current &&
-                                        groups[selectedGroupId.current].group
-                                            .instance_count}
-                                </span>
-                            </p>
-                        </div>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="primary" onPress={handleModalConfirm}>
-                            <Trans>Confirm</Trans>
-                        </Button>
-                        <Button
-                            color="danger"
-                            variant="light"
-                            onPress={handleModalClose}
-                        >
-                            <Trans>Cancel</Trans>
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+                onConfirm={handleModalConfirm}
+            />
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
                     onPress={() => handleRefreshGroups(vultrAPI)}

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import GroupTable from "@/components/Firewall/Group/GroupTable";
+import GroupTable from "@/components/Firewall/Groups/GroupTable";
 
 export const Route = createFileRoute("/_app/groups/")({
     component: Groups,
