@@ -83,7 +83,7 @@ function DeleteModal({
     onClose,
     onConfirm,
 }: {
-    isOpen: boolean;
+    isOpen?: boolean;
     groupId: string;
     ruleId: number | null;
     onClose?: () => void;
