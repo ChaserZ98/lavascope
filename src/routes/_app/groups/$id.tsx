@@ -16,7 +16,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Dexie from "dexie";
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectAtom } from "jotai/utils";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
@@ -93,7 +93,7 @@ function DeleteModal({
     const ruleState = useAtomValue(
         selectAtom(
             rulesAtom,
-            useCallback((rules) => rules[groupId][ruleId], [])
+            useCallback((rules) => rules[groupId][ruleId], [ruleId])
         )
     );
     if (!ruleState) return null;
@@ -229,12 +229,8 @@ function Rules() {
     const deleteModal = useDisclosure();
 
     const [selectedRuleId, setSelectedRuleId] = useState<number | null>(null);
-    const deleteTimeoutId = useRef<NodeJS.Timeout | null>(null);
 
     const handleModalClose = useCallback(() => {
-        deleteTimeoutId.current = setTimeout(() => {
-            setSelectedRuleId(null);
-        }, 1500);
         deleteModal.onClose();
     }, []);
     const handleModalConfirm = useCallback(async () => {
@@ -415,7 +411,6 @@ function Rules() {
         []
     );
     const onRuleDelete = useCallback((ruleId: number) => {
-        if (deleteTimeoutId.current) clearTimeout(deleteTimeoutId.current);
         setSelectedRuleId(ruleId);
         deleteModal.onOpen();
     }, []);
