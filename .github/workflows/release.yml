@@ -89,7 +89,7 @@ jobs:
         with:
           workspaces: "./src-tauri -> target"
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile --production
+        run: bun install --frozen-lockfile
       - name: Setup Android signing
         run: |
           ANDROID_DIRECTORY=src-tauri/gen/android
@@ -180,7 +180,7 @@ jobs:
         with:
           targets: ${{ matrix.build == 'universal' && 'aarch64-apple-darwin,x86_64-apple-darwin' || ( matrix.build == 'aarch64' && 'aarch64-apple-darwin' || 'x86_64-apple-darwin' ) }}
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile --production
+        run: bun install --frozen-lockfile
       - name: Build Tauri app
         id: tauri-build
         uses: tauri-apps/tauri-action@v0
@@ -249,7 +249,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile --production
+        run: bun install --frozen-lockfile
       - name: Build Tauri app
         id: tauri-build
         uses: tauri-apps/tauri-action@v0
@@ -317,7 +317,7 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
       - name: Install frontend dependencies
-        run: bun install --frozen-lockfile --production
+        run: bun install --frozen-lockfile
       - name: Build Tauri app
         id: tauri-build
         uses: tauri-apps/tauri-action@v0
