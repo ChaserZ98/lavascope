@@ -2,24 +2,45 @@ import {
     Pagination,
     Table,
     TableBody,
+    TableCell,
     TableColumn,
     TableHeader,
+    TableRow,
 } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { useState } from "react";
 
-import { NewRuleState, RuleState } from "@/store/firewall";
+import {
+    NewRuleState,
+    RuleState,
+    SourceType,
+    toProtocolDisplay,
+} from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 
-import NewRule from "./NewRule";
-import Rule from "./Rule";
+import {
+    AddButtonCell,
+    NotesCell as NewRuleNotesCell,
+    PortCell as NewRulePortCell,
+    ProtocolCell as NewRuleProtocolCell,
+    SourceAddressCell as NewRuleSourceAddressCell,
+    SourceTypeCell as NewRuleSourceTypeCell,
+} from "./NewRule";
+import {
+    DeleteButtonCell,
+    NoteCell,
+    PortCell,
+    ProtocolCell,
+    SourceAddressCell,
+    SourceTypeCell,
+} from "./Rule";
 
 type RulesTableProps = {
     ipVersion: IPVersion;
     rules: RuleState[];
     newRule: NewRuleState;
     refreshing: boolean;
-    onRuleDelete: (rule: RuleState) => void;
+    onRuleDelete: (ruleId: number) => void;
     onRuleCreate: (rule: NewRuleState) => void;
     onRuleChange: (rule: NewRuleState) => void;
 };
@@ -76,22 +97,101 @@ export default function RulesTable(props: RulesTableProps) {
                 ))}
             </TableHeader>
             <TableBody emptyContent="Empty">
-                {NewRule({
-                    newRule: props.newRule,
-                    onRuleCreate: props.onRuleCreate,
-                    ipVersion: props.newRule.ip_type,
-                    onRuleChange: props.onRuleChange,
-                })}
+                <TableRow>
+                    <TableCell>
+                        <NewRuleProtocolCell
+                            isDisabled={props.refreshing}
+                            newRule={props.newRule}
+                            onRuleChange={props.onRuleChange}
+                        />
+                    </TableCell>
+                    <TableCell>
+                        <NewRulePortCell
+                            isDisabled={props.refreshing}
+                            newRule={props.newRule}
+                            onRuleChange={props.onRuleChange}
+                        />
+                    </TableCell>
+                    <TableCell>
+                        <NewRuleSourceTypeCell
+                            isDisabled={props.refreshing}
+                            newRule={props.newRule}
+                            onRuleChange={props.onRuleChange}
+                        />
+                    </TableCell>
+                    <TableCell>
+                        <NewRuleSourceAddressCell
+                            isDisabled={props.refreshing}
+                            newRule={props.newRule}
+                            onRuleChange={props.onRuleChange}
+                        />
+                    </TableCell>
+                    <TableCell>
+                        <NewRuleNotesCell
+                            isDisabled={props.refreshing}
+                            newRule={props.newRule}
+                            onRuleChange={props.onRuleChange}
+                        />
+                    </TableCell>
+                    <TableCell>
+                        <AddButtonCell
+                            newRule={props.newRule}
+                            onPress={() => props.onRuleCreate(props.newRule)}
+                            isDisabled={props.refreshing}
+                        />
+                    </TableCell>
+                </TableRow>
                 <>
-                    {props.rules.map((ruleState, index) =>
-                        Rule({
-                            key: index,
-                            rule: ruleState.rule,
-                            onDelete: props.onRuleDelete,
-                            loading: props.refreshing,
-                            t,
-                        })
-                    )}
+                    {props.rules.map((ruleState, index) => (
+                        <TableRow key={index}>
+                            <TableCell>
+                                <ProtocolCell
+                                    value={toProtocolDisplay(
+                                        ruleState.rule.protocol,
+                                        ruleState.rule.port
+                                    )}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <PortCell value={ruleState.rule.port || "-"} />
+                            </TableCell>
+                            <TableCell>
+                                <SourceTypeCell
+                                    value={
+                                        ruleState.rule.source ||
+                                        (ruleState.rule.subnet === "::" ||
+                                        ruleState.rule.subnet === "0.0.0.0"
+                                            ? t`anywhere`
+                                            : t`custom`)
+                                    }
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <SourceAddressCell
+                                    value={
+                                        ruleState.rule.source ===
+                                        SourceType.CLOUDFLARE
+                                            ? "cloudflare"
+                                            : `${ruleState.rule.subnet}/${ruleState.rule.subnet_size}`
+                                    }
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <NoteCell value={ruleState.rule.notes || "-"} />
+                            </TableCell>
+                            <TableCell>
+                                <DeleteButtonCell
+                                    isDisabled={
+                                        props.refreshing || ruleState.deleting
+                                    }
+                                    isLoading={ruleState.deleting}
+                                    onDelete={() =>
+                                        props.onRuleDelete(ruleState.rule.id)
+                                    }
+                                />
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </>
             </TableBody>
         </Table>

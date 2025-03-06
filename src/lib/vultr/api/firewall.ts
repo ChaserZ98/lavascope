@@ -143,7 +143,7 @@ export const createRule: Endpoint = {
             required: true,
         },
         subnet_size: {
-            type: "string",
+            type: "number",
             required: true,
         },
         port: { type: "string" },
