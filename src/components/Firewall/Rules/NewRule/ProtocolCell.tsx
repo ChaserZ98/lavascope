@@ -137,11 +137,7 @@ export default function ProtocolCell({
             onSelectionChange={(keys) => {
                 const protocol =
                     (keys.currentKey as ProtocolSelection) || protocolSelection;
-                const port =
-                    getProtocolPort(protocol) ||
-                    (protocol === Protocol.TCP || protocol === Protocol.UDP
-                        ? protocolSelection
-                        : "");
+                const port = getProtocolPort(protocol);
                 onRuleChange({
                     ...newRule,
                     port,
