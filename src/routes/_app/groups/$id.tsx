@@ -77,13 +77,13 @@ function RelativeTime({ date }: { date: string }) {
 }
 
 function DeleteModal({
-    modal,
+    isOpen,
     groupId,
     ruleId,
     onClose,
     onConfirm,
 }: {
-    modal: ReturnType<typeof useDisclosure>;
+    isOpen: boolean;
     groupId: string;
     ruleId: number | null;
     onClose?: () => void;
@@ -101,7 +101,7 @@ function DeleteModal({
     return (
         <Modal
             backdrop="transparent"
-            isOpen={modal.isOpen}
+            isOpen={isOpen}
             onClose={onClose}
             classNames={{
                 base: "select-none",
@@ -596,7 +596,7 @@ function Rules() {
                     </Tab>
                 </Tabs>
                 <DeleteModal
-                    modal={deleteModal}
+                    isOpen={deleteModal.isOpen}
                     ruleId={selectedRuleId}
                     groupId={groupId}
                     onClose={handleModalClose}
