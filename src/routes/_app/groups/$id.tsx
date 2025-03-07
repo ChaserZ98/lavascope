@@ -19,6 +19,7 @@ import { selectAtom } from "jotai/utils";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+import DescriptionEdit from "@/components/Firewall/Groups/DescriptionEdit";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import ProxySwitch from "@/components/ProxySwitch";
 import { db } from "@/db";
@@ -515,36 +516,28 @@ function Rules() {
                     </Tooltip>
                 </div>
             </div>
-            <div className="flex items-center gap-4">
-                <div className="flex flex-col gap-2 items-center">
-                    <p className="text-default-400 text-sm md:text-base">
-                        <Trans>Description</Trans>
-                    </p>
-                    <p className="font-mono text-sm md:text-base">
-                        {group.description ? (
-                            group.description
-                        ) : (
-                            <Trans>[Empty]</Trans>
-                        )}
-                    </p>
-                </div>
+            <div className="flex flex-col items-center gap-4 sm:flex-row">
+                <DescriptionEdit
+                    groupId={group.id}
+                    description={group.description}
+                />
                 <Divider
                     orientation="vertical"
-                    className="h-auto self-stretch bg-default-400"
+                    className="hidden h-auto self-stretch bg-default-400 sm:block"
                 />
                 <div className="flex flex-col gap-2 items-center">
                     <p className="text-default-400 text-sm md:text-base">
                         <Trans>Group Rules</Trans>
                     </p>
                     <p className="font-mono text-sm md:text-base">
-                        <span>{group.rule_count}</span>
+                        <span className="text-primary">{group.rule_count}</span>
                         <span>/</span>
                         <span>{group.max_rule_count}</span>
                     </p>
                 </div>
                 <Divider
                     orientation="vertical"
-                    className="h-auto self-stretch bg-default-400"
+                    className="hidden h-auto self-stretch bg-default-400 sm:block"
                 />
                 <div className="flex flex-col gap-2 items-center">
                     <p className="text-default-400 text-sm  md:text-base">
