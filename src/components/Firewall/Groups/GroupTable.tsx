@@ -360,6 +360,7 @@ export default function GroupTable() {
                         t`ID`,
                         t`Description`,
                         t`Date Created`,
+                        t`Last Modified`,
                         t`Rules`,
                         t`Instances`,
                         t`Action`,
@@ -390,6 +391,11 @@ export default function GroupTable() {
                             <TableCell>
                                 <Group.DateCreatedCell
                                     value={groupState.group.date_created}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Group.LastModifiedDateCell
+                                    value={groupState.group.date_modified}
                                 />
                             </TableCell>
                             <TableCell>

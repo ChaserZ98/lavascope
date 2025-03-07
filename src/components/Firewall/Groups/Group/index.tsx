@@ -26,6 +26,20 @@ function DateCreatedCell({ value }: { value: string }) {
     );
 }
 
+function LastModifiedDateCell({ value }: { value: string }) {
+    return (
+        <>
+            {new Date(value).toLocaleString(
+                Intl.DateTimeFormat().resolvedOptions().locale,
+                {
+                    timeZoneName: "short",
+                    hour12: false,
+                }
+            )}
+        </>
+    );
+}
+
 function RuleCountCell({ value }: { value: number }) {
     return <>{value}</>;
 }
@@ -46,32 +60,30 @@ function ActionCell({
     const { t } = useLingui();
 
     return (
-        <div className="flex w-16 items-center justify-end">
-            {
-                <Tooltip
-                    content={t`Edit`}
-                    delay={1000}
-                    closeDelay={100}
-                    isDisabled={isDisabled}
+        <div className="flex w-24 items-center justify-end">
+            <Tooltip
+                content={t`Edit`}
+                delay={1000}
+                closeDelay={100}
+                isDisabled={isDisabled}
+                color="primary"
+            >
+                <Button
+                    isIconOnly
+                    size="sm"
+                    variant="light"
                     color="primary"
+                    to={`/groups/${id}`}
+                    className="text-default-400 transition-colors-opacity hover:text-primary-400"
+                    as={Link}
                 >
-                    <Button
-                        isIconOnly
-                        size="sm"
-                        variant="light"
-                        color="primary"
-                        to={`/groups/${id}`}
-                        className="text-default-400 transition-colors-opacity hover:text-primary-400"
-                        as={Link}
-                    >
-                        <Icon
-                            path={mdiPencil}
-                            size={0.75}
-                            className="cursor-pointer"
-                        />
-                    </Button>
-                </Tooltip>
-            }
+                    <Icon
+                        path={mdiPencil}
+                        size={0.75}
+                        className="cursor-pointer"
+                    />
+                </Button>
+            </Tooltip>
             <Tooltip
                 content={t`Delete`}
                 delay={1000}
@@ -102,4 +114,5 @@ export default {
     RuleCountCell,
     InstanceCountCell,
     ActionCell,
+    LastModifiedDateCell,
 };
