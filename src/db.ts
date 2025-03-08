@@ -1,7 +1,6 @@
 import Dexie, { Table } from "dexie";
 
 import { Group, Rule } from "./store/firewall";
-import { Version as IPVersion } from "./store/ip";
 
 const db = new Dexie("vfw") as Dexie & {
     groups: Table<Group, string>;
@@ -11,8 +10,6 @@ const db = new Dexie("vfw") as Dexie & {
         },
         [string, number]
     >;
-    endpoints: Table<{ ip_type: IPVersion; endpoint: string }, number>;
-    endpointFlag: Table<{ ip_type: IPVersion }, IPVersion>;
 };
 
 db.version(1).stores({

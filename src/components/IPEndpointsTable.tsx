@@ -12,17 +12,17 @@ import {
 import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiPlus, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-import { db } from "@/db";
 import {
     addIPEndpointAtom,
     deleteIPEndpointAtom,
     ipv4EndpointStateAtom,
     ipv6EndpointStateAtom,
     resetIPEndpointsAtom,
+    restoreIPEndpointsAtom,
     Version,
 } from "@/store/ip";
 import logging from "@/utils/log";
@@ -33,7 +33,7 @@ interface IPEndpointsTableProps {
 
 export default function IPEndpointsTable(props: IPEndpointsTableProps) {
     const { version } = props;
-    const [endpointState, setEndpointState] = useAtom(
+    const endpointState = useAtomValue(
         version === Version.V4 ? ipv4EndpointStateAtom : ipv6EndpointStateAtom
     );
     const endpoints = endpointState.endpoints;
@@ -42,6 +42,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
     const resetEndpoints = useSetAtom(resetIPEndpointsAtom);
     const addEndpoint = useSetAtom(addIPEndpointAtom);
     const deleteEndpoints = useSetAtom(deleteIPEndpointAtom);
+    const restoreEndpoints = useSetAtom(restoreIPEndpointsAtom);
 
     const [newEndpoint, setNewEndpoint] = useState<string>("");
 
@@ -105,30 +106,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
 
     useEffect(() => {
         if (shouldUpdateFromDB) {
-            const update = async () => {
-                logging.info(`Restoring ${version} endpoints from DB`);
-                const count = await db.endpointFlag.count();
-                if (count === 0) {
-                    logging.info(`No ${version} endpoints found in DB`);
-                    await db.endpointFlag.clear();
-                    await db.endpoints.clear();
-                    await db.endpoints.bulkPut(
-                        endpoints.map((endpoint) => ({
-                            ip_type: version,
-                            endpoint,
-                        }))
-                    );
-                    await db.endpointFlag.put({ ip_type: version });
-                }
-                const dbEndpoints = await db.endpoints
-                    .where({ ip_type: version })
-                    .toArray();
-                setEndpointState((state) => {
-                    state.endpoints = dbEndpoints.map((e) => e.endpoint);
-                    state.shouldUpdateFromDB = false;
-                });
-            };
-            update().catch((err: Error) => {
+            restoreEndpoints(version).catch((err: Error) => {
                 logging.error(`Failed to restore ${version} endpoints: ${err}`);
                 const message = err.message;
                 toast.error(

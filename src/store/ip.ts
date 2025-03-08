@@ -1,7 +1,8 @@
+import { get as idbGet, set as idbSet, update as idbUpdate } from "idb-keyval";
 import { atom } from "jotai";
 import { atomWithImmer } from "jotai-immer";
+import { z } from "zod";
 
-import { db } from "@/db";
 import logging from "@/utils/log";
 
 export enum Version {
@@ -105,6 +106,33 @@ export const ipv6EndpointsAtom = atom(
     (get) => get(ipv6EndpointStateAtom).endpoints
 );
 
+export const restoreIPEndpointsAtom = atom(null, async (_get, set, version) => {
+    logging.info(`Restoring ${version} endpoints from DB`);
+    const atom =
+        version === Version.V4 ? ipv4EndpointStateAtom : ipv6EndpointStateAtom;
+    const endpointsSchema = z.array(z.string());
+    const dbEndpointsResult = endpointsSchema.safeParse(
+        await idbGet(`${version}-endpoints`)
+    );
+    if (!dbEndpointsResult.success) {
+        logging.info(`No ${version} endpoints found in DB`);
+        const defaultEndpoints =
+            version === Version.V4
+                ? defaultIPv4Endpoints
+                : defaultIPv6Endpoints;
+        await idbSet(`${version}-endpoints`, defaultEndpoints);
+        set(atom, (state) => {
+            state.endpoints = defaultEndpoints;
+            state.shouldUpdateFromDB = false;
+        });
+        return;
+    }
+    const dbEndpoints = dbEndpointsResult.data;
+    set(atom, (state) => {
+        state.endpoints = dbEndpoints;
+        state.shouldUpdateFromDB = false;
+    });
+});
 export const addIPEndpointAtom = atom(
     null,
     async (_get, set, version: Version, endpoint: string) => {
@@ -112,7 +140,14 @@ export const addIPEndpointAtom = atom(
             version === Version.V4
                 ? ipv4EndpointStateAtom
                 : ipv6EndpointStateAtom;
-        await db.endpoints.add({ ip_type: version, endpoint });
+        await idbUpdate(
+            `${version}-endpoints`,
+            (endpoints: string[] | undefined) => {
+                const newEndpoints = endpoints ?? [];
+                newEndpoints.push(endpoint);
+                return newEndpoints;
+            }
+        );
         set(atom, (state) => {
             state.endpoints.push(endpoint);
         });
@@ -125,7 +160,13 @@ export const deleteIPEndpointAtom = atom(
             version === Version.V4
                 ? ipv4EndpointStateAtom
                 : ipv6EndpointStateAtom;
-        await db.endpoints.where({ ip_type: version, endpoint }).delete();
+        await idbUpdate(
+            `${version}-endpoints`,
+            (endpoints: string[] | undefined) => {
+                const newEndpoints = endpoints?.filter((e) => e !== endpoint);
+                return newEndpoints || [];
+            }
+        );
         set(atom, (state) => {
             state.endpoints = state.endpoints.filter((e) => e !== endpoint);
         });
@@ -142,13 +183,7 @@ export const resetIPEndpointsAtom = atom(
             version === Version.V4
                 ? defaultIPv4Endpoints
                 : defaultIPv6Endpoints;
-        await db.endpoints.where({ ip_type: version }).delete();
-        await db.endpoints.bulkPut(
-            endpoints.map((endpoint) => ({
-                ip_type: version,
-                endpoint,
-            }))
-        );
+        await idbSet(`${version}-endpoints`, endpoints);
         set(atom, (state) => {
             state.endpoints = endpoints;
         });
