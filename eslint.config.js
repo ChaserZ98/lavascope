@@ -1,4 +1,5 @@
 import pluginJs from "@eslint/js";
+import pluginQuery from "@tanstack/eslint-plugin-query";
 import pluginLingui from "eslint-plugin-lingui";
 import pluginReact from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
@@ -45,4 +46,5 @@ export default [
             ],
         },
     },
+    ...pluginQuery.configs["flat/recommended"],
 ];
