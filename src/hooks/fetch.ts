@@ -1,3 +1,4 @@
+import { isTauri } from "@tauri-apps/api/core";
 import {
     type ClientOptions,
     fetch as tauriFetch,
@@ -23,9 +24,7 @@ export default function useFetch() {
     const proxyAddress = useAtomValue(proxyAddressAtom);
 
     const fetchMethod = useMemo(() => {
-        if (!("__TAURI_INTERNALS__" in window)) {
-            return fetch;
-        }
+        if (!isTauri()) return fetch;
         return createTauriFetch({
             proxy: useProxy
                 ? {
