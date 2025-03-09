@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { useDeferredValue, useMemo } from "react";
+import { useDeferredValue, useEffect, useRef } from "react";
 
 import { VultrAPI } from "@/lib/vultr";
 import { apiTokenAtom } from "@/store/firewall";
@@ -12,14 +12,17 @@ export function useVultrAPI() {
 
     const deferredApiToken = useDeferredValue(apiToken);
 
-    const vultrAPI = useMemo(
-        () =>
-            new VultrAPI({
-                apiToken: deferredApiToken,
-                fetchClient,
-            }),
-        [fetchClient, deferredApiToken]
+    const vultrAPI = useRef<VultrAPI>(
+        new VultrAPI({
+            apiToken: deferredApiToken,
+            fetchClient,
+        })
     );
 
-    return vultrAPI;
+    useEffect(() => {
+        vultrAPI.current.apiToken = deferredApiToken;
+        vultrAPI.current.fetchClient = fetchClient;
+    }, [deferredApiToken, fetchClient]);
+
+    return vultrAPI.current;
 }
