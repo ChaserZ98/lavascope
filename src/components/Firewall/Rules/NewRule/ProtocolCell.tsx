@@ -1,6 +1,13 @@
 import { Select, SelectItem, SelectSection } from "@heroui/react";
+import { useParams } from "@tanstack/react-router";
+import { useSetAtom } from "jotai";
 
-import { NewRuleState, Protocol, ProtocolSelection } from "@/store/firewall";
+import {
+    NewRuleState,
+    Protocol,
+    ProtocolSelection,
+    setNewRuleAtom,
+} from "@/store/firewall";
 
 export function getProtocolPort(protocol: ProtocolSelection): string {
     switch (protocol) {
@@ -118,17 +125,23 @@ export const protocols = [
 export default function ProtocolCell({
     isDisabled,
     newRule,
-    onRuleChange,
 }: {
     isDisabled?: boolean;
     newRule: NewRuleState;
-    onRuleChange: (rule: NewRuleState) => void;
 }) {
+    const { id: groupId = "" } = useParams({
+        from: "/_app/groups/$id",
+    });
+
+    const setNewRule = useSetAtom(setNewRuleAtom);
+
     const protocolSelection = newRule.protocol;
+    const isCreating = newRule.isCreating;
+    const isActionDisabled = isDisabled || isCreating;
     return (
         <Select
             items={protocols}
-            isDisabled={isDisabled || newRule.creating}
+            isDisabled={isActionDisabled}
             variant="faded"
             selectionMode="single"
             placeholder="SSH"
@@ -138,11 +151,12 @@ export default function ProtocolCell({
                 const protocol =
                     (keys.currentKey as ProtocolSelection) || protocolSelection;
                 const port = getProtocolPort(protocol);
-                onRuleChange({
+                const rule = {
                     ...newRule,
-                    port,
                     protocol,
-                });
+                    port,
+                };
+                setNewRule(groupId, rule);
             }}
             classNames={{
                 base: "min-w-[150px] !duration-250",

@@ -1,8 +1,9 @@
 import { Select, SelectItem } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
-import { useAtomValue } from "jotai";
+import { useParams } from "@tanstack/react-router";
+import { useAtomValue, useSetAtom } from "jotai";
 
-import { NewRuleState, SourceType } from "@/store/firewall";
+import { NewRuleState, setNewRuleAtom, SourceType } from "@/store/firewall";
 import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@/store/ip";
 
 export function getSource(
@@ -28,14 +29,18 @@ export function getSource(
 export default function SourceTypeCell({
     isDisabled,
     newRule,
-    onRuleChange,
 }: {
     isDisabled?: boolean;
     newRule: NewRuleState;
-    onRuleChange: (rule: NewRuleState) => void;
 }) {
+    const { id: groupId = "" } = useParams({
+        from: "/_app/groups/$id",
+    });
+
     const myIPv4 = useAtomValue(ipv4Atom);
     const myIPv6 = useAtomValue(ipv6Atom);
+
+    const setNewRule = useSetAtom(setNewRuleAtom);
 
     const { t } = useLingui();
 
@@ -57,14 +62,18 @@ export default function SourceTypeCell({
             value: SourceType.ANYWHERE,
         },
         {
-            title: t`Load Balancer`,
+            // TODO: Implement load balancer source type
+            title: t`Load Balancer (WIP)`,
             value: SourceType.LOAD_BALANCER,
         },
     ];
 
+    const isCreating = newRule.isCreating;
+    const isActionDisabled = isDisabled || isCreating;
+
     return (
         <Select
-            isDisabled={isDisabled || newRule.creating}
+            isDisabled={isActionDisabled}
             disallowEmptySelection
             items={
                 (newRule.ip_type === IPVersion.V4 && myIPv4.value) ||
@@ -74,6 +83,7 @@ export default function SourceTypeCell({
                           (type) => type.value !== SourceType.MY_IP
                       )
             }
+            disabledKeys={[SourceType.LOAD_BALANCER]}
             variant="faded"
             selectionMode="single"
             placeholder="Source Type"
@@ -87,7 +97,7 @@ export default function SourceTypeCell({
                     myIPv4.value,
                     myIPv6.value
                 );
-                onRuleChange({
+                setNewRule(groupId, {
                     ...newRule,
                     sourceType,
                     source,

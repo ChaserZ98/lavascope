@@ -1,3 +1,4 @@
+import { atom } from "jotai";
 import { atomWithImmer } from "jotai-immer";
 
 import { Version as IPVersion } from "@/store/ip";
@@ -113,7 +114,7 @@ export const initialNewRuleIPv4: NewRuleState = {
     sourceType: SourceType.ANYWHERE,
     source: "0.0.0.0/0",
     notes: "",
-    creating: false,
+    isCreating: false,
 };
 
 export const initialNewRuleIPv6: NewRuleState = {
@@ -123,9 +124,30 @@ export const initialNewRuleIPv6: NewRuleState = {
     sourceType: SourceType.ANYWHERE,
     source: "::/0",
     notes: "",
-    creating: false,
+    isCreating: false,
 };
 
 export const rulesAtom = atomWithImmer<
-    Record<string, Record<number, RuleState>>
+    Record<string, Record<string, RuleState>>
 >({});
+
+export const setRuleIsDeletingAtom = atom(
+    null,
+    (_get, set, groupId: string, ruleId: string, isDeleting: boolean) => {
+        set(rulesAtom, (state) => {
+            if (!state[groupId]) return;
+            if (!state[groupId][ruleId]) return;
+            state[groupId][ruleId].isDeleting = isDeleting;
+        });
+    }
+);
+
+export const deleteRuleAtom = atom(
+    null,
+    (_get, set, groupId: string, ruleId: string) => {
+        set(rulesAtom, (state) => {
+            if (!state[groupId]) return;
+            delete state[groupId][ruleId];
+        });
+    }
+);

@@ -1,7 +1,8 @@
 import { atom } from "jotai";
 import { atomWithImmer } from "jotai-immer";
 
-import { Version as IPVersion } from "../../ip";
+import { Version } from "@/store/ip";
+
 import {
     initialNewRuleIPv4,
     initialNewRuleIPv6,
@@ -9,37 +10,65 @@ import {
 } from "../rule";
 import { GroupState } from "./types";
 
-const initialGroupInfo = {
-    id: "",
-    description: "",
-    date_created: "",
-    date_modified: "",
-    instance_count: 0,
-    rule_count: 0,
-    max_rule_count: 0,
-};
-
-export const initialGroupState: GroupState = {
-    group: initialGroupInfo,
-    deleting: false,
-    refreshing: false,
-    shouldUpdateFromDB: true,
-    isRulesOutdated: false,
-    newRule: {
-        [IPVersion.V4]: initialNewRuleIPv4,
-        [IPVersion.V6]: initialNewRuleIPv6,
-    },
-};
-
-export const groupsAtom = atomWithImmer<Record<string, GroupState>>({});
+export const groupsStateAtom = atomWithImmer<Record<string, GroupState>>({});
 
 export const setNewRuleAtom = atom(
     null,
     (_get, set, groupId: string, rule: NewRuleState) => {
-        set(groupsAtom, (state) => {
-            if (state[groupId]) {
-                state[groupId].newRule[rule.ip_type] = rule;
-            }
+        const version = rule.ip_type;
+        set(groupsStateAtom, (state) => {
+            state[groupId].newRule[version] = rule;
+        });
+    }
+);
+
+export const resetNewRuleAtom = atom(
+    null,
+    (_get, set, groupId: string, version: Version) => {
+        set(groupsStateAtom, (state) => {
+            state[groupId].newRule[version] =
+                version === Version.V4
+                    ? initialNewRuleIPv4
+                    : initialNewRuleIPv6;
+        });
+    }
+);
+
+export const setNewRuleIsCreatingAtom = atom(
+    null,
+    (_get, set, groupId: string, version: Version, isCreating: boolean) => {
+        set(groupsStateAtom, (state) => {
+            if (!state[groupId]?.newRule[version]) return;
+            state[groupId].newRule[version].isCreating = isCreating;
+        });
+    }
+);
+
+export const setNewDescriptionAtom = atom(
+    null,
+    (_get, set, groupId: string, description: string) => {
+        set(groupsStateAtom, (state) => {
+            state[groupId].newDescription = description;
+        });
+    }
+);
+
+export const setGroupIsUpdatingAtom = atom(
+    null,
+    (_get, set, groupId: string, isLoading: boolean) => {
+        set(groupsStateAtom, (state) => {
+            if (!state[groupId]) return;
+            state[groupId].isUpdating = isLoading;
+        });
+    }
+);
+
+export const setGroupIsDeletingAtom = atom(
+    null,
+    (_get, set, groupId: string, isLoading: boolean) => {
+        set(groupsStateAtom, (state) => {
+            if (!state[groupId]) return;
+            state[groupId].isDeleting = isLoading;
         });
     }
 );

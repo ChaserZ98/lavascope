@@ -1,36 +1,46 @@
 import { Input } from "@heroui/react";
+import { useParams } from "@tanstack/react-router";
+import { useSetAtom } from "jotai";
 
-import { NewRuleState, Protocol } from "@/store/firewall";
+import { NewRuleState, Protocol, setNewRuleAtom } from "@/store/firewall";
 
 export default function PortCell({
     isDisabled,
     newRule,
-    onRuleChange,
 }: {
     isDisabled?: boolean;
     newRule: NewRuleState;
-    onRuleChange: (rule: NewRuleState) => void;
 }) {
+    const { id: groupId = "" } = useParams({
+        from: "/_app/groups/$id",
+    });
+
+    const setNewRule = useSetAtom(setNewRuleAtom);
+
+    const isCreating = newRule.isCreating;
+    const isActionDisabled = isDisabled || isCreating;
     return (
         <Input
             placeholder="Port"
             aria-label="Port"
             variant="faded"
             isDisabled={
-                isDisabled ||
+                isActionDisabled ||
                 (newRule.protocol !== Protocol.TCP &&
-                    newRule.protocol !== Protocol.UDP) ||
-                newRule.creating
+                    newRule.protocol !== Protocol.UDP)
             }
             value={newRule.port}
-            onChange={(e) =>
-                e.target.value.match(/^[0-9]{0,5}$/)
-                    ? onRuleChange({
-                          ...newRule,
-                          port: e.target.value,
-                      })
-                    : e.preventDefault()
-            }
+            onChange={(e) => {
+                if (!e.target.value.match(/^[0-9]{0,5}$/)) {
+                    e.preventDefault();
+                    return;
+                }
+                const rule = {
+                    ...newRule,
+                    port: e.target.value,
+                };
+                setNewRule(groupId, rule);
+            }}
             classNames={{
                 base: "min-w-[80px]",
                 inputWrapper: "transition-colors-opacity !duration-250",

@@ -13,10 +13,15 @@ export type Group = {
 };
 
 export type GroupState = {
-    group: Group;
-    deleting: boolean;
-    refreshing: boolean;
-    shouldUpdateFromDB: boolean;
-    isRulesOutdated: boolean;
+    group?: Group;
     newRule: Record<IPVersion, NewRuleState>;
+    newDescription: string;
+    /**
+     * True -> the group's update mutation is in progress.
+     */
+    isUpdating: boolean;
+    /**
+     * True -> the group's delete mutation is in progress.
+     */
+    isDeleting: boolean;
 };

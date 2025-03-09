@@ -8,10 +8,16 @@ import {
     TableRow,
 } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
-import { useState } from "react";
+import { useParams } from "@tanstack/react-router";
+import { useAtomValue } from "jotai";
+import { selectAtom } from "jotai/utils";
+import { useCallback, useState } from "react";
 
 import {
-    NewRuleState,
+    groupsStateAtom,
+    initialNewRuleIPv4,
+    initialNewRuleIPv6,
+    Rule,
     RuleState,
     SourceType,
     toProtocolDisplay,
@@ -38,18 +44,34 @@ import {
 type RulesTableProps = {
     ipVersion: IPVersion;
     rules: RuleState[];
-    newRule: NewRuleState;
-    refreshing: boolean;
-    onRuleDelete: (ruleId: number) => void;
-    onRuleCreate: (rule: NewRuleState) => void;
-    onRuleChange: (rule: NewRuleState) => void;
+    isLoading?: boolean;
+    onRuleDelete: (rule: Rule) => void;
 };
 export default function RulesTable(props: RulesTableProps) {
-    const [page, setPage] = useState(1);
-    const rowsPerPage = 5;
-    const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
+    const { id: groupId = "" } = useParams({
+        from: "/_app/groups/$id",
+    });
 
     const { t } = useLingui();
+
+    const newRule =
+        useAtomValue(
+            selectAtom(
+                groupsStateAtom,
+                useCallback(
+                    (state) => state[groupId]?.newRule[props.ipVersion],
+                    [groupId, props.ipVersion]
+                )
+            )
+        ) ||
+        (props.ipVersion === IPVersion.V4
+            ? initialNewRuleIPv4
+            : initialNewRuleIPv6);
+
+    const [page, setPage] = useState(1);
+
+    const rowsPerPage = 5;
+    const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
 
     return (
         <Table
@@ -60,13 +82,13 @@ export default function RulesTable(props: RulesTableProps) {
                 td: "transition-colors-opacity text-xs sm:text-sm text-foreground font-mono",
                 base:
                     "overflow-x-auto" +
-                    (props.refreshing ? "animate-pulse" : ""),
+                    (props.isLoading ? "animate-pulse" : ""),
             }}
             isKeyboardNavigationDisabled
             topContent={
                 <div className="sticky left-1/2 -translate-x-1/2 w-fit">
                     <Pagination
-                        isDisabled={props.refreshing}
+                        isDisabled={props.isLoading}
                         showControls
                         color="primary"
                         variant="flat"
@@ -100,44 +122,38 @@ export default function RulesTable(props: RulesTableProps) {
                 <TableRow>
                     <TableCell>
                         <NewRuleProtocolCell
-                            isDisabled={props.refreshing}
-                            newRule={props.newRule}
-                            onRuleChange={props.onRuleChange}
+                            isDisabled={props.isLoading}
+                            newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRulePortCell
-                            isDisabled={props.refreshing}
-                            newRule={props.newRule}
-                            onRuleChange={props.onRuleChange}
+                            isDisabled={props.isLoading}
+                            newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRuleSourceTypeCell
-                            isDisabled={props.refreshing}
-                            newRule={props.newRule}
-                            onRuleChange={props.onRuleChange}
+                            isDisabled={props.isLoading}
+                            newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRuleSourceAddressCell
-                            isDisabled={props.refreshing}
-                            newRule={props.newRule}
-                            onRuleChange={props.onRuleChange}
+                            isDisabled={props.isLoading}
+                            newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRuleNotesCell
-                            isDisabled={props.refreshing}
-                            newRule={props.newRule}
-                            onRuleChange={props.onRuleChange}
+                            isDisabled={props.isLoading}
+                            newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <AddButtonCell
-                            newRule={props.newRule}
-                            onPress={() => props.onRuleCreate(props.newRule)}
-                            isDisabled={props.refreshing}
+                            newRule={newRule}
+                            isDisabled={props.isLoading}
                         />
                     </TableCell>
                 </TableRow>
@@ -182,11 +198,11 @@ export default function RulesTable(props: RulesTableProps) {
                             <TableCell>
                                 <DeleteButtonCell
                                     isDisabled={
-                                        props.refreshing || ruleState.deleting
+                                        props.isLoading || ruleState.isDeleting
                                     }
-                                    isLoading={ruleState.deleting}
+                                    isLoading={ruleState.isDeleting}
                                     onDelete={() =>
-                                        props.onRuleDelete(ruleState.rule.id)
+                                        props.onRuleDelete(ruleState.rule)
                                     }
                                 />
                             </TableCell>

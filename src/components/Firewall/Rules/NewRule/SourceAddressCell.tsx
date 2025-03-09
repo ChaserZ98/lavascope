@@ -1,23 +1,30 @@
 import { Textarea } from "@heroui/react";
+import { useParams } from "@tanstack/react-router";
+import { useSetAtom } from "jotai";
 
-import { NewRuleState, SourceType } from "@/store/firewall";
+import { NewRuleState, setNewRuleAtom, SourceType } from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 
 export default function SourceAddressCell({
     isDisabled,
     newRule,
-    onRuleChange,
 }: {
     isDisabled?: boolean;
     newRule: NewRuleState;
-    onRuleChange: (rule: NewRuleState) => void;
 }) {
+    const { id: groupId = "" } = useParams({
+        from: "/_app/groups/$id",
+    });
+
+    const setNewRule = useSetAtom(setNewRuleAtom);
+
+    const isCreating = newRule.isCreating;
+    const isActionDisabled = isDisabled || isCreating;
+
     return (
         <Textarea
             isDisabled={
-                isDisabled ||
-                newRule.sourceType !== SourceType.CUSTOM ||
-                newRule.creating
+                isActionDisabled || newRule.sourceType !== SourceType.CUSTOM
             }
             minRows={1}
             maxRows={4}
@@ -35,7 +42,7 @@ export default function SourceAddressCell({
                 input: "resize-none h-5 text-foreground !ease-[ease] !duration-250 !transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity] placeholder:transition-colors-opacity placeholder:italic",
             }}
             onChange={(e) => {
-                onRuleChange({
+                setNewRule(groupId, {
                     ...newRule,
                     source: e.target.value,
                 });

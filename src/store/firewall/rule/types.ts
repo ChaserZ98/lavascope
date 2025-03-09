@@ -58,10 +58,10 @@ export type NewRuleState = {
     sourceType: SourceType;
     source: string;
     notes: string;
-    creating: boolean;
+    isCreating: boolean;
 };
 
 export type RuleState = {
     rule: Rule;
-    deleting: boolean;
+    isDeleting: boolean;
 };

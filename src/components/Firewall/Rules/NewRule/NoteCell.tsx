@@ -1,22 +1,31 @@
 import { Textarea } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
+import { useParams } from "@tanstack/react-router";
+import { useSetAtom } from "jotai";
 
-import { NewRuleState } from "@/store/firewall";
+import { NewRuleState, setNewRuleAtom } from "@/store/firewall";
 
 export default function NotesCell({
     isDisabled,
     newRule,
-    onRuleChange,
 }: {
     isDisabled?: boolean;
     newRule: NewRuleState;
-    onRuleChange: (rule: NewRuleState) => void;
 }) {
+    const { id: groupId = "" } = useParams({
+        from: "/_app/groups/$id",
+    });
+
     const { t } = useLingui();
+
+    const setNewRule = useSetAtom(setNewRuleAtom);
+
+    const isCreating = newRule.isCreating;
+    const isActionDisabled = isDisabled || isCreating;
 
     return (
         <Textarea
-            isDisabled={isDisabled || newRule.creating}
+            isDisabled={isActionDisabled}
             minRows={1}
             variant="faded"
             placeholder={t`Enter note here`}
@@ -28,7 +37,7 @@ export default function NotesCell({
                 input: "resize-none overflow-y-auto h-5 text-balance text-foreground !ease-[ease] !duration-250 !transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity] placeholder:transition-colors-opacity placeholder:italic",
             }}
             onChange={(e) =>
-                onRuleChange({
+                setNewRule(groupId, {
                     ...newRule,
                     notes: e.target.value,
                 })

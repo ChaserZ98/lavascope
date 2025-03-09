@@ -26,7 +26,6 @@ import {
     setIPAtom,
     Version as IPVersion,
 } from "@/store/ip";
-import { proxyAddressAtom, useProxyAtom } from "@/store/proxy";
 import logging from "@/utils/log";
 
 import ProxySwitch from "./ProxySwitch";
@@ -36,8 +35,6 @@ export default function MyIPTable() {
     const ipv6 = useAtomValue(ipv6Atom);
     const ipv4Endpoints = useAtomValue(ipv4EndpointsAtom);
     const ipv6Endpoints = useAtomValue(ipv6EndpointsAtom);
-    const useProxy = useAtomValue(useProxyAtom);
-    const proxyAddress = useAtomValue(proxyAddressAtom);
 
     const setIP = useSetAtom(setIPAtom);
 
@@ -61,21 +58,6 @@ export default function MyIPTable() {
                         <p>
                             <Trans>
                                 Please add at least one {version} endpoint.
-                            </Trans>
-                        </p>
-                    </>
-                );
-                return;
-            }
-            if (useProxy && proxyAddress === "") {
-                toast.error(
-                    <>
-                        <p>
-                            <Trans>Proxy address is not set.</Trans>
-                        </p>
-                        <p>
-                            <Trans>
-                                Please set it in settings before using a proxy.
                             </Trans>
                         </p>
                     </>
