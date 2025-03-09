@@ -8,15 +8,11 @@ import { useMemo } from "react";
 
 import { proxyAddressAtom, useProxyAtom } from "@/store/proxy";
 
-function createTauriFetch(clientOptions?: ClientOptions) {
-    return (
-        input: Parameters<typeof fetch>[0],
-        init: Parameters<typeof fetch>[1]
-    ) =>
-        tauriFetch(input, {
-            ...clientOptions,
-            ...init,
-        });
+export class ProxyError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "ProxyError";
+    }
 }
 
 export default function useFetch() {
@@ -25,6 +21,24 @@ export default function useFetch() {
 
     const fetchMethod = useMemo(() => {
         if (!isTauri()) return fetch;
+
+        const createTauriFetch = (clientOptions?: ClientOptions) => {
+            return (
+                input: Parameters<typeof fetch>[0],
+                init: Parameters<typeof fetch>[1]
+            ) => {
+                if (useProxy && proxyAddress === "")
+                    throw new ProxyError(
+                        "Proxy is enabled but address is empty"
+                    );
+
+                return tauriFetch(input, {
+                    ...clientOptions,
+                    ...init,
+                });
+            };
+        };
+
         return createTauriFetch({
             proxy: useProxy
                 ? {
