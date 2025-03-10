@@ -2,21 +2,13 @@ import { Button, Textarea, Tooltip } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { mdiCheck, mdiRestart, mdiShieldEdit, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { useCallback, useEffect } from "react";
-import { toast } from "react-toastify";
 
-import { useVultrAPI } from "@/hooks/vultr";
-import { IListGroupsResponse } from "@/lib/vultr/api/firewall";
-import {
-    groupsStateAtom,
-    setGroupIsUpdatingAtom,
-    setNewDescriptionAtom,
-} from "@/store/firewall";
-import logging from "@/utils/log";
+import { useUpdateGroupMutation } from "@/hooks/Firewall";
+import { groupsStateAtom, setNewDescriptionAtom } from "@/store/firewall";
 
 function IdCell({ value }: { value: string }) {
     return <>{value}</>;
@@ -155,10 +147,6 @@ function ActionCell({
 }) {
     const { t } = useLingui();
 
-    const queryClient = useQueryClient();
-
-    const vultrAPI = useVultrAPI();
-
     const newDescription = useAtomValue(
         selectAtom(
             groupsStateAtom,
@@ -181,68 +169,7 @@ function ActionCell({
         )
     );
 
-    const setGroupIsUpdating = useSetAtom(setGroupIsUpdatingAtom);
-
-    const updateGroupMutation = useMutation<
-        void,
-        Error,
-        {
-            groupId: string;
-            description: string;
-        }
-    >({
-        mutationFn: async ({ groupId, description }) =>
-            await vultrAPI.firewall.updateGroup({
-                "firewall-group-id": groupId,
-                description,
-            }),
-        onMutate: async ({ groupId, description }) => {
-            setGroupIsUpdating(groupId, true);
-            await queryClient.cancelQueries({
-                queryKey: ["groups"],
-            });
-            const previousGroupsState =
-                queryClient.getQueryData<IListGroupsResponse>(["groups"]);
-            const newGroupsState = {
-                ...previousGroupsState,
-                firewall_groups: previousGroupsState?.firewall_groups.map(
-                    (group) => {
-                        if (group.id === groupId) {
-                            return {
-                                ...group,
-                                description,
-                            };
-                        }
-                        return group;
-                    }
-                ),
-            };
-            queryClient.setQueryData(["groups"], newGroupsState);
-            return { previousGroupsState };
-        },
-        onSuccess: async (_, { groupId }) => {
-            logging.info(`Successfully updated group with ID ${groupId}`);
-            toast.success(t`Successfully updated group with ID ${groupId}`);
-            await queryClient.invalidateQueries({
-                queryKey: ["groups"],
-            });
-        },
-        onError: (err, _, context) => {
-            const typedContext = context as {
-                previousGroupsState: IListGroupsResponse;
-            };
-            queryClient.setQueryData(
-                ["groups"],
-                typedContext.previousGroupsState
-            );
-            logging.error(`Failed to update group: ${err}`);
-            const message = err.message || "unknown error";
-            toast.error(t`Failed to update group: ${message}`);
-        },
-        onSettled: (_res, _err, { groupId }: { groupId: string }) => {
-            setGroupIsUpdating(groupId, false);
-        },
-    });
+    const updateGroupMutation = useUpdateGroupMutation();
 
     const handleConfirm = useCallback(
         async (groupId: string, description: string) => {

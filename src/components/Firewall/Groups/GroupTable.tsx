@@ -10,35 +10,23 @@ import {
     useDisclosure,
 } from "@heroui/react";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { useQuery } from "@tanstack/react-query";
-import { useAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useAtomValue } from "jotai";
+import { useCallback, useState } from "react";
 
 import ProxySwitch from "@/components/ProxySwitch";
-import { useVultrAPI } from "@/hooks/vultr";
+import { useGroupsQuery } from "@/hooks/Firewall";
 import { IFirewallGroup } from "@/lib/vultr/types";
-import { groupsStateAtom, initialNewRuleIPv4 } from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
-import logging from "@/utils/log";
+import { groupsStateAtom } from "@/store/firewall";
 
 import DeleteGroupModal from "./DeleteGroupModal";
 import Group from "./Group";
 
 export default function GroupTable() {
-    const vultrAPI = useVultrAPI();
-
     const { t } = useLingui();
 
-    const [groupsState, setGroupsState] = useAtom(groupsStateAtom);
+    const groupsState = useAtomValue(groupsStateAtom);
 
-    const groupsQuery = useQuery({
-        queryKey: ["groups"],
-        staleTime: 1000 * 30, // 30 seconds
-        queryFn: vultrAPI.firewall.listGroups,
-        select: (data) => data.firewall_groups,
-        retry: false,
-    });
+    const groupsQuery = useGroupsQuery();
 
     const isLoading = groupsQuery.isFetching;
 
@@ -63,48 +51,6 @@ export default function GroupTable() {
         setSelectedGroup(group);
         deleteModal.onOpen();
     }, []);
-
-    useEffect(() => {
-        if (groupsQuery.isError) {
-            logging.error(
-                `Failed to fetch firewall groups: ${groupsQuery.error}`
-            );
-            const message =
-                groupsQuery.error instanceof Error
-                    ? groupsQuery.error.message
-                    : groupsQuery.error;
-            toast.error(t`Failed to fetch firewall groups: ${message}`);
-        }
-    }, [groupsQuery.isError]);
-
-    useEffect(() => {
-        const data = groupsQuery.data || [];
-        setGroupsState((state) => {
-            // add new groups or update existing ones
-            data.forEach((group) => {
-                if (!state[group.id]) {
-                    state[group.id] = {
-                        group: group,
-                        newRule: {
-                            [IPVersion.V4]: initialNewRuleIPv4,
-                            [IPVersion.V6]: initialNewRuleIPv4,
-                        },
-                        newDescription: group.description,
-                        isUpdating: false,
-                        isDeleting: false,
-                    };
-                } else {
-                    state[group.id].group = group;
-                }
-            });
-            // remove groups that are no longer in the data
-            Object.keys(state).forEach((key) => {
-                if (!data.find((group) => group.id === key)) {
-                    delete state[key];
-                }
-            });
-        });
-    }, [groupsQuery.data]);
 
     return (
         <div className="flex flex-col w-full max-w-fit gap-4 select-none md:px-8">

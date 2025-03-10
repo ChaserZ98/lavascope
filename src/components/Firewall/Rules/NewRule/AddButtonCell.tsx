@@ -2,22 +2,11 @@ import { Button, Tooltip } from "@heroui/react";
 import { useLingui } from "@lingui/react/macro";
 import { mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
-import { useSetAtom } from "jotai";
 import { useCallback } from "react";
-import { toast } from "react-toastify";
 
-import { useVultrAPI } from "@/hooks/vultr";
-import { IListRulesResponse } from "@/lib/vultr";
-import {
-    CreateRule,
-    NewRuleState,
-    resetNewRuleAtom,
-    setNewRuleIsCreatingAtom,
-    toCreateRule,
-} from "@/store/firewall";
-import logging from "@/utils/log";
+import { useCreateRuleMutation } from "@/hooks/Firewall";
+import { NewRuleState, toCreateRule } from "@/store/firewall";
 
 export default function AddButtonCell({
     newRule,
@@ -32,56 +21,13 @@ export default function AddButtonCell({
 
     const { t } = useLingui();
 
-    const vultrAPI = useVultrAPI();
-
-    const queryClient = useQueryClient();
-
-    const createRuleMutation = useMutation({
-        mutationFn: async (rule: CreateRule) =>
-            await vultrAPI.firewall.createRule({
-                "firewall-group-id": groupId,
-                ...rule,
-            }),
-        onMutate: async (rule) => {
-            setNewRuleIsCreating(groupId, rule.ip_type, true);
-        },
-        onSuccess: async (response, rule) => {
-            logging.info(
-                `Successfully created a new rule in group ${groupId} from Vultr API.`
-            );
-            const newRule = response.firewall_rule;
-            queryClient.setQueryData(
-                ["rules", groupId],
-                (state: IListRulesResponse) => {
-                    return {
-                        firewall_rules: [...state.firewall_rules, newRule],
-                        meta: {
-                            ...state.meta,
-                            total: state.meta.total + 1,
-                        },
-                    };
-                }
-            );
-            await queryClient.invalidateQueries({
-                queryKey: ["rules", groupId],
-            });
-            resetNewRule(groupId, rule.ip_type);
-        },
-        onError: (err, rule) => {
-            logging.error(
-                `Failed to create a new rule in group ${groupId}: ${err}`
-            );
-            const message = err.message || "Unknown error";
-            toast.error(t`Failed to create a new rule: ${message}`);
-            setNewRuleIsCreating(groupId, rule.ip_type, false);
-        },
-    });
-
-    const setNewRuleIsCreating = useSetAtom(setNewRuleIsCreatingAtom);
-    const resetNewRule = useSetAtom(resetNewRuleAtom);
+    const createRuleMutation = useCreateRuleMutation();
 
     const handleCreateRule = useCallback(async () => {
-        await createRuleMutation.mutateAsync(toCreateRule(newRule));
+        await createRuleMutation.mutateAsync({
+            groupId,
+            rule: toCreateRule(newRule),
+        });
     }, [newRule]);
 
     const isCreating = newRule.isCreating;

@@ -1,22 +1,18 @@
 import { Button, Tab, Tabs, useDisclosure } from "@heroui/react";
-import { Trans, useLingui } from "@lingui/react/macro";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { Trans } from "@lingui/react/macro";
+import { createFileRoute } from "@tanstack/react-router";
+import { useAtomValue } from "jotai";
 import { selectAtom } from "jotai/utils";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { useCallback, useState } from "react";
 
 import DeleteRuleModal from "@/components/Firewall/Rules/DeleteRuleModal";
 import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import ProxySwitch from "@/components/ProxySwitch";
-import { useVultrAPI } from "@/hooks/vultr";
-import { ErrorResponse, RequestError } from "@/lib/vultr";
+import { useRulesQuery } from "@/hooks/Firewall/rules";
 import { Rule, rulesAtom } from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 import { Screen, screenSizeAtom } from "@/store/screen";
-import logging from "@/utils/log";
 
 export const Route = createFileRoute("/_app/groups/$id")({
     component: Rules,
@@ -25,21 +21,9 @@ export const Route = createFileRoute("/_app/groups/$id")({
 function Rules() {
     const { id: groupId = "" } = Route.useParams();
 
-    const navigate = useNavigate();
-
-    const vultrAPI = useVultrAPI();
-
-    const { t } = useLingui();
-
     const deleteModal = useDisclosure();
 
-    const rulesQuery = useQuery({
-        queryKey: ["rules", groupId],
-        staleTime: 1000 * 30, // 30 seconds
-        queryFn: async () =>
-            await vultrAPI.firewall.listRules({ "firewall-group-id": groupId }),
-        select: (data) => data.firewall_rules,
-    });
+    const rulesQuery = useRulesQuery(groupId);
 
     const screenSize = useAtomValue(screenSizeAtom);
     const rulesState = useAtomValue(
@@ -48,8 +32,6 @@ function Rules() {
             useCallback((state) => state[groupId] || {}, [groupId])
         )
     );
-
-    const setRules = useSetAtom(rulesAtom);
 
     const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
 
@@ -72,67 +54,6 @@ function Rules() {
         setSelectedRule(rule);
         deleteModal.onOpen();
     }, []);
-
-    useEffect(() => {
-        if (rulesQuery.isError) {
-            const error = rulesQuery.error;
-            if (error instanceof ErrorResponse) {
-                if (error.statusCode === 404) {
-                    logging.warn(
-                        `Failed to fetch firewall rules for group ${groupId}: ${error}`
-                    );
-                    toast.error(t`Group with ID ${groupId} not found`);
-                    navigate({
-                        to: "/",
-                    });
-                    return;
-                }
-                logging.error(
-                    `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
-                );
-                const message = rulesQuery.error.message;
-                toast.error(t`Failed to fetch rules: ${message}`);
-                return;
-            }
-            if (error instanceof RequestError) {
-                logging.error(
-                    `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
-                );
-                const message = rulesQuery.error.message;
-                toast.error(t`Failed to fetch rules: ${message}`);
-                return;
-            }
-            logging.error(
-                `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
-            );
-            const message = error.message || "Unknown error";
-            toast.error(t`Failed to fetch rules: ${message}`);
-        }
-    }, [rulesQuery.isError]);
-
-    useEffect(() => {
-        const data = rulesQuery.data || [];
-        setRules((state) => {
-            data.forEach((rule) => {
-                if (!state[groupId]) {
-                    state[groupId] = {};
-                }
-                if (!state[groupId][rule.id.toString()]) {
-                    state[groupId][rule.id.toString()] = {
-                        rule: rule as Rule,
-                        isDeleting: false,
-                    };
-                } else {
-                    state[groupId][rule.id.toString()].rule = rule as Rule;
-                }
-            });
-            Object.keys(state[groupId]).forEach((key) => {
-                if (!data.find((rule) => rule.id.toString() === key)) {
-                    delete state[groupId][key];
-                }
-            });
-        });
-    }, [rulesQuery.data]);
 
     return (
         <div className="flex flex-col px-8 pb-4 gap-4 items-center select-none">

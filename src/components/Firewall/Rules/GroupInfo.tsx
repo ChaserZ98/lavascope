@@ -1,16 +1,8 @@
 import { Divider, Tooltip } from "@heroui/react";
 import { Plural, Trans } from "@lingui/react/macro";
-import { useQuery } from "@tanstack/react-query";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect } from "react";
+import { useAtomValue } from "jotai";
 
-import { useVultrAPI } from "@/hooks/vultr";
-import {
-    groupsStateAtom,
-    initialNewRuleIPv4,
-    initialNewRuleIPv6,
-} from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
+import { useGroupQuery } from "@/hooks/Firewall";
 import { languageAtom } from "@/store/language";
 
 function RelativeTime({ date }: { date: string }) {
@@ -46,41 +38,11 @@ function RelativeTime({ date }: { date: string }) {
 }
 
 export default function GroupInfo({ groupId }: { groupId: string }) {
-    const vultrAPI = useVultrAPI();
-
-    const groupQuery = useQuery({
-        queryKey: ["groups", groupId],
-        staleTime: 1000 * 30, // 30 seconds
-        queryFn: async () =>
-            await vultrAPI.firewall.getGroup({ "firewall-group-id": groupId }),
-        select: (data) => data.firewall_group,
-    });
+    const groupQuery = useGroupQuery(groupId);
 
     const language = useAtomValue(languageAtom);
 
-    const setGroupsState = useSetAtom(groupsStateAtom);
-
     const group = groupQuery.data;
-
-    useEffect(() => {
-        if (!groupQuery.data) return;
-        setGroupsState((state) => {
-            if (!state[groupId]) {
-                state[groupId] = {
-                    group: groupQuery.data,
-                    newRule: {
-                        [IPVersion.V4]: initialNewRuleIPv4,
-                        [IPVersion.V6]: initialNewRuleIPv6,
-                    },
-                    newDescription: groupQuery.data.description,
-                    isUpdating: false,
-                    isDeleting: false,
-                };
-            } else {
-                state[groupId].group = groupQuery.data;
-            }
-        });
-    }, [groupQuery.data]);
 
     if (!group) return null;
 

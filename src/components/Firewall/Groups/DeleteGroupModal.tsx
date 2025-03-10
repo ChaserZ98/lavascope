@@ -6,16 +6,11 @@ import {
     ModalFooter,
     ModalHeader,
 } from "@heroui/react";
-import { Trans, useLingui } from "@lingui/react/macro";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSetAtom } from "jotai";
+import { Trans } from "@lingui/react/macro";
 import { useCallback, useState } from "react";
-import { toast } from "react-toastify";
 
-import { useVultrAPI } from "@/hooks/vultr";
+import { useDeleteGroupMutation } from "@/hooks/Firewall";
 import { IFirewallGroup } from "@/lib/vultr/types";
-import { setGroupIsDeletingAtom } from "@/store/firewall";
-import logging from "@/utils/log";
 
 export default function DeleteGroupModal({
     group,
@@ -26,38 +21,7 @@ export default function DeleteGroupModal({
     isOpen: boolean;
     onClose?: () => void;
 }) {
-    const vultrAPI = useVultrAPI();
-
-    const { t } = useLingui();
-
-    const queryClient = useQueryClient();
-
-    const setGroupIsDeleting = useSetAtom(setGroupIsDeletingAtom);
-
-    const deleteGroupMutation = useMutation({
-        mutationFn: async (groupId: string) =>
-            await vultrAPI.firewall.deleteGroup({
-                "firewall-group-id": groupId,
-            }),
-        onMutate: async (groupId) => {
-            setGroupIsDeleting(groupId, true);
-        },
-        onSuccess: async (_, groupId) => {
-            logging.info(`Successfully deleted group with ID ${groupId}`);
-            toast.success(t`Successfully deleted group with ID ${groupId}`);
-            await queryClient.invalidateQueries({
-                queryKey: ["groups"],
-            });
-        },
-        onError: (err) => {
-            logging.error(`Failed to delete group: ${err}`);
-            const message = err.message || "unknown error";
-            toast.error(t`Failed to delete group: ${message}`);
-        },
-        onSettled: (_res, _err, groupId: string) => {
-            setGroupIsDeleting(groupId, false);
-        },
-    });
+    const deleteGroupMutation = useDeleteGroupMutation();
 
     const [isConfirming, setIsConfirming] = useState<boolean>(false);
 

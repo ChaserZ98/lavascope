@@ -6,21 +6,12 @@ import {
     ModalFooter,
     ModalHeader,
 } from "@heroui/react";
-import { Trans, useLingui } from "@lingui/react/macro";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useSetAtom } from "jotai";
+import { Trans } from "@lingui/react/macro";
 import { useCallback, useState } from "react";
-import { toast } from "react-toastify";
 
-import { useVultrAPI } from "@/hooks/vultr";
-import {
-    deleteRuleAtom,
-    Rule,
-    setRuleIsDeletingAtom,
-    toProtocolDisplay,
-} from "@/store/firewall";
+import { useDeleteRuleMutation } from "@/hooks/Firewall";
+import { Rule, toProtocolDisplay } from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
-import logging from "@/utils/log";
 
 export default function DeleteRuleModal({
     isOpen,
@@ -33,48 +24,7 @@ export default function DeleteRuleModal({
     rule: Rule | null;
     onClose?: () => void;
 }) {
-    const vultrAPI = useVultrAPI();
-
-    const { t } = useLingui();
-
-    const queryClient = useQueryClient();
-
-    const setRuleIsDeleting = useSetAtom(setRuleIsDeletingAtom);
-    const deleteRule = useSetAtom(deleteRuleAtom);
-
-    const deleteRuleMutation = useMutation({
-        mutationFn: async ({
-            groupId,
-            ruleId,
-        }: {
-            groupId: string;
-            ruleId: string;
-        }) =>
-            await vultrAPI.firewall.deleteRule({
-                "firewall-group-id": groupId,
-                "firewall-rule-id": ruleId,
-            }),
-        onMutate: ({ groupId, ruleId }) => {
-            setRuleIsDeleting(groupId, ruleId, true);
-        },
-        onSuccess: async (_, { groupId, ruleId }) => {
-            logging.info(
-                `Successfully deleted the rule ${ruleId} in group ${groupId} from Vultr API.`
-            );
-            deleteRule(groupId, ruleId);
-            await queryClient.invalidateQueries({
-                queryKey: ["rules", groupId],
-            });
-        },
-        onError: (err, { groupId, ruleId }) => {
-            setRuleIsDeleting(groupId, ruleId, false);
-            logging.error(
-                `Failed to delete the rule ${ruleId} in group ${groupId}: ${err}`
-            );
-            const message = err.message || "Unknown error";
-            toast.error(t`Failed to delete the rule: ${message}`);
-        },
-    });
+    const deleteRuleMutation = useDeleteRuleMutation();
 
     const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
