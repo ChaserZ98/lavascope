@@ -10,7 +10,7 @@ import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import ProxySwitch from "@/components/ProxySwitch";
 import { useRulesQuery } from "@/hooks/Firewall/rules";
-import { Rule, rulesAtom } from "@/store/firewall";
+import { Rule, rulesAtom, RuleState } from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";
 import { Screen, screenSizeAtom } from "@/store/screen";
 
@@ -37,10 +37,12 @@ function Rules() {
 
     const rulesIsLoading = rulesQuery.isFetching;
     const ipv4Rules = Object.values(rulesState).filter(
-        (state) => state.rule.ip_type === IPVersion.V4
+        (state): state is RuleState =>
+            state !== undefined && state.rule.ip_type === IPVersion.V4
     );
     const ipv6Rules = Object.values(rulesState).filter(
-        (state) => state.rule.ip_type === IPVersion.V6
+        (state): state is RuleState =>
+            state !== undefined && state.rule.ip_type === IPVersion.V6
     );
 
     const handleModalClose = useCallback(() => {

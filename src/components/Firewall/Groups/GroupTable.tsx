@@ -102,9 +102,10 @@ export default function GroupTable() {
                     ))}
                 </TableHeader>
                 <TableBody emptyContent="Empty">
-                    {Object.values(groupsState).map((state, index) => {
-                        const group = state.group!;
-                        return (
+                    {Object.values(groupsState)
+                        .map((state) => state?.group)
+                        .filter((state) => state !== undefined)
+                        .map((group, index) => (
                             <TableRow
                                 className={isLoading ? "animate-pulse" : ""}
                                 key={index}
@@ -148,8 +149,7 @@ export default function GroupTable() {
                                     />
                                 </TableCell>
                             </TableRow>
-                        );
-                    })}
+                        ))}
                 </TableBody>
             </Table>
             <DeleteGroupModal

@@ -10,13 +10,16 @@ import {
 } from "../rule";
 import { GroupState } from "./types";
 
-export const groupsStateAtom = atomWithImmer<Record<string, GroupState>>({});
+export const groupsStateAtom = atomWithImmer<
+    Record<string, GroupState | undefined>
+>({});
 
 export const setNewRuleAtom = atom(
     null,
     (_get, set, groupId: string, rule: NewRuleState) => {
         const version = rule.ip_type;
         set(groupsStateAtom, (state) => {
+            if (!state[groupId]) return;
             state[groupId].newRule[version] = rule;
         });
     }
@@ -26,6 +29,7 @@ export const resetNewRuleAtom = atom(
     null,
     (_get, set, groupId: string, version: Version) => {
         set(groupsStateAtom, (state) => {
+            if (!state[groupId]) return;
             state[groupId].newRule[version] =
                 version === Version.V4
                     ? initialNewRuleIPv4
@@ -48,6 +52,7 @@ export const setNewDescriptionAtom = atom(
     null,
     (_get, set, groupId: string, description: string) => {
         set(groupsStateAtom, (state) => {
+            if (!state[groupId]) return;
             state[groupId].newDescription = description;
         });
     }

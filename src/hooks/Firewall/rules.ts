@@ -137,20 +137,28 @@ export function useRulesQuery(groupId: string) {
         const data = rulesQuery.data || [];
         setRules((state) => {
             data.forEach((rule) => {
+                const ruleIdString = rule.id.toString();
                 if (!state[groupId]) {
-                    state[groupId] = {};
+                    state[groupId] = {
+                        [ruleIdString]: {
+                            rule: rule as Rule,
+                            isDeleting: false,
+                        },
+                    };
+                    return;
                 }
-                if (!state[groupId][rule.id.toString()]) {
+                if (!state[groupId][ruleIdString]) {
                     state[groupId][rule.id.toString()] = {
                         rule: rule as Rule,
                         isDeleting: false,
                     };
-                } else {
-                    state[groupId][rule.id.toString()].rule = rule as Rule;
+                    return;
                 }
+                state[groupId][ruleIdString].rule = rule as Rule;
             });
-            Object.keys(state[groupId]).forEach((key) => {
+            Object.keys(state[groupId] || {}).forEach((key) => {
                 if (!data.find((rule) => rule.id.toString() === key)) {
+                    if (!state[groupId]) return;
                     delete state[groupId][key];
                 }
             });

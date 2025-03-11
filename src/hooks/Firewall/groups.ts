@@ -49,8 +49,9 @@ export function useGroupsQuery() {
         setGroupsState((state) => {
             // add new groups or update existing ones
             data.forEach((group) => {
-                if (!state[group.id]) {
-                    state[group.id] = {
+                const groupId = group.id;
+                if (!state[groupId]) {
+                    state[groupId] = {
                         group: group,
                         newRule: {
                             [IPVersion.V4]: initialNewRuleIPv4,
@@ -61,7 +62,7 @@ export function useGroupsQuery() {
                         isDeleting: false,
                     };
                 } else {
-                    state[group.id].group = group;
+                    state[groupId].group = group;
                 }
             });
             // remove groups that are no longer in the data

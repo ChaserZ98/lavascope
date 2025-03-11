@@ -128,7 +128,7 @@ export const initialNewRuleIPv6: NewRuleState = {
 };
 
 export const rulesAtom = atomWithImmer<
-    Record<string, Record<string, RuleState>>
+    Record<string, Record<string, RuleState | undefined> | undefined>
 >({});
 
 export const setRuleIsDeletingAtom = atom(
