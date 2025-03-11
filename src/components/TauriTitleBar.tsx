@@ -150,16 +150,16 @@ export default function TauriTitleBar() {
                 );
         };
 
-        const preventContextMenu = isModeDev
-            ? () => {}
-            : (e: MouseEvent) => e.preventDefault();
+        const preventContextMenu = isModeDev ?
+            () => {} :
+            (e: MouseEvent) => e.preventDefault();
 
-        const preventRefreshKey = isModeDev
-            ? () => {}
-            : (e: KeyboardEvent) => {
-                  if (e.key === "F5" || (e.key === "r" && e.ctrlKey))
-                      e.preventDefault();
-              };
+        const preventRefreshKey = isModeDev ?
+            () => {} :
+            (e: KeyboardEvent) => {
+                if (e.key === "F5" || (e.key === "r" && e.ctrlKey))
+                    e.preventDefault();
+            };
 
         const initialTasks = async () => {
             document.addEventListener("contextmenu", preventContextMenu);

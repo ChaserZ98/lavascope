@@ -73,11 +73,11 @@ export function toCreateRule(newRuleState: NewRuleState): CreateRule {
     let subnet = "";
     let subnet_size = 0;
     const source =
-        newRuleState.sourceType === SourceType.CLOUDFLARE
-            ? "cloudflare"
-            : newRuleState.sourceType === SourceType.LOAD_BALANCER
-              ? "load balancer"
-              : "";
+        newRuleState.sourceType === SourceType.CLOUDFLARE ?
+            "cloudflare" :
+            newRuleState.sourceType === SourceType.LOAD_BALANCER ?
+                "load balancer" :
+                "";
     if (
         newRuleState.sourceType === SourceType.CLOUDFLARE ||
         newRuleState.sourceType === SourceType.LOAD_BALANCER

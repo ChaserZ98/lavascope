@@ -11,9 +11,9 @@ function createInitialTheme(): Theme {
         !cachedTheme ||
         !(Object.values(Theme) as string[]).includes(cachedTheme)
     ) {
-        cachedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? Theme.DARK
-            : Theme.LIGHT;
+        cachedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ?
+            Theme.DARK :
+            Theme.LIGHT;
         localStorage.setItem("theme", cachedTheme);
     }
     document.documentElement.dataset.theme = cachedTheme;

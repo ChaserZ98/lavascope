@@ -30,8 +30,7 @@ export default function DevPanelSection() {
                         onValueChange={(value) =>
                             setShowDevPanel((state) => {
                                 state.jotai = value;
-                            })
-                        }
+                            })}
                     >
                         Jotai
                     </Switch>
@@ -49,8 +48,7 @@ export default function DevPanelSection() {
                         onValueChange={(value) =>
                             setShowDevPanel((state) => {
                                 state.tanStack = value;
-                            })
-                        }
+                            })}
                         color="primary"
                     >
                         TanStack Router

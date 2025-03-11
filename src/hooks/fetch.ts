@@ -40,12 +40,12 @@ export default function useFetch() {
         };
 
         return createTauriFetch({
-            proxy: useProxy
-                ? {
-                      http: proxyAddress,
-                      https: proxyAddress,
-                  }
-                : undefined,
+            proxy: useProxy ?
+                {
+                    http: proxyAddress,
+                    https: proxyAddress,
+                } :
+                undefined,
         });
     }, [useProxy, proxyAddress]);
     return fetchMethod;

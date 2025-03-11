@@ -77,11 +77,11 @@ export default function SourceTypeCell({
             disallowEmptySelection
             items={
                 (newRule.ip_type === IPVersion.V4 && myIPv4.value) ||
-                (newRule.ip_type === IPVersion.V6 && myIPv6.value)
-                    ? sourceTypes
-                    : sourceTypes.filter(
-                          (type) => type.value !== SourceType.MY_IP
-                      )
+                (newRule.ip_type === IPVersion.V6 && myIPv6.value) ?
+                    sourceTypes :
+                    sourceTypes.filter(
+                        (type) => type.value !== SourceType.MY_IP
+                    )
             }
             disabledKeys={[SourceType.LOAD_BALANCER]}
             variant="faded"

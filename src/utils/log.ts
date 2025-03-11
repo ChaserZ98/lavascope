@@ -20,12 +20,12 @@ type Log = {
 
 function forwardLog(
     level: "error" | "warn" | "info" | "debug" | "log",
-    frontEndLogLevel: LogLevel = import.meta.env.PROD
-        ? LogLevel.WARN
-        : LogLevel.DEBUG,
-    tauriLogLevel: LogLevel = import.meta.env.PROD
-        ? LogLevel.INFO
-        : LogLevel.DEBUG
+    frontEndLogLevel: LogLevel = import.meta.env.PROD ?
+        LogLevel.WARN :
+        LogLevel.DEBUG,
+    tauriLogLevel: LogLevel = import.meta.env.PROD ?
+        LogLevel.INFO :
+        LogLevel.DEBUG
 ) {
     switch (level) {
         case "debug": {
@@ -84,20 +84,20 @@ function forwardLog(
 const tauriLogLevel = LogLevel.INFO;
 const frontEndLogLevel = LogLevel.WARN;
 
-const logging: Log = isTauri()
-    ? {
-          error: forwardLog("error", frontEndLogLevel, tauriLogLevel),
-          warn: forwardLog("warn", frontEndLogLevel, tauriLogLevel),
-          info: forwardLog("info", frontEndLogLevel, tauriLogLevel),
-          debug: forwardLog("debug", frontEndLogLevel, tauriLogLevel),
-          trace: forwardLog("log", frontEndLogLevel, tauriLogLevel),
-      }
-    : {
-          error: frontEndLogLevel > LogLevel.ERROR ? () => {} : console.error,
-          warn: frontEndLogLevel > LogLevel.WARN ? () => {} : console.warn,
-          info: frontEndLogLevel > LogLevel.INFO ? () => {} : console.info,
-          debug: frontEndLogLevel > LogLevel.DEBUG ? () => {} : console.debug,
-          trace: frontEndLogLevel > LogLevel.TRACE ? () => {} : console.trace,
-      };
+const logging: Log = isTauri() ?
+    {
+        error: forwardLog("error", frontEndLogLevel, tauriLogLevel),
+        warn: forwardLog("warn", frontEndLogLevel, tauriLogLevel),
+        info: forwardLog("info", frontEndLogLevel, tauriLogLevel),
+        debug: forwardLog("debug", frontEndLogLevel, tauriLogLevel),
+        trace: forwardLog("log", frontEndLogLevel, tauriLogLevel),
+    } :
+    {
+        error: frontEndLogLevel > LogLevel.ERROR ? () => {} : console.error,
+        warn: frontEndLogLevel > LogLevel.WARN ? () => {} : console.warn,
+        info: frontEndLogLevel > LogLevel.INFO ? () => {} : console.info,
+        debug: frontEndLogLevel > LogLevel.DEBUG ? () => {} : console.debug,
+        trace: frontEndLogLevel > LogLevel.TRACE ? () => {} : console.trace,
+    };
 
 export default logging;

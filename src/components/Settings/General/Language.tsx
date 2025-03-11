@@ -32,8 +32,7 @@ export default function LanguageBlock() {
                 label={t`language`}
                 selectedKeys={new Set([language])}
                 onSelectionChange={(keys) =>
-                    handleLanguageChange(keys.currentKey as Locale, platform)
-                }
+                    handleLanguageChange(keys.currentKey as Locale, platform)}
                 classNames={{
                     trigger: "px-4 rounded-none transition-colors-opacity",
                     value: "transition-colors-opacity",

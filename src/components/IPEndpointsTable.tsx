@@ -119,18 +119,18 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
     return (
         <div className="flex flex-col px-8 py-4 gap-4 items-center select-none">
             <h2 className="text-lg font-bold text-foreground transition-colors-opacity sm:text-2xl">
-                {version === Version.V4 ? (
-                    <Trans>IPv4 Endpoints</Trans>
-                ) : (
-                    <Trans>IPv6 Endpoints</Trans>
-                )}
+                {
+                    version === Version.V4 ?
+                        <Trans>IPv4 Endpoints</Trans> :
+                        <Trans>IPv6 Endpoints</Trans>
+                }
             </h2>
             <Table
                 isKeyboardNavigationDisabled
                 aria-label={
-                    version === Version.V4
-                        ? t`IPv4 Endpoints`
-                        : t`IPv6 Endpoints`
+                    version === Version.V4 ?
+                        t`IPv4 Endpoints` :
+                        t`IPv6 Endpoints`
                 }
                 className="text-wrap"
                 classNames={{
@@ -179,9 +179,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                                     color="primary"
                                     isDisabled={newEndpoint.length === 0}
                                     className="text-default-400 transition-colors-opacity hover:text-primary-400"
-                                    onPress={() =>
-                                        onAdd(version, newEndpoint, endpoints)
-                                    }
+                                    onPress={() => onAdd(version, newEndpoint, endpoints)}
                                 >
                                     <Icon path={mdiPlus} size={0.75} />
                                 </Button>
@@ -207,8 +205,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                                             color="danger"
                                             className="text-default-400 transition-colors-opacity hover:text-danger-400"
                                             onPress={() =>
-                                                onDelete(version, endpoint)
-                                            }
+                                                onDelete(version, endpoint)}
                                         >
                                             <Icon
                                                 path={mdiTrashCan}

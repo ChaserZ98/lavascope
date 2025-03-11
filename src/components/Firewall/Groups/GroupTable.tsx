@@ -67,7 +67,7 @@ export default function GroupTable() {
                         "overflow-x-auto" + (isLoading ? "animate-pulse" : ""),
                 }}
                 isKeyboardNavigationDisabled
-                topContent={
+                topContent={(
                     <div className="sticky left-1/2 -translate-x-1/2 w-fit">
                         <Pagination
                             isDisabled={isLoading}
@@ -84,7 +84,7 @@ export default function GroupTable() {
                             }}
                         />
                     </div>
-                }
+                )}
             >
                 <TableHeader>
                     {[

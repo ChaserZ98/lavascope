@@ -117,9 +117,9 @@ export const restoreIPEndpointsAtom = atom(null, async (_get, set, version) => {
     if (!dbEndpointsResult.success) {
         logging.info(`No ${version} endpoints found in DB`);
         const defaultEndpoints =
-            version === Version.V4
-                ? defaultIPv4Endpoints
-                : defaultIPv6Endpoints;
+            version === Version.V4 ?
+                defaultIPv4Endpoints :
+                defaultIPv6Endpoints;
         await idbSet(`${version}-endpoints`, defaultEndpoints);
         set(atom, (state) => {
             state.endpoints = defaultEndpoints;
@@ -137,9 +137,9 @@ export const addIPEndpointAtom = atom(
     null,
     async (_get, set, version: Version, endpoint: string) => {
         const atom =
-            version === Version.V4
-                ? ipv4EndpointStateAtom
-                : ipv6EndpointStateAtom;
+            version === Version.V4 ?
+                ipv4EndpointStateAtom :
+                ipv6EndpointStateAtom;
         await idbUpdate(
             `${version}-endpoints`,
             (endpoints: string[] | undefined) => {
@@ -157,9 +157,9 @@ export const deleteIPEndpointAtom = atom(
     null,
     async (_get, set, version: Version, endpoint: string) => {
         const atom =
-            version === Version.V4
-                ? ipv4EndpointStateAtom
-                : ipv6EndpointStateAtom;
+            version === Version.V4 ?
+                ipv4EndpointStateAtom :
+                ipv6EndpointStateAtom;
         await idbUpdate(
             `${version}-endpoints`,
             (endpoints: string[] | undefined) => {
@@ -176,13 +176,13 @@ export const resetIPEndpointsAtom = atom(
     null,
     async (_get, set, version: Version) => {
         const atom =
-            version === Version.V4
-                ? ipv4EndpointStateAtom
-                : ipv6EndpointStateAtom;
+            version === Version.V4 ?
+                ipv4EndpointStateAtom :
+                ipv6EndpointStateAtom;
         const endpoints =
-            version === Version.V4
-                ? defaultIPv4Endpoints
-                : defaultIPv6Endpoints;
+            version === Version.V4 ?
+                defaultIPv4Endpoints :
+                defaultIPv6Endpoints;
         await idbSet(`${version}-endpoints`, endpoints);
         set(atom, (state) => {
             state.endpoints = endpoints;

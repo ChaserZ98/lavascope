@@ -31,9 +31,9 @@ export const resetNewRuleAtom = atom(
         set(groupsStateAtom, (state) => {
             if (!state[groupId]) return;
             state[groupId].newRule[version] =
-                version === Version.V4
-                    ? initialNewRuleIPv4
-                    : initialNewRuleIPv6;
+                version === Version.V4 ?
+                    initialNewRuleIPv4 :
+                    initialNewRuleIPv6;
         });
     }
 );

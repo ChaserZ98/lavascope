@@ -64,9 +64,9 @@ export default function RulesTable(props: RulesTableProps) {
                 )
             )
         ) ||
-        (props.ipVersion === IPVersion.V4
-            ? initialNewRuleIPv4
-            : initialNewRuleIPv6);
+        (props.ipVersion === IPVersion.V4 ?
+            initialNewRuleIPv4 :
+            initialNewRuleIPv6);
 
     const [page, setPage] = useState(1);
 
@@ -85,7 +85,7 @@ export default function RulesTable(props: RulesTableProps) {
                     (props.isLoading ? "animate-pulse" : ""),
             }}
             isKeyboardNavigationDisabled
-            topContent={
+            topContent={(
                 <div className="sticky left-1/2 -translate-x-1/2 w-fit">
                     <Pagination
                         isDisabled={props.isLoading}
@@ -102,7 +102,7 @@ export default function RulesTable(props: RulesTableProps) {
                         }}
                     />
                 </div>
-            }
+            )}
         >
             <TableHeader>
                 {[
@@ -181,9 +181,9 @@ export default function RulesTable(props: RulesTableProps) {
                                 <SourceAddressCell
                                     value={
                                         ruleState.rule.source ===
-                                        SourceType.CLOUDFLARE
-                                            ? "cloudflare"
-                                            : `${ruleState.rule.subnet}/${ruleState.rule.subnet_size}`
+                                        SourceType.CLOUDFLARE ?
+                                            "cloudflare" :
+                                            `${ruleState.rule.subnet}/${ruleState.rule.subnet_size}`
                                     }
                                 />
                             </TableCell>
@@ -196,9 +196,7 @@ export default function RulesTable(props: RulesTableProps) {
                                         props.isLoading || ruleState.isDeleting
                                     }
                                     isLoading={ruleState.isDeleting}
-                                    onDelete={() =>
-                                        props.onRuleDelete(ruleState.rule)
-                                    }
+                                    onDelete={() => props.onRuleDelete(ruleState.rule)}
                                 />
                             </TableCell>
                         </TableRow>

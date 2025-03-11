@@ -37,9 +37,9 @@ export function useGroupsQuery() {
                 `Failed to fetch firewall groups: ${groupsQuery.error}`
             );
             const message =
-                groupsQuery.error instanceof Error
-                    ? groupsQuery.error.message
-                    : groupsQuery.error;
+                groupsQuery.error instanceof Error ?
+                    groupsQuery.error.message :
+                    groupsQuery.error;
             toast.error(t`Failed to fetch firewall groups: ${message}`);
         }
     }, [groupsQuery.isError]);

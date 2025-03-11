@@ -36,11 +36,8 @@ export default function NotesCell({
                 innerWrapper: "h-full",
                 input: "resize-none overflow-y-auto h-5 text-balance text-foreground !ease-[ease] !duration-250 !transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity] placeholder:transition-colors-opacity placeholder:italic",
             }}
-            onChange={(e) =>
-                setNewRule(groupId, {
-                    ...newRule,
-                    notes: e.target.value,
-                })
+            onChange={
+                (e) => setNewRule(groupId, { ...newRule, notes: e.target.value })
             }
         />
     );

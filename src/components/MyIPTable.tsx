@@ -156,9 +156,9 @@ export default function MyIPTable() {
                             key={version}
                             className={
                                 (version === IPVersion.V4 && ipv4.refreshing) ||
-                                (version === IPVersion.V6 && ipv6.refreshing)
-                                    ? "animate-pulse"
-                                    : ""
+                                (version === IPVersion.V6 && ipv6.refreshing) ?
+                                    "animate-pulse" :
+                                    ""
                             }
                         >
                             <TableCell className="text-foreground font-mono">
@@ -166,13 +166,13 @@ export default function MyIPTable() {
                             </TableCell>
                             <TableCell className="text-foreground font-mono">
                                 <span className="break-all">
-                                    {version === IPVersion.V4
-                                        ? ipv4.refreshing
-                                            ? "Refreshing..."
-                                            : ipv4.value || "Unknown"
-                                        : ipv6.refreshing
-                                          ? "Refreshing..."
-                                          : ipv6.value || "Unknown"}
+                                    {version === IPVersion.V4 ?
+                                        ipv4.refreshing ?
+                                            "Refreshing..." :
+                                            ipv4.value || "Unknown" :
+                                        ipv6.refreshing ?
+                                            "Refreshing..." :
+                                            ipv6.value || "Unknown"}
                                 </span>
                             </TableCell>
                             <TableCell className="sm:flex sm:justify-center">
@@ -196,11 +196,10 @@ export default function MyIPTable() {
                                                 className="text-default-400 transition-colors-opacity hover:text-primary-500"
                                                 onPress={() =>
                                                     copy(
-                                                        version === IPVersion.V4
-                                                            ? ipv4.value
-                                                            : ipv6.value
-                                                    )
-                                                }
+                                                        version === IPVersion.V4 ?
+                                                            ipv4.value :
+                                                            ipv6.value
+                                                    )}
                                             >
                                                 <Icon
                                                     path={mdiContentCopy}
@@ -226,17 +225,16 @@ export default function MyIPTable() {
                                             onPress={() =>
                                                 refresh(
                                                     version,
-                                                    version === IPVersion.V4
-                                                        ? ipv4Endpoints
-                                                        : ipv6Endpoints,
+                                                    version === IPVersion.V4 ?
+                                                        ipv4Endpoints :
+                                                        ipv6Endpoints,
                                                     fetchClient
-                                                )
-                                            }
+                                                )}
                                             disabled={
                                                 (version === IPVersion.V4 &&
                                                     ipv4.refreshing) ||
-                                                (version === IPVersion.V6 &&
-                                                    ipv6.refreshing)
+                                                    (version === IPVersion.V6 &&
+                                                        ipv6.refreshing)
                                             }
                                         >
                                             <Icon
@@ -245,10 +243,10 @@ export default function MyIPTable() {
                                                 className={
                                                     (version === IPVersion.V4 &&
                                                         ipv4.refreshing) ||
-                                                    (version === IPVersion.V6 &&
-                                                        ipv6.refreshing)
-                                                        ? "animate-spin"
-                                                        : ""
+                                                        (version === IPVersion.V6 &&
+                                                            ipv6.refreshing) ?
+                                                        "animate-spin" :
+                                                        ""
                                                 }
                                             />
                                         </Button>

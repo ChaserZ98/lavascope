@@ -11,11 +11,11 @@ export default function SourceTypeCell({
     const { t } = useLingui();
 
     const value =
-        source === "cloudflare"
-            ? t`Cloudflare`
-            : subnet === "::" || subnet === "0.0.0.0"
-              ? t`Anywhere`
-              : t`Custom`;
+        source === "cloudflare" ?
+            t`Cloudflare` :
+            subnet === "::" || subnet === "0.0.0.0" ?
+                t`Anywhere` :
+                t`Custom`;
 
     return (
         <Input

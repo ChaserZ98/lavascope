@@ -8,13 +8,13 @@ export default function TanStackRouterDevtools() {
     if (!showDevPanel.tanStack) return null;
 
     const Devtools =
-        !import.meta.env.PROD && showDevPanel.tanStack
-            ? lazy(() =>
-                  import("@tanstack/router-devtools").then((res) => ({
-                      default: res.TanStackRouterDevtools,
-                  }))
-              )
-            : () => null;
+        !import.meta.env.PROD && showDevPanel.tanStack ?
+            lazy(() =>
+                import("@tanstack/router-devtools").then((res) => ({
+                    default: res.TanStackRouterDevtools,
+                }))
+            ) :
+            () => null;
 
     return (
         <Suspense>

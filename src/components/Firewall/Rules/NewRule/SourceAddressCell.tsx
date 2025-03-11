@@ -30,9 +30,9 @@ export default function SourceAddressCell({
             maxRows={4}
             variant="faded"
             placeholder={
-                newRule.ip_type === IPVersion.V4
-                    ? "x.x.x.x/xx"
-                    : "x:x:x:x:x:x:x:x/xxx"
+                newRule.ip_type === IPVersion.V4 ?
+                    "x.x.x.x/xx" :
+                    "x:x:x:x:x:x:x:x/xxx"
             }
             value={newRule.source}
             classNames={{

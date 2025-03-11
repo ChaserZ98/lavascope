@@ -66,9 +66,9 @@ export default function DeleteRuleModal({
                                 <Trans>IP Version: </Trans>
                             </span>
                             <span className="font-mono">
-                                {rule.ip_type === IPVersion.V4
-                                    ? "IPv4"
-                                    : "IPv6"}
+                                {rule.ip_type === IPVersion.V4 ?
+                                    "IPv4" :
+                                    "IPv6"}
                             </span>
                         </p>
                         <p>

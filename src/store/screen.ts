@@ -51,13 +51,13 @@ export function addScreenSizeListener(
 }
 
 export const screenSizeAtom = atom(
-    smQuery.matches
-        ? Screen.SM
-        : mdQuery.matches
-          ? Screen.MD
-          : lgQuery.matches
-            ? Screen.LG
-            : xlQuery.matches
-              ? Screen.XL
-              : Screen.XXL
+    smQuery.matches ?
+        Screen.SM :
+        mdQuery.matches ?
+            Screen.MD :
+            lgQuery.matches ?
+                Screen.LG :
+                xlQuery.matches ?
+                    Screen.XL :
+                    Screen.XXL
 );

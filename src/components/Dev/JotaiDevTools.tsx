@@ -12,13 +12,13 @@ export default function JotaiDevTools() {
     if (!showDevPanel.jotai) return null;
 
     const DevTools =
-        !import.meta.env.PROD && showDevPanel.jotai
-            ? lazy(() =>
-                  import("jotai-devtools").then((res) => ({
-                      default: res.DevTools,
-                  }))
-              )
-            : () => null;
+        !import.meta.env.PROD && showDevPanel.jotai ?
+            lazy(() =>
+                import("jotai-devtools").then((res) => ({
+                    default: res.DevTools,
+                }))
+            ) :
+            () => null;
 
     return (
         <Suspense>

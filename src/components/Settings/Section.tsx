@@ -35,7 +35,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = (props) => {
         <h2
             className={cn(
                 props.className ||
-                    "pl-4 text-xs font-bold text-foreground transition-colors-opacity sm:text-sm"
+                "pl-4 text-xs font-bold text-foreground transition-colors-opacity sm:text-sm"
             )}
         >
             {props.header}
