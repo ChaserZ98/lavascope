@@ -59,7 +59,7 @@ function DescriptionCell({
     return (
         <div className="flex gap-1">
             <Textarea
-                isDisabled={isDisabled}
+                isDisabled={isActionDisabled}
                 minRows={1}
                 variant="faded"
                 placeholder={t`Enter note here`}
@@ -85,7 +85,7 @@ function DescriptionCell({
                     size="sm"
                     variant="light"
                     color="default"
-                    className="mt-1 text-default-400 transition-colors-opacity"
+                    className={`mt-1 text-default-400 transition-colors-opacity ${newDescription === description ? "opacity-0" : ""}`}
                     onPress={handleReset}
                     isDisabled={
                         isActionDisabled || newDescription === description
@@ -194,7 +194,7 @@ function ActionCell({
                     size="sm"
                     variant="light"
                     color="success"
-                    className="text-default-400 transition-colors-opacity hover:text-success-400"
+                    className={`text-default-400 transition-colors-opacity hover:text-success-400 ${newDescription === description && !isUpdating ? "opacity-0" : ""}`}
                     onPress={() => handleConfirm(groupId, newDescription)}
                     isDisabled={
                         isActionDisabled || newDescription === description
