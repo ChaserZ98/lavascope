@@ -13,273 +13,339 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/Firewall/Group/GroupTable.tsx:108
-msgid "Failed to fetch firewall groups: request timed out"
-msgstr "獲取防火墻安全組失敗: 請求超時"
-
-#: src/components/Firewall/Group/GroupTable.tsx:117
-#: src/components/Firewall/Group/GroupTable.tsx:136
-msgid "Failed to fetch firewall groups: unknown error"
-msgstr "獲取防火墻安全組失敗: 未知錯誤"
-
-#: src/components/Firewall/Group/GroupTable.tsx:122
-msgid "Failed to fetch firewall groups: network error"
-msgstr "獲取防火墻安全組失敗: 網絡錯誤"
-
-#: src/components/Firewall/Group/GroupTable.tsx:129
-msgid "Failed to fetch firewall groups"
-msgstr "獲取防火墻安全組失敗"
-
-#: src/components/Firewall/Group/GroupTable.tsx:172
-msgid "Successfully deleted group with ID {groupId}"
-msgstr "刪除ID為{groupId}的安全組成功"
-
-#: src/components/Firewall/Group/GroupTable.tsx:177
-msgid "Failed to delete group: {message}"
-msgstr "刪除安全組失敗: {message}"
-
-#: src/components/Firewall/Group/GroupTable.tsx:231
-msgid "Firewall Groups"
-msgstr "防火墻安全組"
-
-#: src/components/Firewall/Group/GroupTable.tsx:264
-msgid "ID"
-msgstr "ID"
-
-#: src/components/Firewall/Group/GroupTable.tsx:265
-#: src/routes/_app/groups/$id.tsx:492
-msgid "Description"
-msgstr "描述"
-
-#: src/components/Firewall/Group/GroupTable.tsx:266
-msgid "Date Created"
-msgstr "創建日期"
-
-#: src/components/Firewall/Group/GroupTable.tsx:267
-msgid "Rules"
-msgstr "規則"
-
-#: src/components/Firewall/Group/GroupTable.tsx:268
-msgid "Instances"
-msgstr "實例"
-
-#: src/components/Firewall/Group/GroupTable.tsx:269
-#: src/components/MyIPTable.tsx:168
-msgid "Action"
-msgstr "操作"
-
-#: src/components/Firewall/Group/GroupTable.tsx:303
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:49
 msgid "Delete Firewall Group"
 msgstr "刪除防火墻安全組"
 
-#: src/components/Firewall/Group/GroupTable.tsx:307
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:53
 msgid "Are you sure you want to delete this firewall group?"
 msgstr "你確定要刪除這個防火墻安全組嗎?"
 
-#: src/components/Firewall/Group/GroupTable.tsx:315
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:60
 msgid "ID: "
 msgstr "ID: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:323
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:66
 msgid "Description: "
 msgstr "描述: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:333
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:74
 msgid "Date Created: "
 msgstr "創建日期: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:346
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:82
 msgid "Rules: "
 msgstr "規則: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:356
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:90
 msgid "Instances: "
 msgstr "實例: "
 
-#: src/components/Firewall/Group/GroupTable.tsx:368
-#: src/routes/_app/groups/$id.tsx:159
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:104
+#: src/components/Firewall/Groups/Group/index.tsx:186
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:114
 msgid "Confirm"
 msgstr "確定"
 
-#: src/components/Firewall/Group/GroupTable.tsx:375
-#: src/routes/_app/groups/$id.tsx:162
+#: src/components/Firewall/Groups/DeleteGroupModal.tsx:107
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:117
 msgid "Cancel"
 msgstr "取消"
 
-#: src/components/Firewall/Group/GroupTable.tsx:386
-#: src/components/MyIPTable.tsx:234
-#: src/routes/_app/groups/$id.tsx:573
-msgid "Refresh"
-msgstr "刷新"
-
-#: src/components/Firewall/Rules/NewRule.tsx:174
-#: src/components/Navbar.tsx:51
-#: src/components/Navbar.tsx:109
-msgid "My IP"
-msgstr "我的IP"
-
-#: src/components/Firewall/Rules/NewRule.tsx:178
-msgid "Cloudflare"
-msgstr "Cloudflare"
-
-#: src/components/Firewall/Rules/NewRule.tsx:182
-msgid "Custom"
-msgstr "自定義"
-
-#: src/components/Firewall/Rules/NewRule.tsx:186
-msgid "Anywhere"
-msgstr "任意"
-
-#: src/components/Firewall/Rules/NewRule.tsx:190
-msgid "Load Balancer"
-msgstr "負載均衡器"
-
-#: src/components/Firewall/Rules/NewRule.tsx:363
+#: src/components/Firewall/Groups/Group/index.tsx:65
+#: src/components/Firewall/Rules/NewRule/NoteCell.tsx:31
 msgid "Enter note here"
 msgstr "輸入注釋"
 
-#: src/components/Firewall/Rules/NewRule.tsx:385
-msgid "Add Rule"
-msgstr "添加規則"
-
-#: src/components/Firewall/Rules/RulesTable.tsx:66
-msgid "Protocol"
-msgstr "協議"
-
-#: src/components/Firewall/Rules/RulesTable.tsx:67
-msgid "Port"
-msgstr "端口"
-
-#: src/components/Firewall/Rules/RulesTable.tsx:68
-msgid "Source Type"
-msgstr "源類型"
-
-#: src/components/Firewall/Rules/RulesTable.tsx:69
-msgid "Source"
-msgstr "源"
-
-#: src/components/Firewall/Rules/RulesTable.tsx:70
-msgid "Notes"
-msgstr "注釋"
-
-#: src/components/Firewall/Rules/RulesTable.tsx:71
-#: src/components/IPEndpointsTable.tsx:169
-msgid "Actions"
-msgstr "操作"
-
-#: src/components/IPEndpointsTable.tsx:58
-msgid "Failed to reset {version} endpoints: {message}"
-msgstr "重置{version}節點失敗: {message}"
-
-#: src/components/IPEndpointsTable.tsx:66
-msgid "Endpoint URL cannot be empty"
-msgstr "節點地址不能為空"
-
-#: src/components/IPEndpointsTable.tsx:71
-msgid "Endpoint URL already exists"
-msgstr "節點地址已存在"
-
-#: src/components/IPEndpointsTable.tsx:84
-msgid "Failed to add endpoint URL: {message}"
-msgstr "添加節點地址失敗: {message}"
-
-#: src/components/IPEndpointsTable.tsx:101
-msgid "Failed to delete the endpoint {endpoint}: {message}"
-msgstr "刪除節點{endpoint}失敗: {message}"
-
-#: src/components/IPEndpointsTable.tsx:135
-msgid "Failed to restore {version} endpoints: {message}"
-msgstr "恢復{version}節點失敗: {message}"
-
-#: src/components/IPEndpointsTable.tsx:145
-#: src/components/IPEndpointsTable.tsx:154
-msgid "IPv4 Endpoints"
-msgstr "IPv4節點"
-
-#: src/components/IPEndpointsTable.tsx:147
-#: src/components/IPEndpointsTable.tsx:155
-msgid "IPv6 Endpoints"
-msgstr "IPv6節點"
-
-#: src/components/IPEndpointsTable.tsx:166
-msgid "URL"
-msgstr "地址"
-
-#: src/components/IPEndpointsTable.tsx:176
-msgid "Enter endpoint URL here"
-msgstr "輸入節點地址"
-
-#: src/components/IPEndpointsTable.tsx:193
-msgid "Add endpoint"
-msgstr "添加節點"
-
-#: src/components/IPEndpointsTable.tsx:221
-msgid "Delete"
-msgstr "刪除"
-
-#: src/components/IPEndpointsTable.tsx:252
+#: src/components/Firewall/Groups/Group/index.tsx:77
+#: src/components/IPEndpointsTable.tsx:230
 msgid "Reset"
 msgstr "重置"
 
-#: src/components/MyIPTable.tsx:59
+#: src/components/Firewall/Groups/Group/index.tsx:212
+msgid "Edit Rules"
+msgstr "編輯規則"
+
+#: src/components/Firewall/Groups/Group/index.tsx:236
+#: src/components/IPEndpointsTable.tsx:199
+msgid "Delete"
+msgstr "刪除"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:58
+msgid "Firewall Groups"
+msgstr "防火墻安全組"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:91
+msgid "ID"
+msgstr "ID"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:92
+#: src/components/Firewall/Rules/GroupInfo.tsx:102
+msgid "Description"
+msgstr "描述"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:93
+msgid "Date Created"
+msgstr "創建日期"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:94
+msgid "Last Modified"
+msgstr "最後修改日期"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:95
+msgid "Rules"
+msgstr "規則"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:96
+msgid "Instances"
+msgstr "實例"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:97
+#: src/components/MyIPTable.tsx:150
+msgid "Action"
+msgstr "操作"
+
+#: src/components/Firewall/Groups/GroupTable.tsx:166
+#: src/components/MyIPTable.tsx:216
+#: src/routes/_app/groups/$id.tsx:109
+msgid "Refresh"
+msgstr "刷新"
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:55
+msgid "Delete Firewall Rule"
+msgstr "刪除安全組規則"
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:59
+msgid "Are you sure you want to delete this rule?"
+msgstr "你確定要刪除這條規則嗎?"
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:66
+msgid "IP Version: "
+msgstr "IP版本: "
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:76
+msgid "Protocol: "
+msgstr "協議: "
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:84
+msgid "Port: "
+msgstr "端口: "
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:90
+msgid "Source Type: "
+msgstr "源類型: "
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:98
+msgid "Source Address: "
+msgstr "源地址: "
+
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:106
+msgid "Notes: "
+msgstr "注釋: "
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:13
+msgid "Just now"
+msgstr "剛剛"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:17
+msgid "{minutes, plural, one {# minute ago} other {# minutes ago}}"
+msgstr "{minutes, plural, one {#分鐘前} other {#分鐘前}}"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:22
+msgid "{hours, plural, one {# hour ago} other {# hours ago}}"
+msgstr "{hours, plural, one {#小時前} other {#小時前}}"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:26
+msgid "{days, plural, one {# day ago} other {# days ago}}"
+msgstr "{days, plural, one {#天前} other {#天前}}"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:30
+msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
+msgstr "{weeks, plural, one {#周前} other {#周前}}"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:34
+msgid "{months, plural, one {# month ago} other {# months ago}}"
+msgstr "{months, plural, one {#個月前} other {#個月前}}"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:37
+msgid "{years, plural, one {# year ago} other {# years ago}}"
+msgstr "{years, plural, one {#年前} other {#年前}}"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:54
+msgid "Group ID: "
+msgstr "安全組ID: "
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:60
+msgid "Created: "
+msgstr "創建日期: "
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:80
+msgid "Last Modified: "
+msgstr "最後編輯日期: "
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:114
+msgid "Group Rules"
+msgstr "安全組規則"
+
+#: src/components/Firewall/Rules/GroupInfo.tsx:128
+msgid "Linked Instances"
+msgstr "連接的實例"
+
+#: src/components/Firewall/Rules/NewRule/AddButtonCell.tsx:41
+msgid "Add Rule"
+msgstr "添加規則"
+
+#: src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:49
+#: src/components/Navbar.tsx:53
+#: src/components/Navbar.tsx:118
+msgid "My IP"
+msgstr "我的IP"
+
+#: src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:53
+#: src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:15
+msgid "Cloudflare"
+msgstr "Cloudflare"
+
+#: src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:57
+#: src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:18
+msgid "Custom"
+msgstr "自定義"
+
+#: src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:61
+#: src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:17
+msgid "Anywhere"
+msgstr "任意"
+
+#: src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:66
+msgid "Load Balancer (WIP)"
+msgstr "負載均衡器 (開發中)"
+
+#: src/components/Firewall/Rules/Rule/DeleteButtonCell.tsx:22
+msgid "Delete Rule"
+msgstr "刪除規則"
+
+#: src/components/Firewall/Rules/RulesTable.tsx:109
+msgid "Protocol"
+msgstr "協議"
+
+#: src/components/Firewall/Rules/RulesTable.tsx:110
+msgid "Port"
+msgstr "端口"
+
+#: src/components/Firewall/Rules/RulesTable.tsx:111
+msgid "Source Type"
+msgstr "源類型"
+
+#: src/components/Firewall/Rules/RulesTable.tsx:112
+msgid "Source"
+msgstr "源"
+
+#: src/components/Firewall/Rules/RulesTable.tsx:113
+msgid "Notes"
+msgstr "注釋"
+
+#: src/components/Firewall/Rules/RulesTable.tsx:114
+#: src/components/IPEndpointsTable.tsx:147
+msgid "Actions"
+msgstr "操作"
+
+#: src/components/IPEndpointsTable.tsx:59
+msgid "Failed to reset {version} endpoints: {message}"
+msgstr "重置{version}節點失敗: {message}"
+
+#: src/components/IPEndpointsTable.tsx:67
+msgid "Endpoint URL cannot be empty"
+msgstr "節點地址不能為空"
+
+#: src/components/IPEndpointsTable.tsx:72
+msgid "Endpoint URL already exists"
+msgstr "節點地址已存在"
+
+#: src/components/IPEndpointsTable.tsx:85
+msgid "Failed to add endpoint URL: {message}"
+msgstr "添加節點地址失敗: {message}"
+
+#: src/components/IPEndpointsTable.tsx:102
+msgid "Failed to delete the endpoint {endpoint}: {message}"
+msgstr "刪除節點{endpoint}失敗: {message}"
+
+#: src/components/IPEndpointsTable.tsx:113
+msgid "Failed to restore {version} endpoints: {message}"
+msgstr "恢復{version}節點失敗: {message}"
+
+#: src/components/IPEndpointsTable.tsx:123
+#: src/components/IPEndpointsTable.tsx:132
+msgid "IPv4 Endpoints"
+msgstr "IPv4節點"
+
+#: src/components/IPEndpointsTable.tsx:125
+#: src/components/IPEndpointsTable.tsx:133
+msgid "IPv6 Endpoints"
+msgstr "IPv6節點"
+
+#: src/components/IPEndpointsTable.tsx:144
+msgid "URL"
+msgstr "地址"
+
+#: src/components/IPEndpointsTable.tsx:154
+msgid "Enter endpoint URL here"
+msgstr "輸入節點地址"
+
+#: src/components/IPEndpointsTable.tsx:171
+msgid "Add endpoint"
+msgstr "添加節點"
+
+#: src/components/MyIPTable.tsx:56
 msgid "No {version} endpoint is set."
 msgstr "未設置{version}節點"
 
-#: src/components/MyIPTable.tsx:62
+#: src/components/MyIPTable.tsx:59
 msgid "Please add at least one {version} endpoint."
 msgstr "請添加至少一個{version}節點"
 
-#: src/components/MyIPTable.tsx:74
-msgid "Proxy address is not set."
-msgstr "未設置代理地址."
-
-#: src/components/MyIPTable.tsx:77
-msgid "Please set it in settings before using a proxy."
-msgstr "在使用代理前, 請在設置中設置代理地址."
-
-#: src/components/MyIPTable.tsx:108
+#: src/components/MyIPTable.tsx:90
 msgid "Failed to fetch {version} address: All requests to endpoints failed."
 msgstr "獲取{version}地址失敗: 所有節點請求失敗"
 
-#: src/components/MyIPTable.tsx:113
+#: src/components/MyIPTable.tsx:95
 msgid "Failed to fetch {version} address: unknown error"
 msgstr "獲取{version}地址失敗: 未知錯誤"
 
-#: src/components/MyIPTable.tsx:123
+#: src/components/MyIPTable.tsx:105
 msgid "Copied to clipboard"
 msgstr "已復製到剪貼板"
 
-#: src/components/MyIPTable.tsx:138
+#: src/components/MyIPTable.tsx:120
 msgid "Failed to copy to clipboard"
 msgstr "復製到剪貼板失敗"
 
-#: src/components/MyIPTable.tsx:149
+#: src/components/MyIPTable.tsx:131
 msgid "My Public IP Addresses"
 msgstr "我的公共IP地址"
 
-#: src/components/MyIPTable.tsx:162
+#: src/components/MyIPTable.tsx:144
 msgid "Version"
 msgstr "版本"
 
-#: src/components/MyIPTable.tsx:165
+#: src/components/MyIPTable.tsx:147
 #: src/components/Settings/ProxySection.tsx:27
 msgid "Address"
 msgstr "地址"
 
-#: src/components/MyIPTable.tsx:205
+#: src/components/MyIPTable.tsx:187
 msgid "Copy"
 msgstr "複製"
 
-#: src/components/Navbar.tsx:35
-#: src/components/Navbar.tsx:96
+#: src/components/Navbar.tsx:37
+#: src/components/Navbar.tsx:105
 msgid "Groups"
 msgstr "安全組"
 
-#: src/components/Navbar.tsx:119
+#: src/components/Navbar.tsx:128
 msgid "Theme"
 msgstr "主題"
 
-#: src/components/Navbar.tsx:140
+#: src/components/Navbar.tsx:149
 #: src/routes/_app/settings.tsx:20
 msgid "Settings"
 msgstr "設置"
@@ -326,118 +392,44 @@ msgstr "輸入令牌"
 msgid "The application is still running in the background."
 msgstr "應用程式仍會在後台運行."
 
-#: src/routes/_app/groups/$id.tsx:53
-msgid "Just now"
-msgstr "剛剛"
+#: src/hooks/Firewall/groups.ts:43
+msgid "Failed to fetch firewall groups: {message}"
+msgstr "獲取防火墻安全組失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:56
-msgid "{minutes, plural, one {# minute ago} other {# minutes ago}}"
-msgstr "{minutes, plural, one {#分鐘前} other {#分鐘前}}"
+#: src/hooks/Firewall/groups.ts:164
+msgid "Successfully updated group with ID {groupId}"
+msgstr "成功更新ID為{groupId}的安全組"
 
-#: src/routes/_app/groups/$id.tsx:60
-msgid "{hours, plural, one {# hour ago} other {# hours ago}}"
-msgstr "{hours, plural, one {#小時前} other {#小時前}}"
+#: src/hooks/Firewall/groups.ts:179
+msgid "Failed to update group: {message}"
+msgstr "更新安全組失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:64
-msgid "{days, plural, one {# day ago} other {# days ago}}"
-msgstr "{days, plural, one {#天前} other {#天前}}"
+#: src/hooks/Firewall/groups.ts:208
+msgid "Successfully deleted group with ID {groupId}"
+msgstr "刪除ID為{groupId}的安全組成功"
 
-#: src/routes/_app/groups/$id.tsx:68
-msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
-msgstr "{weeks, plural, one {#周前} other {#周前}}"
+#: src/hooks/Firewall/groups.ts:216
+msgid "Failed to delete group: {message}"
+msgstr "刪除安全組失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:72
-msgid "{months, plural, one {# month ago} other {# months ago}}"
-msgstr "{months, plural, one {#個月前} other {#個月前}}"
+#: src/hooks/Firewall/rules.ts:74
+msgid "Failed to create a new rule: {message}"
+msgstr "創建新規則失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:75
-msgid "{years, plural, one {# year ago} other {# years ago}}"
-msgstr "{years, plural, one {#年前} other {#年前}}"
-
-#: src/routes/_app/groups/$id.tsx:102
-msgid "Delete Firewall Rule"
-msgstr "刪除安全組規則"
-
-#: src/routes/_app/groups/$id.tsx:106
-msgid "Are you sure you want to delete this rule?"
-msgstr "你確定要刪除這條規則嗎?"
-
-#: src/routes/_app/groups/$id.tsx:111
-msgid "IP Version: "
-msgstr "IP版本: "
-
-#: src/routes/_app/groups/$id.tsx:119
-msgid "Protocol: "
-msgstr "協議: "
-
-#: src/routes/_app/groups/$id.tsx:127
-msgid "Port: "
-msgstr "端口: "
-
-#: src/routes/_app/groups/$id.tsx:133
-msgid "Source Type: "
-msgstr "源類型: "
-
-#: src/routes/_app/groups/$id.tsx:139
-msgid "Source Address: "
-msgstr "源地址: "
-
-#: src/routes/_app/groups/$id.tsx:147
-msgid "Notes: "
-msgstr "注釋: "
-
-#: src/routes/_app/groups/$id.tsx:189
+#: src/hooks/Firewall/rules.ts:107
 msgid "Group with ID {groupId} not found"
 msgstr "未找到ID為{groupId}的安全組"
 
-#: src/routes/_app/groups/$id.tsx:269
-msgid "Failed to fetch firewall rules for group {groupId}: {message}"
-msgstr "獲取ID為{groupId}的安全組的規則失敗: {message}"
+#: src/hooks/Firewall/rules.ts:117
+#: src/hooks/Firewall/rules.ts:125
+#: src/hooks/Firewall/rules.ts:132
+msgid "Failed to fetch rules: {message}"
+msgstr "獲取防火墻安全組規則失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:284
-msgid "Delete rule operation failed: Rule ID is null"
-msgstr "刪除安全組失敗: 規則ID為空"
-
-#: src/routes/_app/groups/$id.tsx:317
-msgid "Successfully deleted the rule."
-msgstr "成功刪除安全組規則."
-
-#: src/routes/_app/groups/$id.tsx:324
+#: src/hooks/Firewall/rules.ts:211
 msgid "Failed to delete the rule: {message}"
 msgstr "刪除安全組規則失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:375
-msgid "Successfully created the rule."
-msgstr "成功創建安全組規則."
-
-#: src/routes/_app/groups/$id.tsx:383
-msgid "Failed to create the rule: {message}"
-msgstr "創建安全組規則失敗: {message}"
-
-#: src/routes/_app/groups/$id.tsx:445
+#: src/routes/_app/groups/$id.tsx:63
 msgid "Edit Firewall Group"
 msgstr "編輯防火墻安全組"
-
-#: src/routes/_app/groups/$id.tsx:450
-msgid "Group ID: "
-msgstr "安全組ID: "
-
-#: src/routes/_app/groups/$id.tsx:456
-msgid "Created: "
-msgstr "創建日期: "
-
-#: src/routes/_app/groups/$id.tsx:473
-msgid "Last Modified: "
-msgstr "最後編輯日期: "
-
-#: src/routes/_app/groups/$id.tsx:495
-msgid "[Empty]"
-msgstr "[空]"
-
-#: src/routes/_app/groups/$id.tsx:504
-msgid "Group Rules"
-msgstr "安全組規則"
-
-#: src/routes/_app/groups/$id.tsx:518
-msgid "Linked Instances"
-msgstr "連接的實例"
