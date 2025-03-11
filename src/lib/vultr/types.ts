@@ -56,9 +56,11 @@ export interface IFirewallRule {
     port: string;
     subnet: string;
     subnet_size: number;
-    source: "" | "cloudflare" | string;
+    source: "" | "cloudflare";
     notes: string;
 }
+
+export type LoadBalancerId = string;
 
 export interface IFirewallCreateRule {
     ip_type: "v4" | "v6";
@@ -66,6 +68,6 @@ export interface IFirewallCreateRule {
     subnet: string;
     subnet_size: number;
     port?: string;
-    source?: "" | "cloudflare" | string;
+    source?: "" | "cloudflare" | LoadBalancerId;
     notes?: string;
 }

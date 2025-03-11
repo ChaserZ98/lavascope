@@ -1,3 +1,4 @@
+import { LoadBalancerId } from "@/lib/vultr/types";
 import { Version as IPVersion } from "@/store/ip";
 
 export enum Protocol {
@@ -37,7 +38,7 @@ export type Rule = {
     port: string;
     subnet: string;
     subnet_size: number;
-    source: "" | "cloudflare" | string;
+    source: "" | "cloudflare";
     notes: string;
 };
 
@@ -47,7 +48,7 @@ export type CreateRule = {
     port: string;
     subnet: string;
     subnet_size: number;
-    source: "" | "cloudflare" | string;
+    source: "" | "cloudflare" | LoadBalancerId;
     notes: string;
 };
 
