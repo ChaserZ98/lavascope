@@ -5,11 +5,17 @@ import { ToastContainer } from "react-toastify";
 
 import { BottomNavigation, Navigation } from "@/components/Navbar";
 import TauriTitleBar from "@/components/TauriTitleBar";
+import {
+    IncompatiblePlatformError,
+    useFocusWindow,
+    WindowNotFoundError,
+} from "@/hooks/window";
 import { platformAtom } from "@/store/environment";
 import { languageAtom } from "@/store/language";
 import { addScreenSizeListener, screenSizeAtom } from "@/store/screen";
 import checkCompatibility from "@/utils/compatibility";
 import { dynamicActivate } from "@/utils/i18n";
+import logging from "@/utils/log";
 
 export const Route = createFileRoute("/_app")({
     component: RouteComponent,
@@ -22,7 +28,24 @@ function RouteComponent() {
 
     const language = useAtomValue(languageAtom);
 
+    const focusWindow = useFocusWindow("main");
+
     useEffect(() => {
+        focusWindow()
+            .then(() => {
+                logging.info("Successfully focused main window");
+            })
+            .catch((e) => {
+                if (e instanceof WindowNotFoundError) {
+                    logging.warn(`Skipping focus main window: ${e.message}`);
+                    return;
+                }
+                if (e instanceof IncompatiblePlatformError) {
+                    logging.info(`Skipping focus main window: ${e.message}`);
+                    return;
+                }
+                logging.error(`Failed to focus main window: ${e}`);
+            });
         dynamicActivate(language, platform);
         checkCompatibility(platform);
         const removeScreenSizeListener = addScreenSizeListener(setScreenSize);
