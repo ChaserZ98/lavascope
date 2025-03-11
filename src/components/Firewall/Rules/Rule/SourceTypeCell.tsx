@@ -1,6 +1,22 @@
 import { Input } from "@heroui/react";
+import { useLingui } from "@lingui/react/macro";
 
-export default function SourceTypeCell({ value }: { value: string }) {
+export default function SourceTypeCell({
+    source,
+    subnet,
+}: {
+    source: "" | "cloudflare";
+    subnet: string;
+}) {
+    const { t } = useLingui();
+
+    const value =
+        source === "cloudflare"
+            ? t`Cloudflare`
+            : subnet === "::" || subnet === "0.0.0.0"
+              ? t`Anywhere`
+              : t`Custom`;
+
     return (
         <Input
             isReadOnly

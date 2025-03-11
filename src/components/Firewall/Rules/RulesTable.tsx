@@ -173,13 +173,8 @@ export default function RulesTable(props: RulesTableProps) {
                             </TableCell>
                             <TableCell>
                                 <SourceTypeCell
-                                    value={
-                                        ruleState.rule.source ||
-                                        (ruleState.rule.subnet === "::" ||
-                                        ruleState.rule.subnet === "0.0.0.0"
-                                            ? t`anywhere`
-                                            : t`custom`)
-                                    }
+                                    source={ruleState.rule.source}
+                                    subnet={ruleState.rule.subnet}
                                 />
                             </TableCell>
                             <TableCell>
