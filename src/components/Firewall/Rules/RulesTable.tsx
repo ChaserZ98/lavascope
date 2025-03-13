@@ -73,13 +73,18 @@ export default function RulesTable(props: RulesTableProps) {
     const rowsPerPage = 5;
     const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
 
+    const rules = props.rules.slice(
+        (page - 1) * rowsPerPage,
+        page * rowsPerPage
+    );
+
     return (
         <Table
             aria-label="IP Table"
             classNames={{
                 wrapper: "transition-colors-opacity bg-content2",
                 th: "transition-colors-opacity text-xs font-light bg-content3 sm:text-sm sm:font-bold",
-                td: "transition-colors-opacity text-xs sm:text-sm text-foreground font-mono",
+                td: "align-top transition-colors-opacity text-xs sm:text-sm text-foreground font-mono",
                 base:
                     "overflow-x-auto" +
                     (props.isLoading ? "animate-pulse" : ""),
@@ -158,7 +163,7 @@ export default function RulesTable(props: RulesTableProps) {
                     </TableCell>
                 </TableRow>
                 <>
-                    {props.rules.map((ruleState, index) => (
+                    {rules.map((ruleState, index) => (
                         <TableRow key={index}>
                             <TableCell>
                                 <ProtocolCell
