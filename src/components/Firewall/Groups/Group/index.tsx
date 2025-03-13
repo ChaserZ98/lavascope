@@ -11,7 +11,7 @@ import { useUpdateGroupMutation } from "@/hooks/Firewall";
 import { groupsStateAtom, setNewDescriptionAtom } from "@/store/firewall";
 
 function IdCell({ value }: { value: string }) {
-    return <>{value}</>;
+    return <div className="py-2">{value}</div>;
 }
 
 function DescriptionCell({
@@ -100,7 +100,7 @@ function DescriptionCell({
 
 function DateCreatedCell({ value }: { value: string }) {
     return (
-        <>
+        <div className="py-2">
             {new Date(value).toLocaleString(
                 Intl.DateTimeFormat().resolvedOptions().locale,
                 {
@@ -108,13 +108,13 @@ function DateCreatedCell({ value }: { value: string }) {
                     hour12: false,
                 }
             )}
-        </>
+        </div>
     );
 }
 
 function LastModifiedDateCell({ value }: { value: string }) {
     return (
-        <>
+        <div className="py-2">
             {new Date(value).toLocaleString(
                 Intl.DateTimeFormat().resolvedOptions().locale,
                 {
@@ -122,16 +122,16 @@ function LastModifiedDateCell({ value }: { value: string }) {
                     hour12: false,
                 }
             )}
-        </>
+        </div>
     );
 }
 
 function RuleCountCell({ value }: { value: number }) {
-    return <>{value}</>;
+    return <div className="py-2">{value}</div>;
 }
 
 function InstanceCountCell({ value }: { value: number }) {
-    return <>{value}</>;
+    return <div className="py-2">{value}</div>;
 }
 
 function ActionCell({

@@ -62,7 +62,7 @@ export default function GroupTable() {
                 classNames={{
                     wrapper: "transition-colors-opacity",
                     th: "transition-colors-opacity text-xs font-light sm:text-sm sm:font-bold",
-                    td: "transition-colors-opacity text-xs sm:text-sm text-foreground font-mono",
+                    td: "align-top transition-colors-opacity text-xs sm:text-sm text-foreground font-mono",
                     base:
                         "overflow-x-auto" + (isLoading ? "animate-pulse" : ""),
                 }}
