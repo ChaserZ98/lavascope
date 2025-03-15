@@ -114,7 +114,6 @@ export const initialNewRuleIPv4: NewRuleState = {
     sourceType: SourceType.ANYWHERE,
     source: "0.0.0.0/0",
     notes: "",
-    isCreating: false,
 };
 
 export const initialNewRuleIPv6: NewRuleState = {
@@ -124,7 +123,6 @@ export const initialNewRuleIPv6: NewRuleState = {
     sourceType: SourceType.ANYWHERE,
     source: "::/0",
     notes: "",
-    isCreating: false,
 };
 
 export const rulesAtom = atomWithImmer<
@@ -138,6 +136,36 @@ export const setRuleIsDeletingAtom = atom(
             if (!state[groupId]) return;
             if (!state[groupId][ruleId]) return;
             state[groupId][ruleId].isDeleting = isDeleting;
+        });
+    }
+);
+
+export const getCreatingRuleCountAtom = atom(
+    null,
+    (get, _set, groupId: string) => {
+        return Object.values(get(rulesAtom)[groupId] || {}).filter(
+            (rule) => rule?.isCreating
+        ).length;
+    }
+);
+
+export const persistCreatingRuleAtom = atom(
+    null,
+    (_get, set, groupId: string, creatingRuleId: string, ruleState: RuleState) => {
+        set(rulesAtom, (state) => {
+            if (!state[groupId]) return;
+            delete state[groupId][creatingRuleId];
+            const ruleId = ruleState.rule.id.toString();
+            state[groupId][ruleId] = ruleState;
+        });
+    }
+);
+
+export const addRuleAtom = atom(
+    null, (_get, set, groupId: string, ruleId: string, ruleState: RuleState) => {
+        set(rulesAtom, (state) => {
+            if (!state[groupId]) state[groupId] = {};
+            state[groupId][ruleId] = ruleState;
         });
     }
 );

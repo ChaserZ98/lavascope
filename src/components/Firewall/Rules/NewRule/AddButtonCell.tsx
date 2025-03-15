@@ -3,7 +3,7 @@ import { useLingui } from "@lingui/react/macro";
 import { mdiPlus } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useParams } from "@tanstack/react-router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { useCreateRuleMutation } from "@/hooks/Firewall";
 import { NewRuleState, toCreateRule } from "@/store/firewall";
@@ -23,15 +23,16 @@ export default function AddButtonCell({
 
     const createRuleMutation = useCreateRuleMutation();
 
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
     const handleCreateRule = useCallback(async () => {
-        await createRuleMutation.mutateAsync({
+        setIsLoading(true);
+        createRuleMutation.mutate({
             groupId,
             rule: toCreateRule(newRule),
         });
+        setIsLoading(false);
     }, [newRule]);
-
-    const isCreating = newRule.isCreating;
-    const isActionDisabled = isDisabled || isCreating;
 
     return (
         <div className="flex w-full h-full items-center justify-center py-1">
@@ -41,7 +42,7 @@ export default function AddButtonCell({
                 content={t`Add Rule`}
                 size="sm"
                 color="primary"
-                isDisabled={isActionDisabled}
+                isDisabled={isDisabled}
             >
                 <Button
                     isIconOnly
@@ -50,8 +51,8 @@ export default function AddButtonCell({
                     color="primary"
                     className="text-default-400 transition-colors-opacity hover:text-primary-400"
                     onPress={handleCreateRule}
-                    isDisabled={isActionDisabled}
-                    isLoading={isCreating}
+                    isDisabled={isDisabled}
+                    isLoading={isLoading}
                 >
                     <Icon path={mdiPlus} size={0.75} />
                 </Button>

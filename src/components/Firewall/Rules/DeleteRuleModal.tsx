@@ -32,7 +32,7 @@ export default function DeleteRuleModal({
         if (!rule || isConfirming) return;
         setIsConfirming(true);
         onClose();
-        await deleteRuleMutation.mutateAsync({
+        deleteRuleMutation.mutate({
             groupId,
             ruleId: rule.id.toString(),
         });

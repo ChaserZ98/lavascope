@@ -59,16 +59,6 @@ export const resetNewRuleAtom = atom(
     }
 );
 
-export const setNewRuleIsCreatingAtom = atom(
-    null,
-    (_get, set, groupId: string, version: Version, isCreating: boolean) => {
-        set(groupsStateAtom, (state) => {
-            if (!state[groupId]?.newRule[version]) return;
-            state[groupId].newRule[version].isCreating = isCreating;
-        });
-    }
-);
-
 export const setDescriptionAtom = atom(
     null,
     (_get, set, groupId: string, description: string) => {

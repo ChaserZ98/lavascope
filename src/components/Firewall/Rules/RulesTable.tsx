@@ -72,6 +72,7 @@ export default function RulesTable(props: RulesTableProps) {
 
     const rowsPerPage = 5;
     const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
+    if (page > pages) setPage(pages);
 
     const rules = props.rules.slice(
         (page - 1) * rowsPerPage,
@@ -164,7 +165,7 @@ export default function RulesTable(props: RulesTableProps) {
                 </TableRow>
                 <>
                     {rules.map((ruleState, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={index} className={ruleState.isDeleting || ruleState.isCreating ? "animate-pulse" : ""}>
                             <TableCell>
                                 <ProtocolCell
                                     value={toProtocolDisplay(

@@ -17,15 +17,13 @@ export default function PortCell({
 
     const setNewRule = useSetAtom(setNewRuleAtom);
 
-    const isCreating = newRule.isCreating;
-    const isActionDisabled = isDisabled || isCreating;
     return (
         <Input
             placeholder="Port"
             aria-label="Port"
             variant="faded"
             isDisabled={
-                isActionDisabled ||
+                isDisabled ||
                 (newRule.protocol !== Protocol.TCP &&
                     newRule.protocol !== Protocol.UDP)
             }

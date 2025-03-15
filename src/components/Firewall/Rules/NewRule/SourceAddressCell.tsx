@@ -18,13 +18,10 @@ export default function SourceAddressCell({
 
     const setNewRule = useSetAtom(setNewRuleAtom);
 
-    const isCreating = newRule.isCreating;
-    const isActionDisabled = isDisabled || isCreating;
-
     return (
         <Textarea
             isDisabled={
-                isActionDisabled || newRule.sourceType !== SourceType.CUSTOM
+                isDisabled || newRule.sourceType !== SourceType.CUSTOM
             }
             minRows={1}
             maxRows={4}

@@ -136,12 +136,11 @@ export default function ProtocolCell({
     const setNewRule = useSetAtom(setNewRuleAtom);
 
     const protocolSelection = newRule.protocol;
-    const isCreating = newRule.isCreating;
-    const isActionDisabled = isDisabled || isCreating;
+
     return (
         <Select
             items={protocols}
-            isDisabled={isActionDisabled}
+            isDisabled={isDisabled}
             variant="faded"
             selectionMode="single"
             placeholder="SSH"

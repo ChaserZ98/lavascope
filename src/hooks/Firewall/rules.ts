@@ -5,14 +5,17 @@ import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-import { ErrorResponse, IListRulesResponse } from "@/lib/vultr";
+import { ErrorResponse } from "@/lib/vultr";
 import {
+    addRuleAtom,
     CreateRule,
     deleteRuleAtom,
+    getCreatingRuleCountAtom,
+    persistCreatingRuleAtom,
     resetNewRuleAtom,
     Rule,
     rulesAtom,
-    setNewRuleIsCreatingAtom,
+    RuleState,
     setRuleIsDeletingAtom,
 } from "@/store/firewall";
 import logging from "@/utils/log";
@@ -26,8 +29,11 @@ export function useCreateRuleMutation() {
 
     const { t } = useLingui();
 
-    const setNewRuleIsCreating = useSetAtom(setNewRuleIsCreatingAtom);
     const resetNewRule = useSetAtom(resetNewRuleAtom);
+    const addRule = useSetAtom(addRuleAtom);
+    const deleteRule = useSetAtom(deleteRuleAtom);
+    const getCreatingRuleCount = useSetAtom(getCreatingRuleCountAtom);
+    const persistCreatingRule = useSetAtom(persistCreatingRuleAtom);
 
     const createRuleMutation = useMutation({
         mutationFn: async ({
@@ -42,37 +48,47 @@ export function useCreateRuleMutation() {
                 ...rule,
             }),
         onMutate: async ({ groupId, rule }) => {
-            setNewRuleIsCreating(groupId, rule.ip_type, true);
+            resetNewRule(groupId, rule.ip_type);
+            const count = getCreatingRuleCount(groupId);
+            const creatingRuleId = `creating-${count}`;
+            const creatingRuleState: RuleState = {
+                rule: {
+                    ...rule,
+                    id: Math.floor(Math.random() * 1000),
+                    source: "",
+                    action: "accept"
+                },
+                isDeleting: false,
+                isCreating: true,
+            };
+            addRule(groupId, creatingRuleId, creatingRuleState);
+            return {
+                creatingRuleId,
+                restore: () => deleteRule(groupId, creatingRuleId)
+            };
         },
-        onSuccess: async (response, { groupId, rule }) => {
+        onSuccess: async (data, { groupId }, { creatingRuleId }) => {
             logging.info(
                 `Successfully created a new rule in group ${groupId} from Vultr API.`
             );
-            const newRule = response.firewall_rule;
-            queryClient.setQueryData(
-                ["rules", groupId],
-                (state: IListRulesResponse) => {
-                    return {
-                        firewall_rules: [...state.firewall_rules, newRule],
-                        meta: {
-                            ...state.meta,
-                            total: state.meta.total + 1,
-                        },
-                    };
-                }
-            );
+            const newRule = data.firewall_rule;
+            const newRuleState: RuleState = {
+                rule: newRule as Rule,
+                isDeleting: false,
+                isCreating: false,
+            };
+            persistCreatingRule(groupId, creatingRuleId, newRuleState);
             await queryClient.invalidateQueries({
                 queryKey: ["rules", groupId],
             });
-            resetNewRule(groupId, rule.ip_type);
         },
-        onError: (err, { groupId, rule }) => {
+        onError: (err, { groupId }, context) => {
+            if (context !== undefined) context.restore();
             logging.error(
                 `Failed to create a new rule in group ${groupId}: ${err}`
             );
             const message = err.message || "Unknown error";
             toast.error(t`Failed to create a new rule: ${message}`);
-            setNewRuleIsCreating(groupId, rule.ip_type, false);
         },
     });
 
@@ -126,6 +142,7 @@ export function useRulesQuery(groupId: string) {
                         [ruleIdString]: {
                             rule: rule as Rule,
                             isDeleting: false,
+                            isCreating: false,
                         },
                     };
                     return;
@@ -134,6 +151,7 @@ export function useRulesQuery(groupId: string) {
                     state[groupId][rule.id.toString()] = {
                         rule: rule as Rule,
                         isDeleting: false,
+                        isCreating: false,
                     };
                     return;
                 }
@@ -142,6 +160,8 @@ export function useRulesQuery(groupId: string) {
             Object.keys(state[groupId] || {}).forEach((key) => {
                 if (!data.find((rule) => rule.id.toString() === key)) {
                     if (!state[groupId]) return;
+                    if (!state[groupId][key]) return;
+                    if (state[groupId][key].isDeleting || state[groupId][key].isCreating) return;
                     delete state[groupId][key];
                 }
             });

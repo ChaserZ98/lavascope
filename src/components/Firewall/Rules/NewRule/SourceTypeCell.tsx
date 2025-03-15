@@ -68,12 +68,9 @@ export default function SourceTypeCell({
         },
     ];
 
-    const isCreating = newRule.isCreating;
-    const isActionDisabled = isDisabled || isCreating;
-
     return (
         <Select
-            isDisabled={isActionDisabled}
+            isDisabled={isDisabled}
             disallowEmptySelection
             items={
                 (newRule.ip_type === IPVersion.V4 && myIPv4.value) ||

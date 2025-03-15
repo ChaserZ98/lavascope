@@ -20,12 +20,9 @@ export default function NotesCell({
 
     const setNewRule = useSetAtom(setNewRuleAtom);
 
-    const isCreating = newRule.isCreating;
-    const isActionDisabled = isDisabled || isCreating;
-
     return (
         <Textarea
-            isDisabled={isActionDisabled}
+            isDisabled={isDisabled}
             minRows={1}
             variant="faded"
             placeholder={t`Enter note here`}
