@@ -78,11 +78,8 @@ function forwardLog(
     }
 }
 
-// const tauriLogLevel = import.meta.env.PROD ? LogLevel.INFO : LogLevel.DEBUG;
-// const frontEndLogLevel = import.meta.env.PROD ? LogLevel.WARN : LogLevel.DEBUG;
-
-const tauriLogLevel = LogLevel.INFO;
-const frontEndLogLevel = LogLevel.WARN;
+const tauriLogLevel = import.meta.env.PROD ? LogLevel.INFO : LogLevel.DEBUG;
+const frontEndLogLevel = import.meta.env.PROD ? LogLevel.WARN : LogLevel.DEBUG;
 
 const logging: Log = isTauri() ?
     {
