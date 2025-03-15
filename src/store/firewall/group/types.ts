@@ -13,7 +13,7 @@ export type Group = {
 };
 
 export type GroupState = {
-    group?: Group;
+    group: Group;
     newRule: Record<IPVersion, NewRuleState>;
     newDescription: string;
     /**
@@ -24,4 +24,8 @@ export type GroupState = {
      * True -> the group's delete mutation is in progress.
      */
     isDeleting: boolean;
+    /**
+     * True -> the group's create mutation is in progress.
+     */
+    isCreating: boolean;
 };

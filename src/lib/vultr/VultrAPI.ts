@@ -219,6 +219,12 @@ export class VultrAPI implements IVultrAPI {
         });
     }
 
+    /**
+     * @description Vultr Firewall API
+     * @returns Firewall API functions
+     * @throws {RequestError} If the user's request is invalid
+     * @throws {ResponseError} If the API returns an error response
+     */
     public get firewall() {
         return {
             listGroups: this.createRequestFunction<

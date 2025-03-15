@@ -61,8 +61,8 @@ export default function GroupInfo({ groupId }: { groupId: string }) {
                     </span>
                     <Tooltip
                         content={<RelativeTime date={group.date_created} />}
-                        delay={2000}
-                        closeDelay={500}
+                        delay={1000}
+                        closeDelay={100}
                     >
                         <span className="font-mono">
                             {new Date(group.date_created).toLocaleString(
@@ -81,8 +81,8 @@ export default function GroupInfo({ groupId }: { groupId: string }) {
                     </span>
                     <Tooltip
                         content={<RelativeTime date={group.date_created} />}
-                        delay={2000}
-                        closeDelay={500}
+                        delay={1000}
+                        closeDelay={100}
                     >
                         <span className="font-mono">
                             {new Date(group.date_created).toLocaleString(

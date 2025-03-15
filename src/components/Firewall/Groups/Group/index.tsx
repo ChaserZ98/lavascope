@@ -10,65 +10,47 @@ import { useCallback, useEffect } from "react";
 import { useUpdateGroupMutation } from "@/hooks/Firewall";
 import { groupsStateAtom, setNewDescriptionAtom } from "@/store/firewall";
 
-function IdCell({ value }: { value: string }) {
-    return <div className="py-2">{value}</div>;
+function IdCell({ groupId }: { groupId: string }) {
+    return (
+        <div>{groupId}</div>
+    );
 }
 
 function DescriptionCell({
     groupId,
     description,
+    newDescription,
     isDisabled,
 }: {
     groupId: string;
     description: string;
+    newDescription: string;
     isDisabled?: boolean;
 }) {
     const { t } = useLingui();
 
-    const newDescription = useAtomValue(
-        selectAtom(
-            groupsStateAtom,
-            useCallback((state) => state[groupId]?.newDescription, [groupId])
-        )
-    );
-    const isLoading = useAtomValue(
-        selectAtom(
-            groupsStateAtom,
-            useCallback(
-                (state) => {
-                    if (!state[groupId]) return false;
-                    const group = state[groupId];
-                    return group.isUpdating || group.isDeleting;
-                },
-                [groupId]
-            )
-        )
-    );
-
     const setNewDescription = useSetAtom(setNewDescriptionAtom);
+
     const handleReset = useCallback(() => {
         setNewDescription(groupId, description);
-    }, [description]);
-
-    const isActionDisabled = isDisabled || isLoading;
+    }, [description, groupId]);
 
     useEffect(() => {
         if (isDisabled) setNewDescription(groupId, description);
-    }, [isDisabled]);
+    }, [isDisabled, groupId]);
 
     return (
         <div className="flex gap-1">
             <Textarea
-                isDisabled={isActionDisabled}
+                isDisabled={isDisabled}
                 minRows={1}
                 variant="faded"
-                placeholder={t`Enter note here`}
+                placeholder={t`Enter description here`}
                 value={newDescription}
                 classNames={{
-                    base: "min-w-[120px] max-w-[150px]",
+                    base: "min-w-[120px] max-w-[150px] min-h-8",
                     inputWrapper:
-                        "px-2 transition-colors-opacity !duration-250",
-                    innerWrapper: "h-full",
+                        "px-1.5 py-1 min-h-fit rounded-lg transition-colors-opacity !duration-250",
                     input: "resize-none overflow-y-auto h-5 text-balance text-foreground !ease-[ease] !duration-250 !transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity] placeholder:transition-colors-opacity",
                 }}
                 onChange={(e) => setNewDescription(groupId, e.target.value)}
@@ -77,7 +59,7 @@ function DescriptionCell({
                 content={t`Reset`}
                 delay={1000}
                 closeDelay={100}
-                isDisabled={isActionDisabled || newDescription === description}
+                isDisabled={isDisabled || newDescription === description}
                 color="default"
             >
                 <Button
@@ -85,11 +67,9 @@ function DescriptionCell({
                     size="sm"
                     variant="light"
                     color="default"
-                    className={`mt-1 text-default-400 transition-colors-opacity ${newDescription === description ? "opacity-0" : ""}`}
+                    className={`text-default-400 transition-colors-opacity ${newDescription === description ? "opacity-0" : ""}`}
                     onPress={handleReset}
-                    isDisabled={
-                        isActionDisabled || newDescription === description
-                    }
+                    isDisabled={isDisabled || newDescription === description}
                 >
                     <Icon path={mdiRestart} size={0.75} />
                 </Button>
@@ -100,7 +80,7 @@ function DescriptionCell({
 
 function DateCreatedCell({ value }: { value: string }) {
     return (
-        <div className="py-2">
+        <div>
             {new Date(value).toLocaleString(
                 Intl.DateTimeFormat().resolvedOptions().locale,
                 {
@@ -114,7 +94,7 @@ function DateCreatedCell({ value }: { value: string }) {
 
 function LastModifiedDateCell({ value }: { value: string }) {
     return (
-        <div className="py-2">
+        <div>
             {new Date(value).toLocaleString(
                 Intl.DateTimeFormat().resolvedOptions().locale,
                 {
@@ -127,22 +107,26 @@ function LastModifiedDateCell({ value }: { value: string }) {
 }
 
 function RuleCountCell({ value }: { value: number }) {
-    return <div className="py-2">{value}</div>;
+    return <div>{value}</div>;
 }
 
 function InstanceCountCell({ value }: { value: number }) {
-    return <div className="py-2">{value}</div>;
+    return <div>{value}</div>;
 }
 
 function ActionCell({
     groupId,
     description,
     isDisabled,
+    isUpdating,
+    isDeleting,
     onDelete,
 }: {
     groupId: string;
     description: string;
     isDisabled?: boolean;
+    isUpdating?: boolean;
+    isDeleting?: boolean;
     onDelete: () => void;
 }) {
     const { t } = useLingui();
@@ -156,18 +140,6 @@ function ActionCell({
             )
         )
     );
-    const isUpdating = useAtomValue(
-        selectAtom(
-            groupsStateAtom,
-            useCallback((state) => state[groupId]?.isUpdating, [groupId])
-        )
-    );
-    const isDeleting = useAtomValue(
-        selectAtom(
-            groupsStateAtom,
-            useCallback((state) => state[groupId]?.isDeleting, [groupId])
-        )
-    );
 
     const updateGroupMutation = useUpdateGroupMutation();
 
@@ -178,15 +150,13 @@ function ActionCell({
         []
     );
 
-    const isActionDisabled = isDisabled || isUpdating || isDeleting;
-
     return (
         <div className="flex w-24 items-center justify-end">
             <Tooltip
                 content={t`Confirm`}
                 delay={1000}
                 closeDelay={100}
-                isDisabled={isActionDisabled || newDescription === description}
+                isDisabled={isDisabled || newDescription === description}
                 color="success"
             >
                 <Button
@@ -197,7 +167,7 @@ function ActionCell({
                     className={`text-default-400 transition-colors-opacity hover:text-success-400 ${newDescription === description && !isUpdating ? "opacity-0" : ""}`}
                     onPress={() => handleConfirm(groupId, newDescription)}
                     isDisabled={
-                        isActionDisabled || newDescription === description
+                        isDisabled || newDescription === description
                     }
                     isLoading={isUpdating}
                 >
@@ -212,7 +182,7 @@ function ActionCell({
                 content={t`Edit Rules`}
                 delay={1000}
                 closeDelay={100}
-                isDisabled={isActionDisabled}
+                isDisabled={isDisabled}
                 color="primary"
             >
                 <Button
@@ -223,7 +193,7 @@ function ActionCell({
                     to={`/groups/${groupId}`}
                     className="text-default-400 transition-colors-opacity hover:text-primary-400"
                     as={Link}
-                    isDisabled={isActionDisabled}
+                    isDisabled={isDisabled}
                 >
                     <Icon
                         path={mdiShieldEdit}
@@ -236,7 +206,7 @@ function ActionCell({
                 content={t`Delete`}
                 delay={1000}
                 closeDelay={100}
-                isDisabled={isActionDisabled}
+                isDisabled={isDisabled}
                 color="danger"
             >
                 <Button
@@ -246,7 +216,7 @@ function ActionCell({
                     color="danger"
                     className="text-default-400 transition-colors-opacity hover:text-danger-400"
                     onPress={onDelete}
-                    isDisabled={isActionDisabled}
+                    isDisabled={isDisabled}
                     isLoading={isDeleting}
                 >
                     <Icon path={mdiTrashCan} size={0.75} />

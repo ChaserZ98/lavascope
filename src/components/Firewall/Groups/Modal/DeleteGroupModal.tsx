@@ -28,8 +28,8 @@ export default function DeleteGroupModal({
     const handleModalConfirm = useCallback(async () => {
         if (!group || isConfirming) return;
         setIsConfirming(true);
+        deleteGroupMutation.mutate(group.id);
         onClose();
-        await deleteGroupMutation.mutateAsync(group.id);
         setIsConfirming(false);
     }, [group, isConfirming]);
 
@@ -37,7 +37,7 @@ export default function DeleteGroupModal({
 
     return (
         <Modal
-            backdrop="transparent"
+            backdrop="opaque"
             isOpen={isOpen}
             onClose={onClose}
             classNames={{

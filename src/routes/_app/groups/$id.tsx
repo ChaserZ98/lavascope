@@ -1,9 +1,10 @@
 import { Button, Tab, Tabs, useDisclosure } from "@heroui/react";
-import { Trans } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
 
 import DeleteRuleModal from "@/components/Firewall/Rules/DeleteRuleModal";
 import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
@@ -23,6 +24,8 @@ function Rules() {
 
     const deleteModal = useDisclosure();
 
+    const { t } = useLingui();
+
     const rulesQuery = useRulesQuery(groupId);
 
     const screenSize = useAtomValue(screenSizeAtom);
@@ -35,7 +38,9 @@ function Rules() {
 
     const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
 
-    const rulesIsLoading = rulesQuery.isFetching;
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+
+    // const rulesIsLoading = rulesQuery.isFetching;
     const ipv4Rules = Object.values(rulesState).filter(
         (state): state is RuleState =>
             state !== undefined && state.rule.ip_type === IPVersion.V4
@@ -50,7 +55,15 @@ function Rules() {
     }, []);
 
     const handleRefresh = useCallback(async () => {
-        await rulesQuery.refetch();
+        setIsLoading(true);
+        const res = await rulesQuery.refetch();
+        if (res.isError) {
+            const message = res.error instanceof Error ?
+                res.error.message :
+                res.error;
+            toast.error(t`Failed to fetch firewall rules: ${message}`);
+        }
+        setIsLoading(false);
     }, []);
     const onRuleDelete = useCallback((rule: Rule) => {
         setSelectedRule(rule);
@@ -84,7 +97,7 @@ function Rules() {
                         <RulesTable
                             ipVersion={IPVersion.V4}
                             rules={ipv4Rules}
-                            isLoading={rulesIsLoading}
+                            isLoading={isLoading}
                             onRuleDelete={onRuleDelete}
                         />
                     </Tab>
@@ -92,7 +105,7 @@ function Rules() {
                         <RulesTable
                             ipVersion={IPVersion.V6}
                             rules={ipv6Rules}
-                            isLoading={rulesIsLoading}
+                            isLoading={isLoading}
                             onRuleDelete={onRuleDelete}
                         />
                     </Tab>
@@ -105,7 +118,7 @@ function Rules() {
                 />
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
-                <Button onPress={handleRefresh} isLoading={rulesIsLoading}>
+                <Button onPress={handleRefresh} isLoading={isLoading}>
                     <Trans>Refresh</Trans>
                 </Button>
                 <ProxySwitch />

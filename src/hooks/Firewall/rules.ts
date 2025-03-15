@@ -5,7 +5,7 @@ import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-import { ErrorResponse, IListRulesResponse, RequestError } from "@/lib/vultr";
+import { ErrorResponse, IListRulesResponse } from "@/lib/vultr";
 import {
     CreateRule,
     deleteRuleAtom,
@@ -94,43 +94,26 @@ export function useRulesQuery(groupId: string) {
         queryFn: async () =>
             await vultrAPI.firewall.listRules({ "firewall-group-id": groupId }),
         select: (data) => data.firewall_rules,
+        retry: false,
     });
 
     useEffect(() => {
-        if (rulesQuery.isError) {
-            const error = rulesQuery.error;
-            if (error instanceof ErrorResponse) {
-                if (error.statusCode === 404) {
-                    logging.warn(
-                        `Failed to fetch firewall rules for group ${groupId}: ${error}`
-                    );
-                    toast.error(t`Group with ID ${groupId} not found`);
-                    navigate({
-                        to: "/",
-                    });
-                    return;
-                }
-                logging.error(
-                    `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
-                );
-                const message = rulesQuery.error.message;
-                toast.error(t`Failed to fetch rules: ${message}`);
-                return;
-            }
-            if (error instanceof RequestError) {
-                logging.error(
-                    `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
-                );
-                const message = rulesQuery.error.message;
-                toast.error(t`Failed to fetch rules: ${message}`);
-                return;
-            }
-            logging.error(
-                `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
+        if (!rulesQuery.isError) return;
+
+        const error = rulesQuery.error;
+        if (error instanceof ErrorResponse && error.statusCode === 404) {
+            logging.warn(
+                `Failed to fetch firewall rules for group ${groupId}: ${error}`
             );
-            const message = error.message || "Unknown error";
-            toast.error(t`Failed to fetch rules: ${message}`);
+            toast.error(t`Group with ID ${groupId} not found`);
+            navigate({
+                to: "/",
+            });
+            return;
         }
+        logging.error(
+            `Failed to fetch firewall rules for group ${groupId}: ${rulesQuery.error}`
+        );
     }, [rulesQuery.isError]);
 
     useEffect(() => {
