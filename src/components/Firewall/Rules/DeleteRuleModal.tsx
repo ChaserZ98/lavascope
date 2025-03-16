@@ -28,15 +28,15 @@ export default function DeleteRuleModal({
 
     const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
-    const handleModalConfirm = useCallback(async () => {
+    const handleModalConfirm = useCallback(() => {
         if (!rule || isConfirming) return;
         setIsConfirming(true);
         onClose();
+        setIsConfirming(false);
         deleteRuleMutation.mutate({
             groupId,
             ruleId: rule.id.toString(),
         });
-        setIsConfirming(false);
     }, [rule, isConfirming]);
 
     if (!rule) return null;

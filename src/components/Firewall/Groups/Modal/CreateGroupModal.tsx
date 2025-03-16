@@ -18,13 +18,13 @@ export default function CreateGroupModal({
 
     const createGroupMutation = useCreateGroupMutation();
 
-    const handleModalConfirm = useCallback(async () => {
+    const handleModalConfirm = useCallback(() => {
         if (isCreating) return;
         setIsCreating(true);
-        createGroupMutation.mutate(description);
         onClose();
-        setIsCreating(false);
         setDescription("");
+        setIsCreating(false);
+        createGroupMutation.mutate(description);
     }, [description, isCreating]);
 
     return (

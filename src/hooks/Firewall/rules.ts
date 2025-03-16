@@ -1,11 +1,12 @@
 import { useLingui } from "@lingui/react/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { produce } from "immer";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
-import { ErrorResponse } from "@/lib/vultr";
+import { ErrorResponse, IListRulesResponse } from "@/lib/vultr";
 import {
     addRuleAtom,
     CreateRule,
@@ -78,9 +79,13 @@ export function useCreateRuleMutation() {
                 isCreating: false,
             };
             persistCreatingRule(groupId, creatingRuleId, newRuleState);
-            await queryClient.invalidateQueries({
-                queryKey: ["rules", groupId],
-            });
+            queryClient.setQueryData(
+                ["rules", groupId],
+                (state: IListRulesResponse) => produce(state, (draft) => {
+                    draft.firewall_rules.push(newRule);
+                    draft.meta.total += 1;
+                })
+            );
         },
         onError: (err, { groupId }, context) => {
             if (context !== undefined) context.restore();
@@ -201,9 +206,13 @@ export function useDeleteRuleMutation() {
                 `Successfully deleted the rule ${ruleId} in group ${groupId} from Vultr API.`
             );
             deleteRule(groupId, ruleId);
-            await queryClient.invalidateQueries({
-                queryKey: ["rules", groupId],
-            });
+            queryClient.setQueryData(
+                ["rules", groupId],
+                (state: IListRulesResponse) => produce(state, (draft) => {
+                    draft.firewall_rules = draft.firewall_rules.filter((rule) => rule.id.toString() !== ruleId);
+                    draft.meta.total -= 1;
+                })
+            );
         },
         onError: (err, { groupId, ruleId }) => {
             setRuleIsDeleting(groupId, ruleId, false);

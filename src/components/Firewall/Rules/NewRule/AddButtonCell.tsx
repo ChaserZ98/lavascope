@@ -25,7 +25,7 @@ export default function AddButtonCell({
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const handleCreateRule = useCallback(async () => {
+    const handleCreateRule = useCallback(() => {
         setIsLoading(true);
         createRuleMutation.mutate({
             groupId,

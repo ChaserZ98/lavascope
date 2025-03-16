@@ -25,12 +25,12 @@ export default function DeleteGroupModal({
 
     const [isConfirming, setIsConfirming] = useState<boolean>(false);
 
-    const handleModalConfirm = useCallback(async () => {
+    const handleModalConfirm = useCallback(() => {
         if (!group || isConfirming) return;
         setIsConfirming(true);
-        deleteGroupMutation.mutate(group.id);
         onClose();
         setIsConfirming(false);
+        deleteGroupMutation.mutate(group.id);
     }, [group, isConfirming]);
 
     if (!group) return null;

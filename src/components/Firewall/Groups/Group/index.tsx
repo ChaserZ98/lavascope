@@ -144,8 +144,8 @@ function ActionCell({
     const updateGroupMutation = useUpdateGroupMutation();
 
     const handleConfirm = useCallback(
-        async (groupId: string, description: string) => {
-            await updateGroupMutation.mutateAsync({ groupId, description });
+        (groupId: string, description: string) => {
+            updateGroupMutation.mutate({ groupId, description });
         },
         []
     );

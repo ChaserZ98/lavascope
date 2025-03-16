@@ -1,10 +1,12 @@
 import { useLingui } from "@lingui/react/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { produce } from "immer";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
 
 import { useVultrAPI } from "@/hooks/vultr";
+import { IListGroupsResponse } from "@/lib/vultr";
 import {
     addGroupStateAtom,
     deleteGroupStateAtom,
@@ -80,8 +82,11 @@ export function useCreateGroupMutation() {
                 isCreating: false,
             };
             persistCreatingGroup(creatingGroupId, groupState);
+            queryClient.setQueryData(["groups"], (state: IListGroupsResponse) => produce(state, (draft) => {
+                draft.meta.total += 1;
+                draft.firewall_groups.push(group);
+            }));
             logging.info(`Successfully created a new firewall group.`);
-            await queryClient.invalidateQueries({ queryKey: ["groups"] });
         },
         onError: (err, _, context) => {
             if (context !== undefined) context.restore();
@@ -212,12 +217,15 @@ export function useUpdateGroupMutation() {
                 setGroupDescription(groupId, oldDescription);
             };
         },
-        onSuccess: async (_, { groupId }) => {
+        onSuccess: async (_, { groupId, description }) => {
+            queryClient.setQueryData(
+                ["groups"],
+                (state: IListGroupsResponse) => produce(state, (draft) => {
+                    draft.firewall_groups = draft.firewall_groups.map((group) => (group.id === groupId ? { ...group, description } : group));
+                })
+            );
             logging.info(`Successfully updated group with ID ${groupId}`);
             toast.success(t`Successfully updated group with ID ${groupId}`);
-            await queryClient.invalidateQueries({
-                queryKey: ["groups"],
-            });
         },
         onError: (err, _, restoreCache) => {
             if (restoreCache !== undefined) restoreCache();
@@ -244,6 +252,7 @@ export function useDeleteGroupMutation() {
     const deleteGroupState = useSetAtom(deleteGroupStateAtom);
 
     const deleteGroupMutation = useMutation({
+        mutationKey: ["groups"],
         mutationFn: async (groupId: string) =>
             await vultrAPI.firewall.deleteGroup({
                 "firewall-group-id": groupId,
@@ -253,11 +262,14 @@ export function useDeleteGroupMutation() {
         },
         onSuccess: async (_, groupId) => {
             deleteGroupState(groupId);
+            queryClient.setQueryData(["groups"], (state: IListGroupsResponse) =>
+                produce(state, (draft) => {
+                    draft.meta.total -= 1;
+                    draft.firewall_groups = draft.firewall_groups.filter((group) => group.id !== groupId);
+                })
+            );
             logging.info(`Successfully deleted group with ID ${groupId}`);
             toast.success(t`Successfully deleted group with ID ${groupId}`);
-            await queryClient.invalidateQueries({
-                queryKey: ["groups"],
-            });
         },
         onError: (err) => {
             logging.error(`Failed to delete group: ${err}`);
