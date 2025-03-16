@@ -62,6 +62,29 @@
 
 ### Demo
 
+<div align="center">
+    <img src="doc/img/firewall-groups.png" alt="firewall edit" width="600" />
+    <p><b>Firewall edit</b></p>
+</div>
+
+<div align="center">
+    <div>
+        <img src="doc/img/dark-theme.png" alt="dark theme" width="400">
+        <img src="doc/img/light-theme.png" alt="light theme" width="400">
+    </div>
+    <p><b>Dark/Light theme</b></p>
+</div>
+
+<div align="center">
+    <img src="doc/img/i18n-support.png" alt="internaltionalization" width="600">
+    <p><b>Internationalization support</b></p>
+</div>
+
+<div align="center">
+    <img src="doc/img/responsive-design.png" alt="responsive design" width="400">
+    <p><b>Responsive design</b></p>
+</div>
+
 ### Built With
 
 [![Tauri][Tauri-icon]][Tauri-url]
