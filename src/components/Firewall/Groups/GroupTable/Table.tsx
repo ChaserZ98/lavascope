@@ -86,7 +86,7 @@ export default function GroupTable() {
                 }}
                 isKeyboardNavigationDisabled
                 topContent={(
-                    <div className="flex relative px-2">
+                    <div className="sticky flex left-0 w-full">
                         <TablePagination total={pages} page={page} setPage={setPage} isLoading={isLoading} />
                         <CreateGroupButton onPress={createModal.onOpen} />
                     </div>

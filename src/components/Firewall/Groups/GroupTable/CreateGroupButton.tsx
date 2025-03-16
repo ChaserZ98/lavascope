@@ -18,7 +18,7 @@ export default function CreateGroupButton({ onPress }: { onPress: () => void }) 
                 size="sm"
                 variant="light"
                 color="success"
-                className="absolute flex justify-center right-0 text-sm bg-content2 text-content2-foreground transition-colors-opacity hover:text-success-400"
+                className="absolute right-0 text-sm bg-content2 text-content2-foreground transition-colors-opacity hover:text-success-400"
                 onPress={onPress}
             >
                 <Icon path={mdiPlus} size={0.75} />
