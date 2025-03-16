@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { lingui } from "@lingui/vite-plugin";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import legacy from "@vitejs/plugin-legacy";
@@ -41,4 +42,15 @@ export default defineConfig(async () => ({
             ignored: ["**/src-tauri/**"],
         },
     },
+    test: {
+        globals: true,
+        include: ["tests/**/*.{test,spec}.{ts,tsx}"],
+        coverage: {
+            enabled: true,
+            provider: "v8" as const,
+            reportsDirectory: ".coverage",
+            reporter: ["html"],
+            include: ["src/**/*.{ts,tsx}"],
+        }
+    }
 }));
