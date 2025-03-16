@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
     <a href="https://github.com/ChaserZ98/lavascope">
-        <img src="https://raw.githubusercontent.com/ChaserZ98/lavascope/refs/heads/dev/public/favicon.ico" alt="Logo" height="120">
+        <img src="https://raw.githubusercontent.com/ChaserZ98/lavascope/refs/heads/main/public/favicon.ico" alt="Logo" height="120">
     </a>
     <h3 align="center">LavaScope</h3>
     <p align="center">
@@ -37,7 +37,7 @@
 [issues-badge]: https://img.shields.io/github/issues/ChaserZ98/lavascope.svg?style=flat&label=Issues
 [issues-url]: https://github.com/ChaserZ98/lavascope/issues
 [license-badge]: https://img.shields.io/github/license/ChaserZ98/lavascope.svg?style=flat&label=License
-[license-url]: https://github.com/ChaserZ98/lavascope/blob/dev/LICENSE
+[license-url]: https://github.com/ChaserZ98/lavascope/blob/main/LICENSE
 
 <details>
     <summary>Table of Contents</summary>
@@ -182,9 +182,7 @@ bun tauri build
 
 ## License
 
-Distributed under the MIT License. See [`LICENSE`][License-url] for more information.
-
-[License-url]: https://github.com/ChaserZ98/lavascope/blob/dev/LICENSE
+Distributed under the MIT License. See [`LICENSE`][license-url] for more information.
 
 <p align="right"><a href="#readme-top">⬆️ Back to top</a></p>
 
