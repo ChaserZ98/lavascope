@@ -3,7 +3,7 @@
 <!-- PROJECT LOGO -->
 <div align="center">
     <a href="https://github.com/ChaserZ98/lavascope">
-        <img src="https://raw.githubusercontent.com/ChaserZ98/lavascope/refs/heads/main/public/favicon.ico" alt="Logo" height="120">
+        <img src="public/favicon.ico" alt="Logo" height="120">
     </a>
     <h3 align="center">LavaScope</h3>
     <p align="center">
