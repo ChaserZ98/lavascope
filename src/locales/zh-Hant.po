@@ -13,103 +13,121 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:49
-msgid "Delete Firewall Group"
-msgstr "刪除防火墻安全組"
+#: src/components/Firewall/Groups/Group/index.tsx:48
+#: src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:50
+msgid "Enter description here"
+msgstr "輸入描述"
 
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:53
-msgid "Are you sure you want to delete this firewall group?"
-msgstr "你確定要刪除這個防火墻安全組嗎?"
+#: src/components/Firewall/Groups/Group/index.tsx:59
+#: src/components/IPEndpointsTable.tsx:227
+msgid "Reset"
+msgstr "重置"
 
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:60
-msgid "ID: "
-msgstr "ID: "
-
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:66
-msgid "Description: "
-msgstr "描述: "
-
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:74
-msgid "Date Created: "
-msgstr "創建日期: "
-
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:82
-msgid "Rules: "
-msgstr "規則: "
-
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:90
-msgid "Instances: "
-msgstr "實例: "
-
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:104
-#: src/components/Firewall/Groups/Group/index.tsx:186
+#: src/components/Firewall/Groups/Group/index.tsx:156
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:104
 #: src/components/Firewall/Rules/DeleteRuleModal.tsx:114
 msgid "Confirm"
 msgstr "確定"
 
-#: src/components/Firewall/Groups/DeleteGroupModal.tsx:107
-#: src/components/Firewall/Rules/DeleteRuleModal.tsx:117
-msgid "Cancel"
-msgstr "取消"
-
-#: src/components/Firewall/Groups/Group/index.tsx:65
-#: src/components/Firewall/Rules/NewRule/NoteCell.tsx:31
-msgid "Enter note here"
-msgstr "輸入注釋"
-
-#: src/components/Firewall/Groups/Group/index.tsx:77
-#: src/components/IPEndpointsTable.tsx:230
-msgid "Reset"
-msgstr "重置"
-
-#: src/components/Firewall/Groups/Group/index.tsx:212
+#: src/components/Firewall/Groups/Group/index.tsx:182
 msgid "Edit Rules"
 msgstr "編輯規則"
 
-#: src/components/Firewall/Groups/Group/index.tsx:236
-#: src/components/IPEndpointsTable.tsx:199
+#: src/components/Firewall/Groups/Group/index.tsx:206
+#: src/components/IPEndpointsTable.tsx:197
 msgid "Delete"
 msgstr "刪除"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:58
-msgid "Firewall Groups"
-msgstr "防火墻安全組"
+#: src/components/Firewall/Groups/GroupTable/CreateGroupButton.tsx:11
+msgid "Create Group"
+msgstr "創建安全組"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:91
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:48
+msgid "Failed to fetch firewall groups: {message}"
+msgstr "獲取防火墻安全組失敗: {message}"
+
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:64
 msgid "ID"
 msgstr "ID"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:92
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:65
+#: src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:52
 #: src/components/Firewall/Rules/GroupInfo.tsx:102
 msgid "Description"
 msgstr "描述"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:93
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:66
 msgid "Date Created"
 msgstr "創建日期"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:94
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:67
 msgid "Last Modified"
 msgstr "最後修改日期"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:95
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:68
 msgid "Rules"
 msgstr "規則"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:96
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:69
 msgid "Instances"
 msgstr "實例"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:97
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:70
 #: src/components/MyIPTable.tsx:150
 msgid "Action"
 msgstr "操作"
 
-#: src/components/Firewall/Groups/GroupTable.tsx:166
-#: src/components/MyIPTable.tsx:216
-#: src/routes/_app/groups/$id.tsx:109
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:76
+msgid "Firewall Groups"
+msgstr "防火墻安全組"
+
+#: src/components/Firewall/Groups/GroupTable/Table.tsx:169
+#: src/components/MyIPTable.tsx:215
+#: src/routes/_app/groups/$id.tsx:122
 msgid "Refresh"
 msgstr "刷新"
+
+#: src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:42
+msgid "New Firewall Group"
+msgstr "新防火墻安全組"
+
+#: src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:72
+msgid "Create"
+msgstr "創建"
+
+#: src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:75
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:107
+#: src/components/Firewall/Rules/DeleteRuleModal.tsx:117
+msgid "Cancel"
+msgstr "取消"
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:49
+msgid "Delete Firewall Group"
+msgstr "刪除防火墻安全組"
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:53
+msgid "Are you sure you want to delete this firewall group?"
+msgstr "你確定要刪除這個防火墻安全組嗎?"
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:60
+msgid "ID: "
+msgstr "ID: "
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:66
+msgid "Description: "
+msgstr "描述: "
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:74
+msgid "Date Created: "
+msgstr "創建日期: "
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:82
+msgid "Rules: "
+msgstr "規則: "
+
+#: src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:90
+msgid "Instances: "
+msgstr "實例: "
 
 #: src/components/Firewall/Rules/DeleteRuleModal.tsx:55
 msgid "Delete Firewall Rule"
@@ -191,9 +209,13 @@ msgstr "安全組規則"
 msgid "Linked Instances"
 msgstr "連接的實例"
 
-#: src/components/Firewall/Rules/NewRule/AddButtonCell.tsx:41
+#: src/components/Firewall/Rules/NewRule/AddButtonCell.tsx:42
 msgid "Add Rule"
 msgstr "添加規則"
+
+#: src/components/Firewall/Rules/NewRule/NoteCell.tsx:28
+msgid "Enter note here"
+msgstr "輸入注釋"
 
 #: src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:49
 #: src/components/Navbar.tsx:53
@@ -224,27 +246,27 @@ msgstr "負載均衡器 (開發中)"
 msgid "Delete Rule"
 msgstr "刪除規則"
 
-#: src/components/Firewall/Rules/RulesTable.tsx:109
+#: src/components/Firewall/Rules/RulesTable.tsx:115
 msgid "Protocol"
 msgstr "協議"
 
-#: src/components/Firewall/Rules/RulesTable.tsx:110
+#: src/components/Firewall/Rules/RulesTable.tsx:116
 msgid "Port"
 msgstr "端口"
 
-#: src/components/Firewall/Rules/RulesTable.tsx:111
+#: src/components/Firewall/Rules/RulesTable.tsx:117
 msgid "Source Type"
 msgstr "源類型"
 
-#: src/components/Firewall/Rules/RulesTable.tsx:112
+#: src/components/Firewall/Rules/RulesTable.tsx:118
 msgid "Source"
 msgstr "源"
 
-#: src/components/Firewall/Rules/RulesTable.tsx:113
+#: src/components/Firewall/Rules/RulesTable.tsx:119
 msgid "Notes"
 msgstr "注釋"
 
-#: src/components/Firewall/Rules/RulesTable.tsx:114
+#: src/components/Firewall/Rules/RulesTable.tsx:120
 #: src/components/IPEndpointsTable.tsx:147
 msgid "Actions"
 msgstr "操作"
@@ -273,7 +295,7 @@ msgstr "刪除節點{endpoint}失敗: {message}"
 msgid "Failed to restore {version} endpoints: {message}"
 msgstr "恢復{version}節點失敗: {message}"
 
-#: src/components/IPEndpointsTable.tsx:123
+#: src/components/IPEndpointsTable.tsx:124
 #: src/components/IPEndpointsTable.tsx:132
 msgid "IPv4 Endpoints"
 msgstr "IPv4節點"
@@ -392,44 +414,42 @@ msgstr "輸入令牌"
 msgid "The application is still running in the background."
 msgstr "應用程式仍會在後台運行."
 
-#: src/hooks/Firewall/groups.ts:43
-msgid "Failed to fetch firewall groups: {message}"
-msgstr "獲取防火墻安全組失敗: {message}"
+#: src/hooks/Firewall/groups.ts:95
+msgid "Failed to create the new firewall group: {message}"
+msgstr "創建新防火墻安全組失敗: {message}"
 
-#: src/hooks/Firewall/groups.ts:164
+#: src/hooks/Firewall/groups.ts:228
 msgid "Successfully updated group with ID {groupId}"
 msgstr "成功更新ID為{groupId}的安全組"
 
-#: src/hooks/Firewall/groups.ts:179
+#: src/hooks/Firewall/groups.ts:234
 msgid "Failed to update group: {message}"
 msgstr "更新安全組失敗: {message}"
 
-#: src/hooks/Firewall/groups.ts:208
+#: src/hooks/Firewall/groups.ts:272
 msgid "Successfully deleted group with ID {groupId}"
 msgstr "刪除ID為{groupId}的安全組成功"
 
-#: src/hooks/Firewall/groups.ts:216
+#: src/hooks/Firewall/groups.ts:277
 msgid "Failed to delete group: {message}"
 msgstr "刪除安全組失敗: {message}"
 
-#: src/hooks/Firewall/rules.ts:74
+#: src/hooks/Firewall/rules.ts:96
 msgid "Failed to create a new rule: {message}"
 msgstr "創建新規則失敗: {message}"
 
-#: src/hooks/Firewall/rules.ts:107
+#: src/hooks/Firewall/rules.ts:129
 msgid "Group with ID {groupId} not found"
 msgstr "未找到ID為{groupId}的安全組"
 
-#: src/hooks/Firewall/rules.ts:117
-#: src/hooks/Firewall/rules.ts:125
-#: src/hooks/Firewall/rules.ts:132
-msgid "Failed to fetch rules: {message}"
-msgstr "獲取防火墻安全組規則失敗: {message}"
-
-#: src/hooks/Firewall/rules.ts:211
+#: src/hooks/Firewall/rules.ts:223
 msgid "Failed to delete the rule: {message}"
 msgstr "刪除安全組規則失敗: {message}"
 
-#: src/routes/_app/groups/$id.tsx:63
+#: src/routes/_app/groups/$id.tsx:64
+msgid "Failed to fetch firewall rules: {message}"
+msgstr "獲取防火墻安全組規則失敗: {message}"
+
+#: src/routes/_app/groups/$id.tsx:76
 msgid "Edit Firewall Group"
 msgstr "編輯防火墻安全組"
