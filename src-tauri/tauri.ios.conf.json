@@ -1,0 +1,8 @@
+{
+    "identifier": "com.chaserz98.lavascope",
+    "app": {
+        "security": {
+            "capabilities": ["mobile"]
+        }
+    }
+}

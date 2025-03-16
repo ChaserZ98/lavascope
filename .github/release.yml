@@ -1,0 +1,32 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+  categories:
+    - title: Features
+      labels:
+        - enhancement
+    - title: Breaking Changes
+      labels:
+        - Semver-Major
+        - breaking-changes
+    - title: Fixes
+      labels:
+        - bug
+        - fix
+    - title: Refactors
+      labels:
+        - refactor
+    - title: Docs
+      labels:
+        - documentation
+    - title: Dependencies
+      labels:
+        - dependencies
+    - title: CI/CD
+      labels:
+        - CI
+        - CD
+    - title: Other
+      labels:
+        - "*"

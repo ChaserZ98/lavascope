@@ -1,0 +1,21 @@
+{
+    "identifier": "com.chaserz98.lavascope-dev",
+    "app": {
+        "windows": [
+            {
+                "label": "main",
+                "title": "LavaScope",
+                "width": 1280,
+                "height": 720,
+                "fullscreen": false,
+                "resizable": true,
+                "decorations": false,
+                "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-features=msEdgeFluentOverlayScrollbar,msOverlayScrollbarWinStyle",
+                "center": true
+            }
+        ],
+        "security": {
+            "capabilities": ["desktop"]
+        }
+    }
+}

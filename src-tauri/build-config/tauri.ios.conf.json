@@ -1,0 +1,13 @@
+{
+    "identifier": "com.chaserz98.lavascope",
+    "bundle": {
+        "iOS": {
+            "minimumSystemVersion": "13.0"
+        }
+    },
+    "app": {
+        "security": {
+            "capabilities": ["mobile"]
+        }
+    }
+}

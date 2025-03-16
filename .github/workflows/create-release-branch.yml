@@ -1,0 +1,78 @@
+name: Create Release Branch
+run-name: "${{github.actor}} is trying to create a ${{github.event.inputs.semverType}} release"
+on:
+  workflow_dispatch:
+    inputs:
+      semverType:
+        description: "The type of semver version to create"
+        required: true
+        type: choice
+        options:
+          - major
+          - premajor
+          - minor
+          - preminor
+          - patch
+          - prepatch
+          - prerelease
+        default: "patch"
+      preid:
+        description: "The prerelease identifier"
+        required: false
+        type: choice
+        options:
+          - alpha
+          - beta
+          - rc
+          - canary
+        default: "canary"
+jobs:
+  create-release-branch:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    env:
+      SEMVER_TYPE: ${{github.event.inputs.semverType}}
+      PREID: ${{github.event.inputs.preid}}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Get next version
+        run: |
+          if [[ $SEMVER_TYPE == "premajor" || $SEMVER_TYPE == "preminor" || $SEMVER_TYPE == "prepatch" ]]; then
+            BUMP_COMMAND="npm version $SEMVER_TYPE --preid=$PREID --no-git-tag-version --tag-version-prefix=''"
+          else
+            BUMP_COMMAND="npm version $SEMVER_TYPE --no-git-tag-version --tag-version-prefix=''"
+          fi
+          NEXT_VERSION=$(eval $BUMP_COMMAND)
+          echo "The next version is $NEXT_VERSION"
+          echo "BUMP_COMMAND=$BUMP_COMMAND" >> $GITHUB_ENV
+          echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
+      - name: Setup git config
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+      - name: Create Release Branch
+        run: |
+          git reset --hard HEAD
+          git checkout -b release/$NEXT_VERSION
+      - name: Bump version
+        run: eval $BUMP_COMMAND
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff
+        with:
+          version: $NEXT_VERSION
+          config: cliff.toml
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
+      - name: Commit and push changes
+        run: |
+          git commit -am "🐳 chore: Bump version to $NEXT_VERSION"
+          git push origin release/$NEXT_VERSION

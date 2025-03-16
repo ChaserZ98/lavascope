@@ -1,0 +1,380 @@
+name: Release Draft
+run-name: "Release Attempt: ${{github.event.pull_request.title}}"
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  create-release:
+    if: startsWith(github.head_ref, 'release/')
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    outputs:
+      release_id: ${{fromJson(steps.create-release.outputs.result).id}}
+      release_url: ${{fromJson(steps.create-release.outputs.result).html_url}}
+      release_version: ${{steps.get-version.outputs.PACKAGE_VERSION}}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+      - name: Get version
+        id: get-version
+        run: |
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_OUTPUT
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+      - name: Create release draft
+        id: create-release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `${process.env.PACKAGE_VERSION}`,
+              name: `${process.env.PACKAGE_VERSION}`,
+              body: 'Take a look at the assets to download and install this app.',
+              draft: true,
+              prerelease: false
+            })
+            return { id: data.id, html_url: data.html_url }
+      - name: Release url
+        env:
+          RELEASE_URL: ${{fromJson(steps.create-release.outputs.result).html_url}}
+        run: |
+          echo "Release url: $RELEASE_URL"
+  build-android-release:
+    needs: create-release
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    environment: Release
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
+      APP_NAME: "LavaScope"
+      JAVA_DISTRIBUTION: "adopt"
+      JAVA_VERSION: 17
+      NDK_VERSION: 27.1.12297006
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: ${{env.JAVA_DISTRIBUTION}}
+          java-version: ${{env.JAVA_VERSION}}
+          cache: gradle
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install NDK
+        run: |
+          sdkmanager "ndk;$NDK_VERSION"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/$NDK_VERSION" >> $GITHUB_ENV
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Setup Android signing
+        run: |
+          ANDROID_DIRECTORY=src-tauri/gen/android
+          echo "${{secrets.ANDROID_KEY_BASE64}}" | base64 -d > $RUNNER_TEMP/keystore.jks
+          echo "keyAlias=${{secrets.ANDROID_KEY_ALIAS}}" > $ANDROID_DIRECTORY/keystore.properties
+          echo "password=${{secrets.ANDROID_KEY_PASSWORD}}" >> $ANDROID_DIRECTORY/keystore.properties
+          echo "storeFile=$RUNNER_TEMP/keystore.jks" >> $ANDROID_DIRECTORY/keystore.properties
+      - name: Build Android APK per ABI
+        run: |
+          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
+      - name: Rename APKs and move to temp directory
+        run: |
+          for apk in $(find . -type f -name "*.apk"); do
+            echo "Found APK: $apk"
+            filename=$(basename $apk)
+            arch=$(echo $filename | cut -d'-' -f2)
+            new_filename="${APP_NAME}_${RELEASE_VERSION}_${arch}.apk"
+            mv "$apk" "$RUNNER_TEMP/$new_filename"
+            echo "Renamed APK: $RUNNER_TEMP/$new_filename"
+          done
+      - name: Build Android universal APK
+        run: |
+          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk
+      - name: Rename universal APK
+        run: |
+          output_dir=src-tauri/gen/android/app/build/outputs
+          universal_apk_path=$output_dir/apk/universal/release/app-universal-release.apk
+          if [ ! -f $universal_apk_path ]; then
+            echo "Universal APK not found at $universal_apk_path"
+            exit 1
+          fi
+          echo "Found universal APK: $universal_apk_path"
+          new_filename="${APP_NAME}_${RELEASE_VERSION}_universal.apk"
+          mv "$universal_apk_path" "${RUNNER_TEMP}/$new_filename"
+          echo "Renamed universal APK: ${RUNNER_TEMP}/${new_filename}"
+      - name: Upload artifacts to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const appName = process.env.APP_NAME;
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(appName));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');
+  build-macos-release:
+    needs: create-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [x86_64, aarch64, universal]
+        include:
+          - build: aarch64
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
+          - build: x86_64
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
+          - build: universal
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target universal-apple-darwin"
+    runs-on: ${{ matrix.os }}
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
+      APP_NAME: "LavaScope"
+      ARCH: ${{ matrix.build }}
+    steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.build == 'universal' && 'aarch64-apple-darwin,x86_64-apple-darwin' || ( matrix.build == 'aarch64' && 'aarch64-apple-darwin' || 'x86_64-apple-darwin' ) }}
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+          args: ${{ matrix.args }}
+      - name: Artifact list
+        env:
+          RELEASE_ARTIFACTS: ${{ steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ARTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+      - name: Rename DMG and move to temp directory
+        run: |
+          dmg_file_path=$(find . -type f -name "*.dmg")
+          echo "Found DMG: $dmg_file_path"
+          filename=$(basename "$dmg_file_path")
+          new_filename="${APP_NAME}_${RELEASE_VERSION}_${ARCH}.dmg"
+          mv "$dmg_file_path" "$RUNNER_TEMP/$new_filename"
+          echo "Renamed DMG: $RUNNER_TEMP/$new_filename"
+      - name: Upload dmg to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const appName = process.env.APP_NAME;
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(appName));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');
+  build-linux-release:
+    needs: create-release
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
+      APP_NAME: "LavaScope"
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install Tauri dependencies for Linux
+        run: |
+          sudo apt update
+          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+      - name: Artifact list
+        env:
+          RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ARTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+      - name: Rename artifacts and move to temp directory
+        run: |
+          file_list=$(find . -type f -name *.rpm -o -name *.deb -o -name *.AppImage)
+          IFS=$'\n'
+          for file_path in $file_list; do
+            echo "Found artifact: $file_path"
+            filename=$(basename "$file_path")
+            file_extension="${filename##*.}"
+            new_filename="${APP_NAME}_${RELEASE_VERSION}_amd64.${file_extension}"
+            mv "$file_path" "$RUNNER_TEMP/$new_filename"
+            echo "Renamed artifact: $RUNNER_TEMP/$new_filename"
+          done
+      - name: Upload artifacts to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const appName = process.env.APP_NAME;
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(appName));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');
+  build-windows-release:
+    needs: create-release
+    permissions:
+      contents: write
+    runs-on: windows-latest
+    env:
+      RELEASE_ID: ${{needs.create-release.outputs.release_id}}
+      RELEASE_VERSION: ${{needs.create-release.outputs.release_version}}
+      APP_NAME: "LavaScope"
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+          args: "--config src-tauri/build-config/tauri.windows.conf.json"
+      - name: Artifact list
+        env:
+          RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ARTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+      - name: Rename WiX artifacts and move to temp directory
+        shell: bash
+        run: |
+          file_list=$(find . -type f -name "*.msi")
+          IFS=$'\n'
+          for file_path in $file_list; do
+            echo "Found MSI: $file_path"
+            filename=$(basename "$file_path")
+            filename_no_ext=${filename%.*}
+            locale=$(echo ${filename_no_ext} | cut -d '_' -f 4)
+            new_filename="${APP_NAME}_${RELEASE_VERSION}_amd64_${locale}.msi"
+            mv "$file_path" "$RUNNER_TEMP/$new_filename"
+            echo "Renamed MSI: $RUNNER_TEMP/$new_filename"
+          done
+      - name: Rename NSIS artifact and move to temp directory
+        shell: bash
+        run: |
+          file_path=$(find ./src-tauri/target/release/bundle -type f -name "*.exe")
+          echo "Found EXE: $file_path"
+          filename=$(basename "$file_path")
+          new_filename="${APP_NAME}_${RELEASE_VERSION}_amd64-setup.exe"
+          mv "$file_path" "$RUNNER_TEMP/$new_filename"
+          echo "Renamed EXE: $RUNNER_TEMP/$new_filename"
+      - name: Upload artifacts to release asset
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const appName = process.env.APP_NAME;
+            const files = fs.readdirSync(process.env.RUNNER_TEMP).filter(file => file.startsWith(appName));
+            for (const file of files) {
+              console.log(`Uploading ${file}...`);
+              const { data } = await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: process.env.RELEASE_ID,
+                name: file,
+                data: fs.readFileSync(path.join(process.env.RUNNER_TEMP, file))
+              });
+            }
+            console.log('All files uploaded.');

@@ -1,0 +1,34 @@
+{
+    "identifier": "com.chaserz98.vultr-firewall-watcher",
+    "bundle": {
+        "windows": {
+            "wix": {
+                "language": ["en-US", "zh-CN"]
+            },
+            "nsis": {
+                "displayLanguageSelector": true,
+                "installMode": "both",
+                "languages": ["English", "SimpChinese", "TradChinese"],
+                "installerIcon": "icons/icon.ico"
+            }
+        }
+    },
+    "app": {
+        "windows": [
+            {
+                "label": "main",
+                "title": "LavaScope",
+                "width": 1280,
+                "height": 720,
+                "fullscreen": false,
+                "resizable": true,
+                "decorations": false,
+                "additionalBrowserArgs": "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection --enable-features=msEdgeFluentOverlayScrollbar,msOverlayScrollbarWinStyle",
+                "center": true
+            }
+        ],
+        "security": {
+            "capabilities": ["desktop"]
+        }
+    }
+}

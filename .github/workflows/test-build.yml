@@ -1,0 +1,164 @@
+name: Test Build
+run-name: "Test Build: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event_name }}"
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-desktop-build:
+    if: ${{ !startsWith(github.head_ref, 'release/')}}
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        build: [linux, macos-x86_64, macos-arm, windows]
+        include:
+          - build: macos-arm
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
+          - build: macos-x86_64
+            os: macos-latest
+            args: "--config src-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
+          - build: linux
+            os: ubuntu-22.04
+            args: ""
+          - build: windows
+            os: "windows-latest"
+            args: "--config src-tauri/build-config/tauri.windows.conf.json"
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Install dependencies (ubuntu only)
+        if: matrix.build == 'linux'
+        run: |
+          sudo apt update
+          sudo apt install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.os == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Build Tauri app
+        id: tauri-build
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tauriScript: bun run tauri
+          args: ${{ matrix.args }}
+      - name: Actifact list
+        env:
+          RELEASE_ACTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactArray = JSON.parse(process.env.RELEASE_ACTIFACTS);
+            for (const artifact of artifactArray) {
+              console.log(`Artifact: ${artifact}`);
+            }
+  test-android-build:
+    if: ${{ !startsWith(github.head_ref, 'release/')}}
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    env:
+      JAVA_DISTRIBUTION: 'adopt'
+      JAVA_VERSION: 17
+      NDK_VERSION: 27.1.12297006
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: ${{env.JAVA_DISTRIBUTION}}
+          java-version: ${{env.JAVA_VERSION}}
+          cache: gradle
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install NDK
+        run: |
+          sdkmanager "ndk;$NDK_VERSION"
+          echo "NDK_HOME=$ANDROID_HOME/ndk/$NDK_VERSION" >> $GITHUB_ENV
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,i686-linux-android,x86_64-linux-android
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+      - name: Install frontend dependencies
+        run: bun install --frozen-lockfile
+      - name: Setup Android signing
+        env:
+          ANDROID_DIRECTORY: src-tauri/gen/android
+          STORE_FILE: build-test-keystore.jks
+          STORE_PASS: test-build
+          KEY_ALIAS: test
+          KEY_CN: test
+          KEY_OU: test
+          KEY_O: test
+          KEY_L: test
+          KEY_ST: test
+          KEY_C: test
+        run: |
+          keytool -genkey -v -keystore $RUNNER_TEMP/$STORE_FILE -keyalg RSA -keysize 2048 -validity 7 -alias $KEY_ALIAS -dname "CN=$KEY_CN, OU=$KEY_OU, O=$KEY_O, L=$KEY_L, ST=$KEY_ST, C=$KEY_C" -storepass $STORE_PASS
+          echo "keyAlias=$KEY_ALIAS" > $ANDROID_DIRECTORY/keystore.properties
+          echo "password=$STORE_PASS" >> $ANDROID_DIRECTORY/keystore.properties
+          echo "storeFile=$RUNNER_TEMP/$STORE_FILE" >> $ANDROID_DIRECTORY/keystore.properties
+      - name: Build Android APK per abi
+        run: |
+          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
+      - name: Rename APKs and move to temp directory
+        run: |
+          for apk in $(find . -type f -name "*.apk"); do
+            echo "Found APK: $apk"
+            filename=$(basename $apk)
+            directory=$(dirname $apk)
+            arch=$(echo $filename | cut -d'-' -f2)
+            new_filename=LavaScope_$RELEASE_VERSION_$arch.apk
+            mv $apk $RUNNER_TEMP/$new_filename
+            echo "Renamed APK: $RUNNER_TEMP/$new_filename"
+          done
+      - name: Build Android bundle and move to temp directory
+        run: |
+          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json
+      - name: Rename universal APK and aab
+        run: |
+          output_dir=src-tauri/gen/android/app/build/outputs
+          universal_apk_path=$output_dir/apk/universal/release/app-universal-release.apk
+          if [ ! -f $universal_apk_path ]; then
+            echo "Universal APK not found at $universal_apk_path"
+            exit 1
+          fi
+          echo "Found universal APK: $universal_apk_path"
+          mv $universal_apk_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.apk
+          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.apk"
+
+          universal_aab_path=$output_dir/bundle/universalRelease/app-universal-release.aab
+          if [ ! -f $universal_aab_path ]; then
+            echo "Universal AAB not found at $universal_aab_path"
+            exit 1
+          fi
+          echo "Found universal AAB: $universal_aab_path"
+          mv $universal_aab_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab
+          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab"
+      
