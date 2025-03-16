@@ -33,3 +33,4 @@ bunfig.toml
 src/routeTree.gen.ts
 
 *.code-workspace
+.coverage/
