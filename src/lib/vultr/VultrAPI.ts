@@ -87,7 +87,7 @@ export class VultrAPI implements IVultrAPI {
                     // Parameters for the request are required, but none were passed in
                     throw new RequestError(`Missing parameter: ${parameter}`);
                 }
-                if (userParameter || userParameter === "") {
+                if (userParameter !== undefined) {
                     if (
                         endpointParameter.type === "array" &&
                         !Array.isArray(userParameter)
