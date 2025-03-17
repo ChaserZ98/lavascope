@@ -15,6 +15,7 @@ on:
           - patch
           - prepatch
           - prerelease
+          - initial
         default: "patch"
       preid:
         description: "The prerelease identifier"
@@ -44,12 +45,16 @@ jobs:
           node-version: lts/*
       - name: Get next version
         run: |
-          if [[ $SEMVER_TYPE == "premajor" || $SEMVER_TYPE == "preminor" || $SEMVER_TYPE == "prepatch" ]]; then
-            BUMP_COMMAND="npm version $SEMVER_TYPE --preid=$PREID --no-git-tag-version --tag-version-prefix=''"
+          if [[ $SEMVER_TYPE == "initial" ]]; then
+            NEXT_VERSION=0.1.0
           else
-            BUMP_COMMAND="npm version $SEMVER_TYPE --no-git-tag-version --tag-version-prefix=''"
+            if [[ $SEMVER_TYPE == "premajor" || $SEMVER_TYPE == "preminor" || $SEMVER_TYPE == "prepatch" ]]; then
+              BUMP_COMMAND="npm version $SEMVER_TYPE --preid=$PREID --no-git-tag-version --tag-version-prefix=''"
+            else
+              BUMP_COMMAND="npm version $SEMVER_TYPE --no-git-tag-version --tag-version-prefix=''"
+            fi
+            NEXT_VERSION=$(eval $BUMP_COMMAND)
           fi
-          NEXT_VERSION=$(eval $BUMP_COMMAND)
           echo "The next version is $NEXT_VERSION"
           echo "BUMP_COMMAND=$BUMP_COMMAND" >> $GITHUB_ENV
           echo "NEXT_VERSION=$NEXT_VERSION" >> $GITHUB_ENV
@@ -62,16 +67,27 @@ jobs:
           git reset --hard HEAD
           git checkout -b release/$NEXT_VERSION
       - name: Bump version
+        if: ${{ github.event.inputs.semverType != 'initial' }}
         run: eval $BUMP_COMMAND
       - name: Generate changelog
+        if: ${{ github.event.inputs.semverType == 'initial' }}
         uses: orhun/git-cliff-action@v4
-        id: git-cliff
+        id: git-cliff-generate
+        with:
+          config: cliff.toml
+          args: --verbose --unreleased --tag $NEXT_VERSION
+        env:
+          OUTPUT: CHANGELOG.md
+      - name: Prepend changelog
+        if: ${{ github.event.inputs.semverType != 'initial' }}
+        uses: orhun/git-cliff-action@v4
+        id: git-cliff-prepend
         with:
           version: $NEXT_VERSION
           config: cliff.toml
-          args: --verbose
+          args: --verbose --unreleased --tag $NEXT_VERSION --prepend CHANGELOG.md
         env:
-          OUTPUT: CHANGELOG.md
+          OUTPUT: ""
       - name: Commit and push changes
         run: |
           git commit -am "🐳 chore: Bump version to $NEXT_VERSION"
