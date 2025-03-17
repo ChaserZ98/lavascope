@@ -159,10 +159,10 @@
 - [Android][Android-latest-url]
 - [Linux][Linux-latest-url]
 
-[Windows-latest-url]: https://github.com/ChaserZ98/lavascope/releases/latest/download/LavaScope_0.1.0_amd64-setup.exe
-[MacOS-latest-url]: https://github.com/ChaserZ98/lavascope/releases/latest/download/LavaScope_0.1.0_universal.dmg
-[Android-latest-url]: https://github.com/ChaserZ98/lavascope/releases/latest/download/LavaScope_0.1.0_universal.apk
-[Linux-latest-url]: https://github.com/ChaserZ98/lavascope/releases/latest/download/LavaScope_0.1.0_amd64.deb
+[Windows-latest-url]: https://github.com/ChaserZ98/lavascope/release/latest/download/LavaScope_0.1.1_amd64-setup.exe
+[MacOS-latest-url]: https://github.com/ChaserZ98/lavascope/release/latest/download/LavaScope_0.1.1_universal.dmg
+[Android-latest-url]: https://github.com/ChaserZ98/lavascope/release/latest/download/LavaScope_0.1.1_universal.apk
+[Linux-latest-url]: https://github.com/ChaserZ98/lavascope/release/latest/download/LavaScope_0.1.1_amd64.deb
 
 ### Previous releases
 
