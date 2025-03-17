@@ -83,7 +83,6 @@ jobs:
         uses: orhun/git-cliff-action@v4
         id: git-cliff-prepend
         with:
-          version: $NEXT_VERSION
           config: cliff.toml
           args: --verbose --unreleased --tag $NEXT_VERSION --prepend CHANGELOG.md
         env:
