@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.1 - 2025-03-17
+
+### <!-- 2 -->🐞 Bug Fixes
+- Fix not able to add anywhere rule due to invalid request ([#15](https://github.com/ChaserZ98/vultr-firewall-watcher-client/pull/15)) by @ChaserZ98
+
+### <!-- 9 -->🐎 CI/CD
+- Update release link in README.md when creating release branch ([#16](https://github.com/ChaserZ98/vultr-firewall-watcher-client/pull/16)) by @ChaserZ98
+
 ## 0.1.0 - 2025-03-17
 
 ### <!-- 0 -->🎉 Hello World !
