@@ -37,7 +37,7 @@
         "jotai": "^2.11.3",
         "jotai-immer": "^0.4.1",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1",
+        "react-dom": "^19.0.0",
         "react-toastify": "^10.0.5",
         "tailwind-scrollbar": "^3.1.0",
         "zod": "^3.24.2"
