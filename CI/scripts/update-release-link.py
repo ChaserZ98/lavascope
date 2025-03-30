@@ -11,7 +11,7 @@ class Platform(Enum):
 
 
 if __name__ == "__main__":
-    release_link = "https://github.com/ChaserZ98/lavascope/release/latest/download"
+    release_link = "https://github.com/ChaserZ98/lavascope/releases/latest/download"
     app_name = "LavaScope"
     version = os.environ.get("NEXT_VERSION")
     if version is None:
