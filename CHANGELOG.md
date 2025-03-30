@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.1.2 - 2025-03-30
+
+### <!-- 10 -->🐳 Miscellaneous Tasks
+- Update .gitignore to exclude vscode workspace files ([#30](https://github.com/ChaserZ98/vultr-firewall-watcher-client/pull/30)) by @ChaserZ98
+
+### <!-- 2 -->🐞 Bug Fixes
+- Update release link to point to the correct releases page ([#29](https://github.com/ChaserZ98/vultr-firewall-watcher-client/pull/29)) by @ChaserZ98
+
+### <!-- 9 -->🐎 CI/CD
+- Update dependabot configuration and Rust cache configuration in release workflow ([#18](https://github.com/ChaserZ98/vultr-firewall-watcher-client/pull/18)) by @ChaserZ98
+
 ## 0.1.1 - 2025-03-17
 
 ### <!-- 2 -->🐞 Bug Fixes
