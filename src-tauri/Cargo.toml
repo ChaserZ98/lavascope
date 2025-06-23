@@ -22,7 +22,7 @@ serde_json = "1"
 tauri-plugin-notification = "2.0.1"
 tauri-plugin-http = "2.0.1"
 tauri-plugin-clipboard-manager = "2.1.0"
-tauri-plugin-os = "2.0.1"
+tauri-plugin-os = "2.2.2"
 tauri-plugin-log = "2.0.1"
 log = "0.4"
 
