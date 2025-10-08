@@ -1,0 +1,15 @@
+{
+    "name": "@lavascope/log",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "@tauri-apps/plugin-log": "catalog:tauri",
+        "@tauri-apps/api": "catalog:tauri"
+    },
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}

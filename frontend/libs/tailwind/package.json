@@ -1,0 +1,17 @@
+{
+    "name": "@lavascope/tailwind",
+    "version": "0.0.1",
+    "exports": {
+        ".": "./src/tailwind.css"
+    },
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "@heroui/react": "catalog:heroui",
+        "tailwind-scrollbar": "catalog:tailwindcss"
+    },
+    "devDependencies": {
+        "typescript": "catalog:",
+        "tailwindcss": "catalog:tailwindcss"
+    }
+}

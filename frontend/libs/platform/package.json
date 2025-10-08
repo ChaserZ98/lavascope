@@ -1,0 +1,16 @@
+{
+    "name": "@lavascope/platform",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "jotai": "catalog:jotai",
+        "@tauri-apps/plugin-os": "catalog:tauri",
+        "@tauri-apps/api": "catalog:tauri"
+    },
+    "devDependencies": {
+        "typescript": "catalog:"
+    }
+}
