@@ -9,9 +9,7 @@
         "preview": "vite preview",
         "generate-routes": "tsr generate",
         "watch-routes": "tsr watch",
-        "supported-browsers": "echo \"export default $(browserslist-useragent-regexp --allowHigherVersions);\" > ./src/utils/supportedBrowsers.ts",
-        "lingui-extract": "lingui extract --clean --overwrite",
-        "lingui-compile": "lingui compile --typescript"
+        "supported-browsers": "echo \"export default $(browserslist-useragent-regexp --allowHigherVersions);\" > ./src/utils/supportedBrowsers.ts"
     },
     "dependencies": {
         "@lavascope/i18n": "workspace:*",

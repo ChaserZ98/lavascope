@@ -10,12 +10,11 @@
     "scripts": {
         "dev": "bun run dev:ui",
         "dev:ui": "bun run --cwd frontend/apps/ui dev",
-        "build": "tsr generate && tsc && vite build",
-        "preview": "vite preview",
+        "build": "bun run build:ui",
+        "build:ui": "bun run --cwd frontend/apps/ui build",
+        "preview": "bun run preview:ui",
+        "preview:ui": "bun run --cwd frontend/apps/ui preview",
         "tauri": "tauri",
-        "generate-routes": "tsr generate",
-        "watch-routes": "tsr watch",
-        "supported-browsers": "echo \"export default $(browserslist-useragent-regexp --allowHigherVersions);\" > ./src/utils/supportedBrowsers.ts",
         "i18n:extract": "bun run --cwd frontend/libs/i18n extract"
     },
     "catalog": {

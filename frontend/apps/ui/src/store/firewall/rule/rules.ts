@@ -87,13 +87,13 @@ export function toCreateRule(newRuleState: NewRuleState): CreateRule {
     } else {
         const s = newRuleState.source.split("/");
         if (s.length == 1) {
-            subnet = s[0];
+            subnet = s[0] as string;
             subnet_size = newRuleState.ip_type === IPVersion.V4 ? 32 : 128;
-        } else if (isNaN(parseInt(s[1]))) {
+        } else if (isNaN(parseInt(s[1] as string))) {
             throw new Error(`Invalid subnet size: ${s[1]}`);
         } else {
-            subnet = s[0];
-            subnet_size = parseInt(s[1]);
+            subnet = s[0] as string;
+            subnet_size = parseInt(s[1] as string);
         }
     }
     return {

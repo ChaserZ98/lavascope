@@ -59,7 +59,7 @@ export class VultrAPI implements IVultrAPI {
             if (!parameters) {
                 // No parameters passed, check that none are required
                 for (const endpointParameter in endpoint.parameters) {
-                    if (endpoint.parameters[endpointParameter].required) {
+                    if (endpoint.parameters[endpointParameter]?.required) {
                         throw new RequestError(
                             `Missing parameter: ${endpointParameter}`
                         );
@@ -82,7 +82,7 @@ export class VultrAPI implements IVultrAPI {
                 const userParameter = parameters[parameter];
 
                 if (
-                    endpointParameter.required &&
+                    endpointParameter?.required &&
                     typeof userParameter === "undefined"
                 ) {
                     // Parameters for the request are required, but none were passed in
@@ -90,7 +90,7 @@ export class VultrAPI implements IVultrAPI {
                 }
                 if (userParameter !== undefined) {
                     if (
-                        endpointParameter.type === "array" &&
+                        endpointParameter?.type === "array" &&
                         !Array.isArray(userParameter)
                     ) {
                         // Request requires array but array was not passed in
@@ -99,7 +99,7 @@ export class VultrAPI implements IVultrAPI {
                         );
                     }
                     if (
-                        endpointParameter.type === "number" &&
+                        endpointParameter?.type === "number" &&
                         isNaN(Number(userParameter))
                     ) {
                         // Request requires a number but special character or alpha character was passed in
@@ -108,13 +108,13 @@ export class VultrAPI implements IVultrAPI {
                         );
                     }
                     if (
-                        endpointParameter.type !== "array" &&
-                        endpointParameter.type !== "number" &&
-                        typeof userParameter !== endpointParameter.type
+                        endpointParameter?.type !== "array" &&
+                        endpointParameter?.type !== "number" &&
+                        typeof userParameter !== endpointParameter?.type
                     ) {
                         // Request parameter type does not match the parameter type that was passed in
                         throw new RequestError(
-                            `Invalid parameter type for ${parameter}, expected ${endpointParameter.type}`
+                            `Invalid parameter type for ${parameter}, expected ${endpointParameter?.type}`
                         );
                     }
                     // Parameters successfully validated
@@ -144,7 +144,7 @@ export class VultrAPI implements IVultrAPI {
         if (endpointParameters && requestParameters) {
             // Replace path parameters in the URL
             Object.keys(requestParameters)
-                .filter((key) => endpointParameters[key].path)
+                .filter((key) => endpointParameters[key]?.path)
                 .forEach((param) => {
                     fetchUrl.pathname = fetchUrl.pathname.replace(
                         encodeURIComponent(`{${param}}`),
@@ -164,7 +164,7 @@ export class VultrAPI implements IVultrAPI {
                 requestType === "OPTIONS"
             ) {
                 Object.keys(requestParameters)
-                    .filter((key) => !endpointParameters[key].path)
+                    .filter((key) => !endpointParameters[key]?.path)
                     .forEach((key) => {
                         fetchUrl.searchParams.append(
                             key,
@@ -173,7 +173,7 @@ export class VultrAPI implements IVultrAPI {
                     });
             } else if (requestType === "PUT" || requestType === "PATCH") {
                 const bodyParams = Object.keys(requestParameters)
-                    .filter((key) => !endpointParameters[key].path)
+                    .filter((key) => !endpointParameters[key]?.path)
                     .reduce(
                         (acc, key) => {
                             acc[key] = requestParameters[key] as string;
