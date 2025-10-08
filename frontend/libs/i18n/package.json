@@ -1,0 +1,22 @@
+{
+    "name": "@lavascope/i18n",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts",
+        "./config": "./lingui.config.ts"
+    },
+    "scripts": {
+        "extract": "lingui extract --clean --overwrite"
+    },
+    "dependencies": {
+        "react": "catalog:react",
+        "@lingui/core": "catalog:i18n",
+        "@lingui/react": "catalog:i18n",
+        "@lavascope/platform": "workspace:*",
+        "@lavascope/log": "workspace:*"
+    },
+    "devDependencies": {
+        "typescript": "catalog:",
+        "@lingui/cli": "catalog:i18n"
+    }
+}
