@@ -1,21 +1,15 @@
 {
     "name": "lavascope",
-    "private": true,
-    "version": "0.1.2",
-    "type": "module",
-    "workspaces": [
-        "frontend/apps/*",
-        "frontend/libs/*"
-    ],
-    "scripts": {
-        "dev": "bun run dev:ui",
-        "dev:ui": "bun run --cwd frontend/apps/ui dev",
-        "build": "bun run build:ui",
-        "build:ui": "bun run --cwd frontend/apps/ui build",
-        "preview": "bun run preview:ui",
-        "preview:ui": "bun run --cwd frontend/apps/ui preview",
-        "tauri": "tauri",
-        "i18n:extract": "bun run --cwd frontend/libs/i18n extract"
+    "devDependencies": {
+        "typescript": "catalog:",
+        "eslint": "catalog:eslint",
+        "typescript-eslint": "catalog:eslint",
+        "@eslint/js": "catalog:eslint",
+        "@stylistic/eslint-plugin": "catalog:eslint",
+        "eslint-plugin-react": "catalog:eslint",
+        "eslint-plugin-simple-import-sort": "catalog:eslint",
+        "eslint-plugin-unused-imports": "catalog:eslint",
+        "globals": "^16.4.0"
     },
     "catalog": {
         "typescript": "^5.9.2"
@@ -39,10 +33,10 @@
             "vite-plugin-babel-macros": "^1.0.6"
         },
         "react": {
-            "react": "^18.3.1",
-            "react-dom": "^18.3.1",
-            "@types/react": "^18.3.18",
-            "@types/react-dom": "^18.3.5"
+            "react": "^19.2.0",
+            "react-dom": "^19.2.0",
+            "@types/react": "^19.2.2",
+            "@types/react-dom": "^19.2.1"
         },
         "tauri": {
             "@tauri-apps/api": "^2.8.0",
@@ -58,14 +52,13 @@
         "vite": {
             "vite": "^7.1.9",
             "vite-tsconfig-paths": "^5.1.4",
-            "@vitejs/plugin-legacy": "^6.0.1",
-            "@vitejs/plugin-react": "^4.3.4"
+            "@vitejs/plugin-legacy": "^7.2.1",
+            "@vitejs/plugin-react": "^5.0.4"
         },
         "eslint": {
             "eslint": "^9.20.0",
             "@eslint/js": "^9.20.0",
             "@stylistic/eslint-plugin": "^4.2.0",
-            "@tanstack/eslint-plugin-query": "^5.67.2",
             "eslint-plugin-lingui": "^0.10.0",
             "typescript-eslint": "^8.23.0",
             "eslint-plugin-react": "^7.37.4",
@@ -73,19 +66,32 @@
             "eslint-plugin-unused-imports": "^4.1.4"
         },
         "jotai": {
-            "jotai": "^2.11.3",
-            "jotai-devtools": "^0.10.1"
+            "jotai": "^2.15.0",
+            "jotai-devtools": "^0.13.0"
+        },
+        "tanstack": {
+            "@tanstack/react-query": "^5.90.2",
+            "@tanstack/react-query-persist-client": "^5.90.2",
+            "@tanstack/react-router": "^1.132.47",
+            "@tanstack/react-router-devtools": "^1.132.51",
+            "@tanstack/eslint-plugin-query": "^5.91.0",
+            "@tanstack/router-plugin": "^1.132.51"
         }
     },
-    "devDependencies": {
-        "typescript": "catalog:",
-        "eslint": "catalog:eslint",
-        "typescript-eslint": "catalog:eslint",
-        "@eslint/js": "catalog:eslint",
-        "@stylistic/eslint-plugin": "catalog:eslint",
-        "eslint-plugin-react": "catalog:eslint",
-        "eslint-plugin-simple-import-sort": "catalog:eslint",
-        "eslint-plugin-unused-imports": "catalog:eslint",
-        "globals": "^15.14.0"
-    }
+    "private": true,
+    "scripts": {
+        "dev": "bun run dev:ui",
+        "dev:ui": "bun run --cwd frontend/apps/ui dev",
+        "build": "bun run build:ui",
+        "build:ui": "bun run --cwd frontend/apps/ui build",
+        "preview": "bun run preview:ui",
+        "preview:ui": "bun run --cwd frontend/apps/ui preview",
+        "tauri": "tauri",
+        "i18n:extract": "bun run --cwd frontend/libs/i18n extract"
+    },
+    "type": "module",
+    "workspaces": [
+        "frontend/apps/*",
+        "frontend/libs/*"
+    ]
 }

@@ -30,6 +30,8 @@ dist-ssr
 bunfig.toml
 
 # TanStack Router file
-src/routeTree.gen.ts
+routeTree.gen.ts
+
+stats.html
 
 *.code-workspace

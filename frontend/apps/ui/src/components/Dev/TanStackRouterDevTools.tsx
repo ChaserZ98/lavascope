@@ -10,7 +10,7 @@ export default function TanStackRouterDevtools() {
     const Devtools =
         !import.meta.env.PROD && showDevPanel.tanStack ?
             lazy(() =>
-                import("@tanstack/router-devtools").then((res) => ({
+                import("@tanstack/react-router-devtools").then((res) => ({
                     default: res.TanStackRouterDevtools,
                 }))
             ) :
