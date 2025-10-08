@@ -87,20 +87,20 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "./src-tauri -> target"
+          workspaces: "./backend -> target"
           shared-key: "android-release"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing
         run: |
-          ANDROID_DIRECTORY=src-tauri/gen/android
+          ANDROID_DIRECTORY=backend/gen/android
           echo "${{secrets.ANDROID_KEY_BASE64}}" | base64 -d > $RUNNER_TEMP/keystore.jks
           echo "keyAlias=${{secrets.ANDROID_KEY_ALIAS}}" > $ANDROID_DIRECTORY/keystore.properties
           echo "password=${{secrets.ANDROID_KEY_PASSWORD}}" >> $ANDROID_DIRECTORY/keystore.properties
           echo "storeFile=$RUNNER_TEMP/keystore.jks" >> $ANDROID_DIRECTORY/keystore.properties
       - name: Build Android APK per ABI
         run: |
-          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
+          bun run tauri android build -v --config backend/build-config/tauri.android.conf.json --apk --split-per-abi
       - name: Rename APKs and move to temp directory
         run: |
           for apk in $(find . -type f -name "*.apk"); do
@@ -113,10 +113,10 @@ jobs:
           done
       - name: Build Android universal APK
         run: |
-          bun run tauri android build -v --config src-tauri/build-config/tauri.android.conf.json --apk
+          bun run tauri android build -v --config backend/build-config/tauri.android.conf.json --apk
       - name: Rename universal APK
         run: |
-          output_dir=src-tauri/gen/android/app/build/outputs
+          output_dir=backend/gen/android/app/build/outputs
           universal_apk_path=$output_dir/apk/universal/release/app-universal-release.apk
           if [ ! -f $universal_apk_path ]; then
             echo "Universal APK not found at $universal_apk_path"
@@ -156,13 +156,13 @@ jobs:
         include:
           - build: aarch64
             os: macos-latest
-            args: "--config src-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
+            args: "--config backend/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
           - build: x86_64
             os: macos-latest
-            args: "--config src-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
+            args: "--config backend/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
           - build: universal
             os: macos-latest
-            args: "--config src-tauri/build-config/tauri.macos.conf.json --target universal-apple-darwin"
+            args: "--config backend/build-config/tauri.macos.conf.json --target universal-apple-darwin"
     runs-on: ${{ matrix.os }}
     env:
       RELEASE_ID: ${{needs.create-release.outputs.release_id}}
@@ -183,7 +183,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "./src-tauri -> target"
+          workspaces: "./backend -> target"
           shared-key: "macos-release-${{ matrix.build }}"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
@@ -257,7 +257,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "./src-tauri -> target"
+          workspaces: "./backend -> target"
           shared-key: "linux-release"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
@@ -330,7 +330,7 @@ jobs:
       - name: Rust cache
         uses: swatinem/rust-cache@v2
         with:
-          workspaces: "./src-tauri -> target"
+          workspaces: "./backend -> target"
           shared-key: "windows-release"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
@@ -341,7 +341,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           tauriScript: bun run tauri
-          args: "--config src-tauri/build-config/tauri.windows.conf.json"
+          args: "--config backend/build-config/tauri.windows.conf.json"
       - name: Artifact list
         env:
           RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
@@ -369,7 +369,7 @@ jobs:
       - name: Rename NSIS artifact and move to temp directory
         shell: bash
         run: |
-          file_path=$(find ./src-tauri/target/release/bundle -type f -name "*.exe")
+          file_path=$(find ./backend/target/release/bundle -type f -name "*.exe")
           echo "Found EXE: $file_path"
           filename=$(basename "$file_path")
           new_filename="${APP_NAME}_${RELEASE_VERSION}_amd64-setup.exe"
