@@ -16,7 +16,11 @@ function createInitialTheme(): Theme {
             Theme.LIGHT;
         localStorage.setItem("theme", cachedTheme);
     }
-    document.documentElement.dataset.theme = cachedTheme;
+    if (cachedTheme === Theme.LIGHT) {
+        document.documentElement.classList.remove("dark");
+    } else if (cachedTheme === Theme.DARK && !document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.add("dark");
+    }
     return cachedTheme as Theme;
 }
 
@@ -27,5 +31,9 @@ export const toggleThemeAtom = atom(null, (get, set) => {
     const newTheme = currentTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT;
     set(themeAtom, newTheme);
     localStorage.setItem("theme", newTheme);
-    document.documentElement.dataset.theme = newTheme;
+    if (newTheme === Theme.LIGHT) {
+        document.documentElement.classList.remove("dark");
+    } else if (newTheme === Theme.DARK && !document.documentElement.classList.contains("dark")) {
+        document.documentElement.classList.add("dark");
+    }
 });

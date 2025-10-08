@@ -10,13 +10,14 @@ import {
 import { Image } from "@heroui/react";
 import appIcon from "@img/app-icon.png";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { mdiCog, mdiIpOutline, mdiThemeLightDark, mdiWall } from "@mdi/js";
+import { mdiCog, mdiIpOutline, mdiWall } from "@mdi/js";
 import Icon from "@mdi/react";
 import { Link, useLocation } from "@tanstack/react-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
 import { Screen, screenSizeAtom } from "@/store/screen";
-import { toggleThemeAtom } from "@/store/theme";
+
+import ThemeSwitch from "./ThemeSwitch";
 
 export function BottomNavigation() {
     return (
@@ -60,7 +61,6 @@ export function BottomNavigation() {
 export function Navigation() {
     const location = useLocation();
 
-    const toggleTheme = useSetAtom(toggleThemeAtom);
     const screenSize = useAtomValue(screenSizeAtom);
 
     const { t } = useLingui();
@@ -124,22 +124,7 @@ export function Navigation() {
                 className="data-[justify=end]:flex-grow-0 sm:data-[justify=end]:flex-grow"
             >
                 <NavbarItem>
-                    <Tooltip
-                        content={t`Theme`}
-                        delay={500}
-                        closeDelay={150}
-                        classNames={{
-                            content: "transition-colors-opacity",
-                        }}
-                    >
-                        <Button
-                            isIconOnly
-                            onPress={() => toggleTheme()}
-                            className="p-0.5 min-w-9 w-9 h-9 sm:p-1 sm:min-w-10 sm:w-10 sm:h-10 text-default-foreground"
-                        >
-                            <Icon path={mdiThemeLightDark} className="w-full" />
-                        </Button>
-                    </Tooltip>
+                    <ThemeSwitch />
                 </NavbarItem>
                 <NavbarItem
                     isActive={location.pathname === "/settings"}
