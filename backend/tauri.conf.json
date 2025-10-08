@@ -6,7 +6,7 @@
         "beforeDevCommand": "bun run dev --host",
         "devUrl": "http://127.0.0.1:1420",
         "beforeBuildCommand": "bun run build",
-        "frontendDist": "../dist"
+        "frontendDist": "../frontend/apps/ui/dist"
     },
     "bundle": {
         "active": true,
