@@ -1,4 +1,5 @@
 import { lingui } from "@lingui/vite-plugin";
+import tailwindcss from "@tailwindcss/vite";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import legacy from "@vitejs/plugin-legacy";
 import viteReact from "@vitejs/plugin-react";
@@ -14,6 +15,7 @@ export default defineConfig(async () => ({
                 plugins: ["@lingui/babel-plugin-lingui-macro"],
             },
         }),
+        tailwindcss(),
         lingui(),
         legacy(),
     ],
