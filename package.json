@@ -81,10 +81,11 @@
     },
     "private": true,
     "scripts": {
+        "prebuild": "python scripts/build_info.py",
         "dev": "bun run dev:ui",
-        "dev:ui": "bun run --cwd frontend/apps/ui dev",
+        "dev:ui": "bun run prebuild && bun run --cwd frontend/apps/ui dev",
         "build": "bun run build:ui",
-        "build:ui": "bun run --cwd frontend/apps/ui build",
+        "build:ui": "bun run prebuild && bun run --cwd frontend/apps/ui build",
         "preview": "bun run preview:ui",
         "preview:ui": "bun run --cwd frontend/apps/ui preview",
         "tauri": "tauri",
