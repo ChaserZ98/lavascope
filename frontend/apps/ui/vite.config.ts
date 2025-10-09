@@ -7,6 +7,8 @@ import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+import buildInfo from "../../../build-info.json";
+
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
@@ -23,6 +25,9 @@ export default defineConfig({
         lingui(),
         // legacy(),
     ],
+    define: {
+        __BUILD_INFO__: buildInfo
+    },
 
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
     //
