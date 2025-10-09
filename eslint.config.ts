@@ -55,7 +55,7 @@ export default [
         jsx: true,
         commaDangle: "only-multiline",
         braceStyle: "1tbs",
-        arrowParens: "always",
+        arrowParens: true,
     }),
     {
         plugins: {
