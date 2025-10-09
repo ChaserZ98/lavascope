@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_app/settings")({
 
 function Settings() {
     return (
-        <div className="flex px-2 justify-center select-none">
+        <div className="flex flex-col px-2 gap-4 items-center select-none">
             <Card className="mt-2 w-full max-w-sm [transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity]">
                 <CardHeader className="flex justify-center text-foreground text-lg sm:text-2xl transition-colors-opacity">
                     <h1>
@@ -29,6 +29,7 @@ function Settings() {
                 </CardBody>
                 <CardFooter className="flex justify-end"></CardFooter>
             </Card>
+            <p className="text-foreground">UI version: {__BUILD_INFO__.ui_version}</p>
         </div>
     );
 }
