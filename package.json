@@ -10,6 +10,7 @@
         "eslint-plugin-simple-import-sort": "catalog:eslint",
         "eslint-plugin-unused-imports": "catalog:eslint",
         "eslint-plugin-lingui": "catalog:i18n",
+        "@tanstack/eslint-plugin-query": "catalog:tanstack",
         "globals": "^16.4.0"
     },
     "catalog": {
