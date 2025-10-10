@@ -6,6 +6,12 @@ pub struct ParseLocaleError {
     message: String,
 }
 
+impl Display for ParseLocaleError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
 #[derive(Debug, Hash, Eq, PartialEq, Clone, Copy)]
 pub enum Locale {
     EN,
