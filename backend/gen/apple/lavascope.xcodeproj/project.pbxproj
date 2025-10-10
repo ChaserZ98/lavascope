@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 77;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -29,8 +29,6 @@
 		14C18295C4EAC922C9332A21 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		15A4C816C84C7B9DAD5C651F /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
 		1949E7DFB4D608FEE867FCB4 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
-		2D100398FF6BF4100353A655 /* translator.rs */ = {isa = PBXFileReference; path = translator.rs; sourceTree = "<group>"; };
-		3062CFEFD868792BC0CCA46B /* tray.rs */ = {isa = PBXFileReference; path = tray.rs; sourceTree = "<group>"; };
 		361ED4B3716C6455FCD32ACF /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
 		3640CF227FBF1A9D730A41A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		4259B003732571F6975893BA /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
@@ -41,11 +39,20 @@
 		7BA57DAF7BB6D2CE6C4FA205 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		7F54E900EE43CBC80FF41AE8 /* lavascope_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = lavascope_iOS.entitlements; sourceTree = "<group>"; };
 		820BCB7D1C2234DE41AF4EA2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		8634D839081E23DA1E6EDB29 /* event.rs */ = {isa = PBXFileReference; path = event.rs; sourceTree = "<group>"; };
 		8F59CBE02BA20E0686CC21F0 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		9FA053FB975175C07B23F136 /* error.rs */ = {isa = PBXFileReference; path = error.rs; sourceTree = "<group>"; };
 		A31E241D83F7B35CB12205A3 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
+		AC5E68C421CAAA2DB0E78390 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		AF933A48021450CEA39A5C59 /* builder.rs */ = {isa = PBXFileReference; path = builder.rs; sourceTree = "<group>"; };
+		C46CA7CD6D4A902F21BCB73F /* state.rs */ = {isa = PBXFileReference; path = state.rs; sourceTree = "<group>"; };
 		D50E278929692A06AD03D137 /* logging.rs */ = {isa = PBXFileReference; path = logging.rs; sourceTree = "<group>"; };
 		E0CB54172804AE690C94ACF9 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		EA683A387FC5C81E5E3556D9 /* event.rs */ = {isa = PBXFileReference; path = event.rs; sourceTree = "<group>"; };
 		F3AB8DC44EF439EC2F24F19F /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		F6B284BDF88A5D76AB6A0301 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		F77B9F4582B50DD62509077A /* builder.rs */ = {isa = PBXFileReference; path = builder.rs; sourceTree = "<group>"; };
+		F83B205B0A2579ACF20188A4 /* builder.rs */ = {isa = PBXFileReference; path = builder.rs; sourceTree = "<group>"; };
 		FA3326C4727DC270953B9BCE /* window.rs */ = {isa = PBXFileReference; path = window.rs; sourceTree = "<group>"; };
 		FCA70DCE1E6A91D17E420D4C /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,13 +95,26 @@
 		26E59D12377E17A3804CA64B /* app */ = {
 			isa = PBXGroup;
 			children = (
+				AF933A48021450CEA39A5C59 /* builder.rs */,
 				099F7C41A3FF88CD1F1B6C6E /* commands.rs */,
 				15A4C816C84C7B9DAD5C651F /* mod.rs */,
-				2D100398FF6BF4100353A655 /* translator.rs */,
-				3062CFEFD868792BC0CCA46B /* tray.rs */,
+				C46CA7CD6D4A902F21BCB73F /* state.rs */,
 				FA3326C4727DC270953B9BCE /* window.rs */,
+				3146CFA4D271AAB50FD7A655 /* tray */,
 			);
 			path = app;
+			sourceTree = "<group>";
+		};
+		3146CFA4D271AAB50FD7A655 /* tray */ = {
+			isa = PBXGroup;
+			children = (
+				F83B205B0A2579ACF20188A4 /* builder.rs */,
+				9FA053FB975175C07B23F136 /* error.rs */,
+				8634D839081E23DA1E6EDB29 /* event.rs */,
+				F6B284BDF88A5D76AB6A0301 /* mod.rs */,
+				7D41901EE8433893E8CDDA59 /* menu */,
+			);
+			path = tray;
 			sourceTree = "<group>";
 		};
 		48DB81C6457C9CD249C1F63D /* Externals */ = {
@@ -155,6 +175,16 @@
 			path = lavascope;
 			sourceTree = "<group>";
 		};
+		7D41901EE8433893E8CDDA59 /* menu */ = {
+			isa = PBXGroup;
+			children = (
+				F77B9F4582B50DD62509077A /* builder.rs */,
+				EA683A387FC5C81E5E3556D9 /* event.rs */,
+				AC5E68C421CAAA2DB0E78390 /* mod.rs */,
+			);
+			path = menu;
+			sourceTree = "<group>";
+		};
 		8DAB86176D2B8190F7BA32A9 /* lavascope_iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +229,8 @@
 			dependencies = (
 			);
 			name = lavascope_iOS;
+			packageProductDependencies = (
+			);
 			productName = lavascope_iOS;
 			productReference = 13C12D84D9A82FC1AA8354CF /* lavascope_iOS.app */;
 			productType = "com.apple.product-type.application";
@@ -211,8 +243,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 8EECC527561B0B5B6C3025F6 /* Build configuration list for PBXProject "lavascope" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -223,6 +253,8 @@
 				en,
 			);
 			mainGroup = 49680CB8224A927AB5F8D51B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -261,7 +293,6 @@
 			outputPaths = (
 				"$(SRCROOT)/Externals/x86_64/${CONFIGURATION}/libapp.a",
 				"$(SRCROOT)/Externals/arm64/${CONFIGURATION}/libapp.a",
-				"$(SRCROOT)/Externals/arm64-sim/${CONFIGURATION}/libapp.a",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -287,14 +318,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ARCHS = (
 					arm64,
-					"arm64-sim",
 				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = lavascope_iOS/lavascope_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\".\"",
@@ -304,14 +333,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chaserz98.lavascope;
-				PRODUCT_NAME = LavaScope;
+				PRODUCT_NAME = "LavaScope";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64  arm64-sim";
+				VALID_ARCHS = arm64;
 			};
 			name = release;
 		};
@@ -366,7 +394,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -384,14 +412,12 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ARCHS = (
 					arm64,
-					"arm64-sim",
 				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = lavascope_iOS/lavascope_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
+				"EXCLUDED_ARCHS[sdk=iphoneos*]" = x86_64;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\".\"",
@@ -401,14 +427,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.chaserz98.lavascope;
-				PRODUCT_NAME = LavaScope;
+				PRODUCT_NAME = "LavaScope";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "arm64  arm64-sim";
+				VALID_ARCHS = arm64;
 			};
 			name = debug;
 		};
@@ -457,7 +482,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
