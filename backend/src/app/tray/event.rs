@@ -1,10 +1,11 @@
+use rust_i18n::t;
 use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
     Manager,
 };
 
 use crate::app::{
-    state::{MenuState, StateError, TranslatorState},
+    state::{MenuState, StateError},
     tray::error::TrayIconEventError,
 };
 
@@ -65,17 +66,14 @@ fn handle_tray_icon_right_click(tray: &TrayIcon) -> Result<(), TrayIconRightClic
     let menu_state_mutex = MenuState::try_borrow_from_app(app)?;
     let menu = &mut menu_state_mutex.lock().unwrap().menu;
 
-    let translator_state_mutex = TranslatorState::try_borrow_from_app(app)?;
-    let translator = &mut translator_state_mutex.lock().unwrap().translator;
-
     let window = tray
         .app_handle()
         .get_webview_window("main")
         .ok_or(TrayIconRightClickError::FailedToGetMainWindow)?;
 
     let new_text = match window.is_visible().unwrap_or(false) {
-        true => translator.translate_or("Hide"),
-        false => translator.translate_or("Show"),
+        true => t!("Hide"),
+        false => t!("Show"),
     };
 
     menu.get("Hide")

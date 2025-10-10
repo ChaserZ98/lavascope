@@ -1,26 +1,25 @@
-use crate::{app::state::TranslatorState, utils::translator::Locale};
+use rust_i18n::t;
 use tauri::command;
 
+use crate::utils::translator::Locale;
+
 #[cfg(all(desktop))]
-use super::state::MenuState;
+use crate::app::state::MenuState;
 
 #[cfg(all(desktop))]
 #[command]
 pub fn toggle_locale(app: tauri::AppHandle, locale_string: String) -> Result<(), String> {
-    let menu_state = MenuState::try_borrow_from_app(&app).map_err(|e| e.to_string())?;
-    let menu = &mut menu_state.lock().unwrap().menu;
-
-    let translator_state = TranslatorState::try_borrow_from_app(&app).map_err(|e| e.to_string())?;
-    let translator = &mut translator_state.lock().unwrap().translator;
+    let menu_state_mutex = MenuState::try_borrow_from_app(&app).map_err(|e| e.to_string())?;
+    let menu = &mut menu_state_mutex.lock().unwrap().menu;
 
     let locale = locale_string.parse::<Locale>().map_err(|e| e.to_string())?;
 
-    translator.set_locale(locale);
+    rust_i18n::set_locale(locale.as_str());
+
     menu.items().unwrap().iter().for_each(|item| {
         let item = item.as_menuitem().unwrap();
         let id = item.id().as_ref();
-        let text = item.text().unwrap();
-        let _ = item.set_text(translator.translate_with_default(id, text.as_str()));
+        item.set_text(t!(id)).unwrap();
     });
 
     Ok(())

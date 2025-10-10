@@ -1,7 +1,10 @@
+mod builder;
 pub mod commands;
-pub mod state;
-pub mod translator;
 pub mod window;
 
 #[cfg(desktop)]
+pub mod state;
+#[cfg(desktop)]
 pub mod tray;
+
+pub use builder::*;
