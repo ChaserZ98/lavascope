@@ -1,29 +1,22 @@
-use super::translator::TranslatorState;
-use crate::utils::translator::Locale;
+use crate::{app::state::TranslatorState, utils::translator::Locale};
 use tauri::command;
 
 #[cfg(all(desktop))]
-use super::tray::MenuState;
+use super::state::MenuState;
 
 #[cfg(all(desktop))]
 #[command]
 pub fn toggle_locale(app: tauri::AppHandle, locale_string: String) -> Result<(), String> {
-    let menu_state = match MenuState::borrow_from_app(&app) {
-        Ok(menu_state) => menu_state,
-        Err(message) => {
-            log::error!("{message}");
-            return Err(message);
-        }
-    };
+    let menu_state = MenuState::try_borrow_from_app(&app).map_err(|e| {
+        log::error!("{e}");
+        e.to_string()
+    })?;
     let menu = &mut menu_state.lock().unwrap().menu;
 
-    let translator_state = match TranslatorState::borrow_from_app(&app) {
-        Ok(translator_state) => translator_state,
-        Err(message) => {
-            log::error!("{message}");
-            return Err(message);
-        }
-    };
+    let translator_state = TranslatorState::try_borrow_from_app(&app).map_err(|e| {
+        log::error!("{e}");
+        e.to_string()
+    })?;
     let translator = &mut translator_state.lock().unwrap().translator;
 
     let locale = match locale_string.parse::<Locale>() {
