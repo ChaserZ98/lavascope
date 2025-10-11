@@ -1,42 +1,25 @@
-use super::translator::TranslatorState;
-use crate::utils::translator::Locale;
+use rust_i18n::t;
 use tauri::command;
 
+use crate::utils::translator::Locale;
+
 #[cfg(all(desktop))]
-use super::tray::MenuState;
+use crate::app::state::MenuState;
 
 #[cfg(all(desktop))]
 #[command]
 pub fn toggle_locale(app: tauri::AppHandle, locale_string: String) -> Result<(), String> {
-    let menu_state = match MenuState::borrow_from_app(&app) {
-        Ok(menu_state) => menu_state,
-        Err(message) => {
-            log::error!("{message}");
-            return Err(message);
-        }
-    };
-    let menu = &mut menu_state.lock().unwrap().menu;
+    let menu_state_mutex = MenuState::try_borrow_from_app(&app).map_err(|e| e.to_string())?;
+    let menu = &mut menu_state_mutex.lock().unwrap().menu;
 
-    let translator_state = match TranslatorState::borrow_from_app(&app) {
-        Ok(translator_state) => translator_state,
-        Err(message) => {
-            log::error!("{message}");
-            return Err(message);
-        }
-    };
-    let translator = &mut translator_state.lock().unwrap().translator;
+    let locale = locale_string.parse::<Locale>().map_err(|e| e.to_string())?;
 
-    let locale = match locale_string.parse::<Locale>() {
-        Ok(locale) => locale,
-        Err(_) => return Err("Failed to parse locale".to_string()),
-    };
+    rust_i18n::set_locale(locale.as_str());
 
-    translator.set_locale(locale);
     menu.items().unwrap().iter().for_each(|item| {
         let item = item.as_menuitem().unwrap();
         let id = item.id().as_ref();
-        let text = item.text().unwrap();
-        let _ = item.set_text(translator.translate_with_default(id, text.as_str()));
+        item.set_text(t!(id)).unwrap();
     });
 
     Ok(())

@@ -1,6 +1,18 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, fmt::Display, str::FromStr};
 
-#[derive(Hash, Eq, PartialEq, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[allow(dead_code)]
+pub struct ParseLocaleError {
+    message: String,
+}
+
+impl Display for ParseLocaleError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
+#[derive(Debug, Hash, Eq, PartialEq, Clone, Copy)]
 pub enum Locale {
     EN,
     ZH,
@@ -18,24 +30,34 @@ impl Locale {
     }
 }
 
-#[derive(Debug)]
-#[allow(dead_code)]
-pub struct ParseLocaleError {
-    message: String,
-}
-
-impl std::str::FromStr for Locale {
+impl FromStr for Locale {
     type Err = ParseLocaleError;
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            s if s == Locale::EN.as_str() => Ok(Locale::EN),
-            s if s == Locale::ZH.as_str() => Ok(Locale::ZH),
-            s if s == Locale::ZhHant.as_str() => Ok(Locale::ZhHant),
+    fn from_str(value: &str) -> Result<Self, Self::Err> {
+        match value {
+            "en" => Ok(Locale::EN),
+            "zh" => Ok(Locale::ZH),
+            "zh-Hant" => Ok(Locale::ZhHant),
             _ => Err(ParseLocaleError {
-                message: format!("Invalid locale string `{s}`"),
+                message: format!("Invalid locale string `{value}`"),
             }),
         }
     }
+}
+
+impl Display for Locale {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.as_str())
+    }
+}
+
+#[derive(thiserror::Error, Debug)]
+pub enum TranslatorError {
+    #[error("Locale of the translator is not set")]
+    LocaleNotSet,
+    #[error("`{0}` is not in the dictionary")]
+    NotInDictionary(String),
+    #[error("No match locale string for `{0}` with locale `{1}`")]
+    NoMatchLocale(String, Locale),
 }
 
 pub struct Translator {
@@ -45,10 +67,10 @@ pub struct Translator {
 
 #[allow(dead_code)]
 impl Translator {
-    pub fn new(messages: HashMap<String, HashMap<Locale, String>>) -> Self {
+    pub fn new() -> Self {
         Self {
             locale: None,
-            messages,
+            messages: HashMap::new(),
         }
     }
     /**
@@ -58,18 +80,19 @@ impl Translator {
        # Returns
        An `Option` wrapping the translated string if there is a match, otherwise `None`
     */
-    pub fn try_translate(&self, value: &str) -> Option<String> {
-        if self.locale.is_none() || !self.messages.contains_key(value) {
-            return None;
-        }
-        let message = self.messages.get(value).unwrap();
-        let locale = self.locale.as_ref().unwrap();
+    pub fn try_translate(&self, value: &str) -> Result<String, TranslatorError> {
+        let locale = self.locale.ok_or(TranslatorError::LocaleNotSet)?;
 
-        if !message.contains_key(locale) {
-            return None;
-        }
-        let translation = message.get(locale);
-        translation.cloned()
+        let message = self
+            .messages
+            .get(value)
+            .ok_or(TranslatorError::NotInDictionary(value.to_string()))?;
+
+        let translation = message
+            .get(&locale)
+            .ok_or(TranslatorError::NoMatchLocale(value.to_string(), locale))?;
+
+        Ok(translation.clone())
     }
     /**
        Translate a string to the current locale if it exists in the messages, otherwise return the default value.
@@ -98,9 +121,18 @@ impl Translator {
         self.locale = Some(locale);
     }
     pub fn get_locale(&self) -> Option<Locale> {
-        self.locale.clone()
+        self.locale
     }
     pub fn insert_message(&mut self, text: String, message: HashMap<Locale, String>) {
         self.messages.insert(text, message);
+    }
+}
+
+impl From<HashMap<String, HashMap<Locale, String>>> for Translator {
+    fn from(messages: HashMap<String, HashMap<Locale, String>>) -> Self {
+        Self {
+            locale: None,
+            messages,
+        }
     }
 }
