@@ -82,9 +82,12 @@
     },
     "private": true,
     "scripts": {
-        "prebuild": "python scripts/build_info.py",
+        "android-keystore": "python scripts/android_keystore.py",
+        "build-info": "python scripts/build_info.py",
+        "prebuild": "bun run build-info",
         "dev": "bun run dev:ui",
         "dev:ui": "bun run prebuild && bun run --cwd frontend/apps/ui dev",
+        "dev:android": "bun run prebuild && bun run android-keystore && tauri android dev",
         "build": "bun run build:ui",
         "build:ui": "bun run prebuild && bun run --cwd frontend/apps/ui build",
         "preview": "bun run preview:ui",

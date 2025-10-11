@@ -3,7 +3,7 @@ import subprocess
 from dataclasses import dataclass
 
 import tomllib
-from path_const import APP_UI_DIR, BACKEND_DIR, ROOT_DIR
+from common.path_const import APP_UI_DIR, BACKEND_DIR, ROOT_DIR
 
 ui_manifest_path = APP_UI_DIR.joinpath("package.json")
 cargo_manifest_path = BACKEND_DIR.joinpath("Cargo.toml")
