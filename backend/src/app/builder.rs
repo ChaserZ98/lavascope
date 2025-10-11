@@ -29,10 +29,17 @@ impl Default for AppBuilder {
 
         #[cfg(all(desktop))]
         {
-            builder = builder.plugin(tauri_plugin_autostart::init(
-                tauri_plugin_autostart::MacosLauncher::LaunchAgent,
-                None,
-            ))
+            builder = builder
+                .plugin(tauri_plugin_autostart::init(
+                    tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+                    None,
+                ))
+                .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+                    use tauri::Manager;
+
+                    let main_window = app.get_webview_window("main_window").unwrap();
+                    let _ = main_window.set_focus();
+                }))
         }
 
         builder = builder.setup(|app| {
