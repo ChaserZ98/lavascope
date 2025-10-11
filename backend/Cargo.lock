@@ -2357,7 +2357,7 @@ dependencies = [
 
 [[package]]
 name = "lavascope"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "log",
  "rust-i18n",
