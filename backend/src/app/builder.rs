@@ -11,7 +11,27 @@ impl AppBuilder {
     }
 
     pub fn run(self) -> Result<(), tauri::Error> {
-        self.0.run(generate_context!())
+        let app = self.0.build(generate_context!())?;
+
+        app.run(|_app, event| {
+            // workaround for macos single instance reopen issue
+            // see details https://github.com/tauri-apps/plugins-workspace/issues/1613#issuecomment-2454134194
+            #[cfg(target_os = "macos")]
+            {
+                use tauri::{Manager, RunEvent};
+
+                match event {
+                    RunEvent::Reopen { .. } => {
+                        let main_window = _app.get_webview_window("main").unwrap();
+                        let _ = main_window.show();
+                        let _ = main_window.set_focus();
+                    }
+                    _ => {}
+                }
+            }
+        });
+
+        Ok(())
     }
 }
 
