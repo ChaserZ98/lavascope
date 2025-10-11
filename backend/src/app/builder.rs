@@ -37,7 +37,8 @@ impl Default for AppBuilder {
                 .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
                     use tauri::Manager;
 
-                    let main_window = app.get_webview_window("main_window").unwrap();
+                    let main_window = app.get_webview_window("main").unwrap();
+                    let _ = main_window.show();
                     let _ = main_window.set_focus();
                 }))
         }
