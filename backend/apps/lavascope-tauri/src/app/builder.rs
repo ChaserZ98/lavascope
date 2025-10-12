@@ -1,7 +1,7 @@
+use lavascope_logging::LogBuilder;
 use tauri::{Builder, Wry, generate_context, generate_handler};
 
 use super::commands;
-use crate::utils::configure_log_builder;
 
 pub struct AppBuilder(Builder<Wry>);
 
@@ -43,7 +43,7 @@ impl Default for AppBuilder {
         builder = builder
             .plugin(tauri_plugin_shell::init())
             .plugin(tauri_plugin_os::init())
-            .plugin(configure_log_builder().build())
+            .plugin(LogBuilder::new().build())
             .plugin(tauri_plugin_notification::init())
             .plugin(tauri_plugin_http::init())
             .plugin(tauri_plugin_clipboard_manager::init());
@@ -67,7 +67,7 @@ impl Default for AppBuilder {
         builder = builder.setup(|app| {
             #[cfg(all(desktop))]
             {
-                use crate::app::tray::TrayIconBuilder;
+                use lavascope_tray::TrayIconBuilder;
                 let app_handle = app.handle();
                 TrayIconBuilder::build(&app_handle).unwrap();
             }

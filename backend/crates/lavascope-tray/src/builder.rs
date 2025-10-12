@@ -1,17 +1,15 @@
 use std::sync::Mutex;
 
+use lavascope_state::MenuState;
 use tauri::{
-    tray::{TrayIcon, TrayIconBuilder as TauriTrayIconBuilder},
     AppHandle, Manager,
+    tray::{TrayIcon, TrayIconBuilder as TauriTrayIconBuilder},
 };
 
-use crate::app::{
-    state::MenuState,
-    tray::{
-        error::CreateTrayError,
-        event::handle_tray_icon_event,
-        menu::{handle_menu_click, TrayIconMenuBuilder},
-    },
+use crate::{
+    error::CreateTrayError,
+    event::handle_tray_icon_event,
+    menu::{TrayIconMenuBuilder, handle_menu_click},
 };
 
 pub struct TrayIconBuilder {}

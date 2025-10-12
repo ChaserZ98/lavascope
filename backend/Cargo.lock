@@ -2363,10 +2363,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "lavascope-logging"
+version = "0.0.0"
+dependencies = [
+ "log",
+ "tauri",
+ "tauri-plugin-log",
+]
+
+[[package]]
+name = "lavascope-state"
+version = "0.0.0"
+dependencies = [
+ "tauri",
+ "thiserror 2.0.11",
+]
+
+[[package]]
 name = "lavascope-tauri"
 version = "0.1.0"
 dependencies = [
  "lavascope-i18n",
+ "lavascope-logging",
+ "lavascope-state",
+ "lavascope-tray",
  "log",
  "rust-i18n",
  "serde",
@@ -2381,6 +2401,18 @@ dependencies = [
  "tauri-plugin-os",
  "tauri-plugin-shell",
  "tauri-plugin-single-instance",
+ "thiserror 2.0.11",
+]
+
+[[package]]
+name = "lavascope-tray"
+version = "0.0.0"
+dependencies = [
+ "lavascope-i18n",
+ "lavascope-state",
+ "log",
+ "rust-i18n",
+ "tauri",
  "thiserror 2.0.11",
 ]
 

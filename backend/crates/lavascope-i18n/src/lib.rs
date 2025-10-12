@@ -1,6 +1,8 @@
 mod backend;
+mod locale;
 
 pub use backend::I18nBackend;
+pub use locale::*;
 
 #[macro_export]
 macro_rules! init {

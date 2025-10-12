@@ -1,0 +1,9 @@
+[package]
+name = "lavascope-logging"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+tauri.workspace = true
+tauri-plugin-log.workspace = true
+log.workspace = true

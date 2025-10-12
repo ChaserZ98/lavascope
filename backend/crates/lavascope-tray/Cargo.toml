@@ -1,0 +1,12 @@
+[package]
+name = "lavascope-tray"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+lavascope-i18n.workspace = true
+rust-i18n.workspace = true
+lavascope-state.workspace = true
+tauri.workspace = true
+thiserror.workspace = true
+log.workspace = true

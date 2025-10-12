@@ -1,5 +1,4 @@
 mod app;
-mod utils;
 
 lavascope_i18n::init!();
 

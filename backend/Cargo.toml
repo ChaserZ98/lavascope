@@ -4,6 +4,9 @@ resolver = "3"
 
 [workspace.dependencies]
 lavascope-i18n = { path = "crates/lavascope-i18n" }
+lavascope-tray = { path = "crates/lavascope-tray" }
+lavascope-state = { path = "crates/lavascope-state" }
+lavascope-logging = { path = "crates/lavascope-logging" }
 
 tauri = "2.8.5"
 tauri-build = "2.4.1"

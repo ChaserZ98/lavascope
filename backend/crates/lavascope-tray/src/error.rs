@@ -1,7 +1,6 @@
-use crate::app::{
-    state::StateError,
-    tray::event::{TrayIconLeftClickError, TrayIconRightClickError},
-};
+use lavascope_state::StateError;
+
+use crate::event::{TrayIconLeftClickError, TrayIconRightClickError};
 
 #[derive(thiserror::Error, Debug)]
 pub enum CreateTrayError {

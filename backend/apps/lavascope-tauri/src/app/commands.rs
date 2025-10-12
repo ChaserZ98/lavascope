@@ -1,10 +1,8 @@
-use lavascope_i18n::{set_locale, t};
+use lavascope_i18n::{Locale, set_locale, t};
 use tauri::command;
 
-use crate::utils::translator::Locale;
-
 #[cfg(all(desktop))]
-use crate::app::state::MenuState;
+use lavascope_state::MenuState;
 
 #[cfg(all(desktop))]
 #[command]

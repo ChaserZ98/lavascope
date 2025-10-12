@@ -1,0 +1,8 @@
+[package]
+name = "lavascope-state"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+tauri.workspace = true
+thiserror.workspace = true

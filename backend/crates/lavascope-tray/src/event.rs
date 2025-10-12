@@ -1,13 +1,11 @@
 use lavascope_i18n::t;
+use lavascope_state::{MenuState, StateError};
 use tauri::{
     Manager,
     tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
 };
 
-use crate::app::{
-    state::{MenuState, StateError},
-    tray::error::TrayIconEventError,
-};
+use crate::error::TrayIconEventError;
 
 pub fn handle_tray_icon_event(tray: &TrayIcon, event: TrayIconEvent) {
     let res: Result<(), TrayIconEventError> = match event {

@@ -4,7 +4,7 @@ use tauri::{
     menu::{Menu, MenuItem},
 };
 
-use crate::app::tray::error::CreateTrayError;
+use crate::error::CreateTrayError;
 
 pub struct TrayIconMenuBuilder {}
 
