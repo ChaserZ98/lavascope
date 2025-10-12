@@ -10,6 +10,7 @@
         "@tauri-apps/api": "catalog:tauri"
     },
     "devDependencies": {
-        "typescript": "catalog:"
+        "typescript": "catalog:",
+        "vite": "catalog:vite"
     }
 }

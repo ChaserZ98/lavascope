@@ -1,6 +1,7 @@
 {
     "name": "lavascope",
     "devDependencies": {
+        "@tauri-apps/cli": "catalog:tauri",
         "typescript": "catalog:",
         "eslint": "catalog:eslint",
         "typescript-eslint": "catalog:eslint",
@@ -33,7 +34,8 @@
             "@lingui/react": "^5.4.1",
             "@lingui/cli": "^5.4.1",
             "vite-plugin-babel-macros": "^1.0.6",
-            "eslint-plugin-lingui": "^0.10.0"
+            "eslint-plugin-lingui": "^0.10.0",
+            "@lingui/babel-plugin-lingui-macro": "^5.5.1"
         },
         "react": {
             "react": "^19.2.0",

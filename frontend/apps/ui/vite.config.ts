@@ -1,12 +1,10 @@
 import { lingui } from "@lingui/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
-// import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 // import legacy from "@vitejs/plugin-legacy";
 import react from "@vitejs/plugin-react";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
-// import macrosPlugin from "vite-plugin-babel-macros";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 // https://vitejs.dev/config/

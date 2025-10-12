@@ -42,8 +42,10 @@
         "zod": "^3.24.2"
     },
     "devDependencies": {
+        "@lingui/babel-plugin-lingui-macro": "catalog:i18n",
         "@lingui/cli": "catalog:i18n",
         "@lingui/vite-plugin": "catalog:i18n",
+        "@react-types/shared": "^3.32.1",
         "@tanstack/router-plugin": "catalog:tanstack",
         "@tauri-apps/cli": "catalog:tauri",
         "@types/react": "catalog:react",
