@@ -100,7 +100,7 @@ jobs:
           echo "storeFile=$RUNNER_TEMP/keystore.jks" >> $ANDROID_DIRECTORY/keystore.properties
       - name: Build Android APK per ABI
         run: |
-          bun run tauri android build -v --config backend/build-config/tauri.android.conf.json --apk --split-per-abi
+          bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
       - name: Rename APKs and move to temp directory
         run: |
           for apk in $(find . -type f -name "*.apk"); do
@@ -113,7 +113,7 @@ jobs:
           done
       - name: Build Android universal APK
         run: |
-          bun run tauri android build -v --config backend/build-config/tauri.android.conf.json --apk
+          bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json --apk
       - name: Rename universal APK
         run: |
           output_dir=backend/gen/android/app/build/outputs
@@ -156,13 +156,13 @@ jobs:
         include:
           - build: aarch64
             os: macos-latest
-            args: "--config backend/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
+            args: "--config backend/apps/lavascope-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
           - build: x86_64
             os: macos-latest
-            args: "--config backend/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
+            args: "--config backend/apps/lavascope-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
           - build: universal
             os: macos-latest
-            args: "--config backend/build-config/tauri.macos.conf.json --target universal-apple-darwin"
+            args: "--config backend/apps/lavascope-tauri/build-config/tauri.macos.conf.json --target universal-apple-darwin"
     runs-on: ${{ matrix.os }}
     env:
       RELEASE_ID: ${{needs.create-release.outputs.release_id}}
@@ -341,7 +341,7 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
           tauriScript: bun run tauri
-          args: "--config backend/build-config/tauri.windows.conf.json"
+          args: "--config backend/apps/lavascope-tauri/build-config/tauri.windows.conf.json"
       - name: Artifact list
         env:
           RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
