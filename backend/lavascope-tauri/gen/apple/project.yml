@@ -1,4 +1,4 @@
-name: lavascope
+name: lavascope-tauri
 options:
   bundleIdPrefix: com.chaserz98.lavascope
   deploymentTarget:
@@ -24,20 +24,20 @@ targetTemplates:
     settings:
       groups: [app]
 targets:
-  lavascope_iOS:
+  lavascope-tauri_iOS:
     type: application
     platform: iOS
     sources:
       - path: Sources
       - path: Assets.xcassets
       - path: Externals
-      - path: lavascope_iOS
+      - path: lavascope-tauri_iOS
       - path: assets
         buildPhase: resources
         type: folder
       - path: LaunchScreen.storyboard
     info:
-      path: lavascope_iOS/Info.plist
+      path: lavascope-tauri_iOS/Info.plist
       properties:
         LSRequiresIPhoneOS: true
         UILaunchStoryboardName: LaunchScreen
@@ -54,7 +54,7 @@ targets:
         CFBundleShortVersionString: 0.1.2
         CFBundleVersion: "0.1.2"
     entitlements:
-      path: lavascope_iOS/lavascope_iOS.entitlements
+      path: lavascope-tauri_iOS/lavascope-tauri_iOS.entitlements
     scheme:
       environmentVariables:
         RUST_BACKTRACE: full

@@ -15,10 +15,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "87B9928EBD58087F71CAEE8A"
-               BuildableName = "lavascope_iOS.app"
-               BlueprintName = "lavascope_iOS"
-               ReferencedContainer = "container:lavascope.xcodeproj">
+               BlueprintIdentifier = "F2E74BC160261C622D3FBCBA"
+               BuildableName = "lavascope-tauri_iOS.app"
+               BlueprintName = "lavascope-tauri_iOS"
+               ReferencedContainer = "container:lavascope-tauri.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "87B9928EBD58087F71CAEE8A"
-            BuildableName = "lavascope_iOS.app"
-            BlueprintName = "lavascope_iOS"
-            ReferencedContainer = "container:lavascope.xcodeproj">
+            BlueprintIdentifier = "F2E74BC160261C622D3FBCBA"
+            BuildableName = "lavascope-tauri_iOS.app"
+            BlueprintName = "lavascope-tauri_iOS"
+            ReferencedContainer = "container:lavascope-tauri.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -69,10 +69,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "87B9928EBD58087F71CAEE8A"
-            BuildableName = "lavascope_iOS.app"
-            BlueprintName = "lavascope_iOS"
-            ReferencedContainer = "container:lavascope.xcodeproj">
+            BlueprintIdentifier = "F2E74BC160261C622D3FBCBA"
+            BuildableName = "lavascope-tauri_iOS.app"
+            BlueprintName = "lavascope-tauri_iOS"
+            ReferencedContainer = "container:lavascope-tauri.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
@@ -100,10 +100,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "87B9928EBD58087F71CAEE8A"
-            BuildableName = "lavascope_iOS.app"
-            BlueprintName = "lavascope_iOS"
-            ReferencedContainer = "container:lavascope.xcodeproj">
+            BlueprintIdentifier = "F2E74BC160261C622D3FBCBA"
+            BuildableName = "lavascope-tauri_iOS.app"
+            BlueprintName = "lavascope-tauri_iOS"
+            ReferencedContainer = "container:lavascope-tauri.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <CommandLineArguments>
