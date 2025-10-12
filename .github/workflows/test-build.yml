@@ -18,16 +18,16 @@ jobs:
         include:
           - build: macos-arm
             os: macos-latest
-            args: "--config backend/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
+            args: "--config backend/apps/lavascope-tauri/build-config/tauri.macos.conf.json --target aarch64-apple-darwin"
           - build: macos-x86_64
             os: macos-latest
-            args: "--config backend/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
+            args: "--config backend/apps/lavascope-tauri/build-config/tauri.macos.conf.json --target x86_64-apple-darwin"
           - build: linux
             os: ubuntu-22.04
             args: ""
           - build: windows
             os: "windows-latest"
-            args: "--config backend/build-config/tauri.windows.conf.json"
+            args: "--config backend/apps/lavascope-tauri/build-config/tauri.windows.conf.json"
     runs-on: ${{ matrix.os }}
     steps:
       - name: Check out repository code
@@ -126,7 +126,7 @@ jobs:
           echo "storeFile=$RUNNER_TEMP/$STORE_FILE" >> $ANDROID_DIRECTORY/keystore.properties
       - name: Build Android APK per abi
         run: |
-          bun run tauri android build -v --config backend/build-config/tauri.android.conf.json --apk --split-per-abi
+          bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json --apk --split-per-abi
       - name: Rename APKs and move to temp directory
         run: |
           for apk in $(find . -type f -name "*.apk"); do
@@ -140,7 +140,7 @@ jobs:
           done
       - name: Build Android bundle and move to temp directory
         run: |
-          bun run tauri android build -v --config backend/build-config/tauri.android.conf.json
+          bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json
       - name: Rename universal APK and aab
         run: |
           output_dir=backend/gen/android/app/build/outputs
