@@ -1,7 +1,7 @@
-use rust_i18n::t;
+use lavascope_i18n::t;
 use tauri::{
-    tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
     Manager,
+    tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
 };
 
 use crate::app::{

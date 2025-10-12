@@ -3,11 +3,11 @@ import subprocess
 from dataclasses import dataclass
 
 import tomllib
-from common.path_const import APP_UI_DIR, BACKEND_DIR, ROOT_DIR
+from common.path_const import APP_UI_DIR, BACKEND_TAURI_DIR, ROOT_DIR
 
 ui_manifest_path = APP_UI_DIR.joinpath("package.json")
-cargo_manifest_path = BACKEND_DIR.joinpath("Cargo.toml")
-tauri_config_path = BACKEND_DIR.joinpath("tauri.conf.json")
+cargo_manifest_path = BACKEND_TAURI_DIR.joinpath("Cargo.toml")
+tauri_config_path = BACKEND_TAURI_DIR.joinpath("tauri.conf.json")
 
 
 def get_cargo_package_version() -> str:

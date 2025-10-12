@@ -1,7 +1,7 @@
 mod app;
 mod utils;
 
-rust_i18n::i18n!();
+lavascope_i18n::init!();
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {

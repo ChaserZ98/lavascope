@@ -1,7 +1,7 @@
-use rust_i18n::t;
+use lavascope_i18n::t;
 use tauri::{
-    menu::{Menu, MenuItem},
     AppHandle, Wry,
+    menu::{Menu, MenuItem},
 };
 
 use crate::app::tray::error::CreateTrayError;

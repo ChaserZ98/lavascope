@@ -1,4 +1,4 @@
-use tauri::{generate_context, generate_handler, Builder, Wry};
+use tauri::{Builder, Wry, generate_context, generate_handler};
 
 use super::commands;
 use crate::utils::configure_log_builder;
@@ -13,6 +13,7 @@ impl AppBuilder {
     pub fn run(self) -> Result<(), tauri::Error> {
         let app = self.0.build(generate_context!())?;
 
+        #[allow(unused_variables)]
         app.run(|_app, event| {
             // workaround for macos single instance reopen issue
             // see details https://github.com/tauri-apps/plugins-workspace/issues/1613#issuecomment-2454134194

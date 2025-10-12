@@ -2356,9 +2356,17 @@ dependencies = [
 ]
 
 [[package]]
-name = "lavascope"
+name = "lavascope-i18n"
+version = "0.0.0"
+dependencies = [
+ "rust-i18n",
+]
+
+[[package]]
+name = "lavascope-tauri"
 version = "0.1.0"
 dependencies = [
+ "lavascope-i18n",
  "log",
  "rust-i18n",
  "serde",

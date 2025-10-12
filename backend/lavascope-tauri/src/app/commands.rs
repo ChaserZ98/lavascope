@@ -1,4 +1,4 @@
-use rust_i18n::t;
+use lavascope_i18n::{set_locale, t};
 use tauri::command;
 
 use crate::utils::translator::Locale;
@@ -14,7 +14,7 @@ pub fn toggle_locale(app: tauri::AppHandle, locale_string: String) -> Result<(),
 
     let locale = locale_string.parse::<Locale>().map_err(|e| e.to_string())?;
 
-    rust_i18n::set_locale(locale.as_str());
+    set_locale(locale.as_str());
 
     menu.items().unwrap().iter().for_each(|item| {
         let item = item.as_menuitem().unwrap();

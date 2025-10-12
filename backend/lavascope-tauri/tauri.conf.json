@@ -1,12 +1,12 @@
 {
     "productName": "LavaScope",
-    "version": "../frontend/apps/ui/package.json",
+    "version": "../../frontend/apps/ui/package.json",
     "identifier": "com.chaserz98.lavascope",
     "build": {
         "beforeDevCommand": "bun run dev --host",
         "devUrl": "http://127.0.0.1:1420",
         "beforeBuildCommand": "bun run build",
-        "frontendDist": "../frontend/apps/ui/dist"
+        "frontendDist": "../../frontend/apps/ui/dist"
     },
     "bundle": {
         "active": true,

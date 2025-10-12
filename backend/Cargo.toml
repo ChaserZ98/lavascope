@@ -1,38 +1,61 @@
-[package]
-name = "lavascope"
-version = "0.1.0"
-description = "LavaScope"
-authors = ["Feiyu Zheng <feiyuzheng98@gmail.com>"]
-edition = "2021"
+# [package]
+# name = "lavascope"
+# version = "0.1.0"
+# description = "LavaScope"
+# authors = ["Feiyu Zheng <feiyuzheng98@gmail.com>"]
+# edition = "2021"
 
-[lib]
-name = "lavascope_lib"
-crate-type = ["rlib", "cdylib", "staticlib"]
+# [lib]
+# name = "lavascope_lib"
+# crate-type = ["rlib", "cdylib", "staticlib"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[build-dependencies]
-tauri-build = { version = "2.4.1", features = [] }
+# [build-dependencies]
+# tauri-build = { version = "2.4.1", features = [] }
 
-[dependencies]
-tauri = { version = "2.8.5", features = ["tray-icon"] }
+# [dependencies]
+# tauri = { version = "2.8.5", features = ["tray-icon"] }
+# tauri-plugin-shell = "2.3.1"
+# tauri-plugin-notification = "2.3.1"
+# tauri-plugin-http = "2.5.2"
+# tauri-plugin-clipboard-manager = "2.3.0"
+# tauri-plugin-os = "2.3.1"
+# tauri-plugin-log = "2.7.0"
+# serde = { version = "1", features = ["derive"] }
+# serde_json = "1"
+# log = "0.4"
+# thiserror = "2.0.11"
+# rust-i18n = "3.1.5"
+
+# [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+# tauri-plugin-autostart = "2.5.0"
+# tauri-plugin-single-instance = "2.3.4"
+
+[workspace]
+members = ["lavascope-tauri", "lavascope-i18n"]
+resolver = "3"
+
+[workspace.dependencies]
+lavascope-i18n = { path = "lavascope-i18n" }
+
+tauri = "2.8.5"
+tauri-build = "2.4.1"
 tauri-plugin-shell = "2.3.1"
 tauri-plugin-notification = "2.3.1"
 tauri-plugin-http = "2.5.2"
 tauri-plugin-clipboard-manager = "2.3.0"
 tauri-plugin-os = "2.3.1"
 tauri-plugin-log = "2.7.0"
-serde = { version = "1", features = ["derive"] }
+tauri-plugin-autostart = "2.5.0"
+tauri-plugin-single-instance = "2.3.4"
+serde = "1"
 serde_json = "1"
 log = "0.4"
 thiserror = "2.0.11"
 rust-i18n = "3.1.5"
 
-[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
-tauri-plugin-autostart = "2.5.0"
-tauri-plugin-single-instance = "2.3.4"
-
-[package.metadata.i18n]
+[workspace.metadata.i18n]
 available-locales = ["en", "zh", "zh-Hant"]
 default-locale = "en"
 load-path = "locales"
