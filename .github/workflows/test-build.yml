@@ -49,6 +49,10 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./backend -> target"
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -105,6 +109,10 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./backend -> target"
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing
