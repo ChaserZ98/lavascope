@@ -253,14 +253,8 @@ dist
 dist-ssr
 *.local
 
-
 # Bun config
 bunfig.toml
-
-# TanStack Router file
-routeTree.gen.ts
-
-stats.html
 
 *.code-workspace
 
