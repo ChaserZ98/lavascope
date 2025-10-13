@@ -25,9 +25,9 @@ export async function initializeI18n(
     await dynamicActivate(locale, platform);
 }
 
-export async function dynamicActivate(locale: string, platform: Platform) {
+export async function dynamicActivate(locale: Locale, platform: Platform) {
     await setReactLocale(locale);
-    if (platform !== Platform.WEB) await setTauriTrayLocale(locale);
+    if ([Platform.WINDOWS, Platform.LINUX, Platform.MACOS].includes(platform)) await setTauriTrayLocale(locale);
 }
 
 export async function setReactLocale(locale: string) {
@@ -41,7 +41,7 @@ export async function setReactLocale(locale: string) {
     }
 }
 
-export async function setTauriTrayLocale(locale: string) {
+export async function setTauriTrayLocale(locale: Locale) {
     try {
         await invoke("toggle_locale", {
             localeString: locale,
