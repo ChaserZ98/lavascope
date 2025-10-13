@@ -6,6 +6,7 @@ description = "LavaScope"
 authors = ["Feiyu Zheng <feiyuzheng98@gmail.com>"]
 
 [lib]
+name = "lavascope_tauri_lib"
 crate-type = ["rlib", "cdylib", "staticlib"]
 
 [build-dependencies]
@@ -14,8 +15,6 @@ tauri-build = { workspace = true, features = [] }
 [dependencies]
 rust-i18n.workspace = true
 lavascope-i18n.workspace = true
-lavascope-tray.workspace = true
-lavascope-state.workspace = true
 lavascope-logging.workspace = true
 
 tauri = { workspace = true, features = ["tray-icon"] }
@@ -31,5 +30,7 @@ log.workspace = true
 thiserror.workspace = true
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+lavascope-state.workspace = true
+lavascope-tray.workspace = true
 tauri-plugin-autostart.workspace = true
 tauri-plugin-single-instance.workspace = true
