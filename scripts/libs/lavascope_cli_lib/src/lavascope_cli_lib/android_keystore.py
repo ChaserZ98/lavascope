@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from common.path_const import ANDROID_DIR
+from .path_const import ANDROID_DIR
 
 STORE_PATH = ANDROID_DIR.joinpath("dev-keystore.jks")
 KEY_ALG = "RSA"
@@ -66,8 +66,3 @@ def generate_properties():
         f.write(f"storeFile={STORE_PATH}\n")
 
     print(f"Keystore properties generated at {PROPERTIES_PATH}")
-
-
-if __name__ == "__main__":
-    generate_keystore()
-    generate_properties()

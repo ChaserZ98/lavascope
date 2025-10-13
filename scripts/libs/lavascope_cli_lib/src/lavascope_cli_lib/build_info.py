@@ -1,9 +1,9 @@
 import json
 import subprocess
+import tomllib
 from dataclasses import dataclass
 
-import tomllib
-from common.path_const import APP_UI_DIR, BACKEND_TAURI_DIR, ROOT_DIR
+from .path_const import APP_UI_DIR, BACKEND_TAURI_DIR, ROOT_DIR
 
 ui_manifest_path = APP_UI_DIR.joinpath("package.json")
 cargo_manifest_path = BACKEND_TAURI_DIR.joinpath("Cargo.toml")
@@ -57,8 +57,3 @@ class BuildInfo:
 
     def default_path(self):
         return ROOT_DIR.joinpath("build-info.json")
-
-
-if __name__ == "__main__":
-    version_metadata = BuildInfo()
-    version_metadata.save_to_file()

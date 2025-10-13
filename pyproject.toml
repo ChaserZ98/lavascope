@@ -1,0 +1,14 @@
+[project]
+name = "lavascope"
+version = "0.1.0"
+description = "Python build scripts for Lavascope"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = ["lavascope-cli", "lavascope-cli-lib", "click-extra>=6.0.3"]
+
+[tool.uv.workspace]
+members = ["scripts/libs/*", "scripts/apps/*"]
+
+[tool.uv.sources]
+lavascope-cli = { workspace = true }
+lavascope-cli-lib = { workspace = true }

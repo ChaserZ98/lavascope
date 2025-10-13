@@ -84,8 +84,8 @@
     },
     "private": true,
     "scripts": {
-        "android-keystore": "python scripts/android_keystore.py",
-        "build-info": "python scripts/build_info.py",
+        "android-keystore": "uv run lavascope-cli android-keystore",
+        "build-info": "uv run lavascope-cli build-info",
         "prebuild": "bun run build-info",
         "dev": "bun run dev:ui",
         "dev:ui": "bun run prebuild && bun run --cwd frontend/apps/ui dev",
