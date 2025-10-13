@@ -49,6 +49,10 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./backend -> target"
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -105,11 +109,15 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./backend -> target"
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing
         env:
-          ANDROID_DIRECTORY: backend/gen/android
+          ANDROID_DIRECTORY: backend/apps/lavascope-tauri/gen/android
           STORE_FILE: build-test-keystore.jks
           STORE_PASS: test-build
           KEY_ALIAS: test
@@ -143,7 +151,7 @@ jobs:
           bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json
       - name: Rename universal APK and aab
         run: |
-          output_dir=backend/gen/android/app/build/outputs
+          output_dir=backend/apps/lavascope-tauri/gen/android/app/build/outputs
           universal_apk_path=$output_dir/apk/universal/release/app-universal-release.apk
           if [ ! -f $universal_apk_path ]; then
             echo "Universal APK not found at $universal_apk_path"
