@@ -1,11 +1,9 @@
 [project]
 name = "lavascope-cli-lib"
 version = "0.1.0"
-description = "Add your description here"
+description = "Shared library for Lavascope build scripts and CLI"
 readme = "README.md"
-authors = [
-    { name = "ChaserZ98", email = "feiyuzheng98@gmail.com" }
-]
+authors = [{ name = "ChaserZ98", email = "feiyuzheng98@gmail.com" }]
 requires-python = ">=3.12"
 dependencies = []
 
