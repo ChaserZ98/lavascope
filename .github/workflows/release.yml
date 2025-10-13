@@ -93,7 +93,7 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Setup Android signing
         run: |
-          ANDROID_DIRECTORY=backend/gen/android
+          ANDROID_DIRECTORY=backend/apps/lavascope-tauri/gen/android
           echo "${{secrets.ANDROID_KEY_BASE64}}" | base64 -d > $RUNNER_TEMP/keystore.jks
           echo "keyAlias=${{secrets.ANDROID_KEY_ALIAS}}" > $ANDROID_DIRECTORY/keystore.properties
           echo "password=${{secrets.ANDROID_KEY_PASSWORD}}" >> $ANDROID_DIRECTORY/keystore.properties
@@ -116,7 +116,7 @@ jobs:
           bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json --apk
       - name: Rename universal APK
         run: |
-          output_dir=backend/gen/android/app/build/outputs
+          output_dir=backend/apps/lavascope-tauri/gen/android/app/build/outputs
           universal_apk_path=$output_dir/apk/universal/release/app-universal-release.apk
           if [ ! -f $universal_apk_path ]; then
             echo "Universal APK not found at $universal_apk_path"
