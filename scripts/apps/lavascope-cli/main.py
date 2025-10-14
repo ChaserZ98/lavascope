@@ -36,8 +36,10 @@ def android_keystore():
         GenerateKeystoreUnknownError,
     ) as e:
         click_extra.echo(e, err=True)
+        raise SystemExit(1)
     except Exception as e:
         click_extra.echo(f"Unknown error: {e}", err=True)
+        raise SystemExit(1)
 
 
 @click_extra.extra_group(help="lavascope build commands", params=None)

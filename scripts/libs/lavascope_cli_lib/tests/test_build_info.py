@@ -97,7 +97,7 @@ def test_get_commit_hash(mocker):
     res = get_git_commit_hash()
 
     mocked_subprocess_check_output.assert_called_once_with(["git", "rev-parse", "HEAD"])
-    assert res == get_git_commit_hash(), f"{res} != {expected_hash}"
+    assert res == expected_hash, f"{res} != {expected_hash}"
 
 
 def test_build_info_dump(mocker):
