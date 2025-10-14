@@ -6,9 +6,19 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = ["lavascope-cli", "lavascope-cli-lib", "click-extra>=6.0.3"]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "pytest-mock>=3.15.1",
+]
+
 [tool.uv.workspace]
 members = ["scripts/libs/*", "scripts/apps/*"]
 
 [tool.uv.sources]
 lavascope-cli = { workspace = true }
 lavascope-cli-lib = { workspace = true }
+
+[tool.pytest.ini_options]
+addopts = "--cov=lavascope_cli_lib --cov-report=term-missing"

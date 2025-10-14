@@ -51,9 +51,10 @@ class BuildInfo:
         if not path:
             path = self.default_path()
 
-        print(f"Saving build info to {path}")
         with open(path, "w") as f:
             json.dump(self.dump(), f, indent=4)
+
+        return path
 
     def default_path(self):
         return ROOT_DIR.joinpath("build-info.json")
