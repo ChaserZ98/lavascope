@@ -77,13 +77,14 @@ jobs:
         run: |
           import json
           import os
+          import shutil
           from pathlib import Path
           artifactArray = json.loads(os.getenv('RELEASE_ACTIFACTS', '[]'))
           for artifact in artifactArray:
             print(artifact)
             file_name = Path(artifact).name
             temp_dir = Path(os.getenv('RUNNER_TEMP'))
-            os.move(artifact, temp_dir.joinpath(file_name))
+            shutil.move(artifact, temp_dir.joinpath(file_name))
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
