@@ -29,9 +29,16 @@ jobs:
             os: "windows-latest"
             args: "--config backend/apps/lavascope-tauri/build-config/tauri.windows.conf.json"
     runs-on: ${{ matrix.os }}
+    env:
+      COMMIT_SHA_SHORT: ""
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Get commit sha short
+        run: |
+          echo "COMMIT_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Show commit sha short
+        run: echo $COMMIT_SHA_SHORT
       - name: Install dependencies (ubuntu only)
         if: matrix.build == 'linux'
         run: |
@@ -80,15 +87,24 @@ jobs:
           import shutil
           from pathlib import Path
           artifactArray = json.loads(os.getenv('RELEASE_ACTIFACTS', '[]'))
-          for artifact in artifactArray:
-            print(artifact)
-            file_name = Path(artifact).name
+          for artifact_path in artifactArray:
+            print(artifact_path)
+
+            dir_name = Path(artifact_path).parent
+            file_name = Path(artifact_path).name
+            l = file_name.split("_")
+            if len(l) > 1:
+              l[1] = os.getenv('COMMIT_SHA_SHORT')
+            new_file_name = "_".join(l)
             temp_dir = Path(os.getenv('RUNNER_TEMP'))
-            shutil.move(artifact, temp_dir.joinpath(file_name))
+            
+            target_path = temp_dir.joinpath(new_file_name)
+            print(f"Moving and renaming ${artifact_path} to ${target_path}")
+            shutil.move(artifact_path, temp_dir.joinpath(new_file_name))
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: ${{matrix.build}} artifacts
+          name: ${{matrix.build}} artifacts (${{env.COMMIT_SHA_SHORT}})
           path: ${{runner.temp}}/LavaScope*
           if-no-files-found: warn
   test-android-build:
@@ -100,6 +116,7 @@ jobs:
       JAVA_DISTRIBUTION: "adopt"
       JAVA_VERSION: 17
       NDK_VERSION: 27.1.12297006
+      COMMIT_SHA_SHORT: ""
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -170,11 +187,11 @@ jobs:
             filename=$(basename $apk)
             directory=$(dirname $apk)
             arch=$(echo $filename | cut -d'-' -f2)
-            new_filename=LavaScope_$COMMIT_SHA_SHORT_$arch.apk
+            new_filename=LavaScope_${{env.COMMIT_SHA_SHORT}}_$arch.apk
             mv $apk $RUNNER_TEMP/$new_filename
             echo "Renamed APK: $RUNNER_TEMP/$new_filename"
           done
-      - name: Build Android bundle and move to temp directory
+      - name: Build Android bundle
         run: |
           bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json
       - name: Rename universal APK and aab
@@ -186,8 +203,8 @@ jobs:
             exit 1
           fi
           echo "Found universal APK: $universal_apk_path"
-          mv $universal_apk_path $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.apk
-          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.apk"
+          mv $universal_apk_path $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.apk
+          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.apk"
 
           universal_aab_path=$output_dir/bundle/universalRelease/app-universal-release.aab
           if [ ! -f $universal_aab_path ]; then
@@ -195,11 +212,11 @@ jobs:
             exit 1
           fi
           echo "Found universal AAB: $universal_aab_path"
-          mv $universal_aab_path $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.aab
-          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.aab"
+          mv $universal_aab_path $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.aab
+          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.aab"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: android artifacts
+          name: android artifacts (${{env.COMMIT_SHA_SHORT}})
           path: ${{runner.temp}}/LavaScope*
           if-no-files-found: warn
