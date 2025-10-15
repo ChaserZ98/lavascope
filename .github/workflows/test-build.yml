@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test-desktop-build:
     if: ${{ !startsWith(github.head_ref, 'release/')}}
@@ -29,9 +33,13 @@ jobs:
             os: "windows-latest"
             args: "--config backend/apps/lavascope-tauri/build-config/tauri.windows.conf.json"
     runs-on: ${{ matrix.os }}
+    env:
+      COMMIT_SHA_SHORT: ""
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Get commit sha short
+        run: python CI/scripts/get_commit_sha_short.py
       - name: Install dependencies (ubuntu only)
         if: matrix.build == 'linux'
         run: |
@@ -58,6 +66,8 @@ jobs:
           restore-cache: true
           save-cache: true
           prune-cache: true
+      - name: Install python dependencies
+        run: uv sync
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -68,16 +78,16 @@ jobs:
         with:
           tauriScript: bun run tauri
           args: ${{ matrix.args }}
-      - name: Actifact list
+      - name: Show artifact list and move to temp directory
         env:
-          RELEASE_ACTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
-        uses: actions/github-script@v7
+          RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+        run: python CI/scripts/artifact_list_move_rename.py
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          script: |
-            const artifactArray = JSON.parse(process.env.RELEASE_ACTIFACTS);
-            for (const artifact of artifactArray) {
-              console.log(`Artifact: ${artifact}`);
-            }
+          name: ${{matrix.build}} artifacts (${{env.COMMIT_SHA_SHORT}})
+          path: ${{runner.temp}}/LavaScope*
+          if-no-files-found: warn
   test-android-build:
     if: ${{ !startsWith(github.head_ref, 'release/')}}
     permissions:
@@ -87,9 +97,12 @@ jobs:
       JAVA_DISTRIBUTION: "adopt"
       JAVA_VERSION: 17
       NDK_VERSION: 27.1.12297006
+      COMMIT_SHA_SHORT: ""
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Get commit sha short
+        run: python CI/scripts/get_commit_sha_short.py
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -123,6 +136,8 @@ jobs:
           restore-cache: true
           save-cache: true
           prune-cache: true
+      - name: Install python dependencies
+        run: uv sync
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing
@@ -152,11 +167,11 @@ jobs:
             filename=$(basename $apk)
             directory=$(dirname $apk)
             arch=$(echo $filename | cut -d'-' -f2)
-            new_filename=LavaScope_$RELEASE_VERSION_$arch.apk
+            new_filename=LavaScope_${{env.COMMIT_SHA_SHORT}}_$arch.apk
             mv $apk $RUNNER_TEMP/$new_filename
             echo "Renamed APK: $RUNNER_TEMP/$new_filename"
           done
-      - name: Build Android bundle and move to temp directory
+      - name: Build Android bundle
         run: |
           bun run tauri android build -v --config backend/apps/lavascope-tauri/build-config/tauri.android.conf.json
       - name: Rename universal APK and aab
@@ -168,8 +183,8 @@ jobs:
             exit 1
           fi
           echo "Found universal APK: $universal_apk_path"
-          mv $universal_apk_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.apk
-          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.apk"
+          mv $universal_apk_path $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.apk
+          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.apk"
 
           universal_aab_path=$output_dir/bundle/universalRelease/app-universal-release.aab
           if [ ! -f $universal_aab_path ]; then
@@ -177,5 +192,11 @@ jobs:
             exit 1
           fi
           echo "Found universal AAB: $universal_aab_path"
-          mv $universal_aab_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab
-          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab"
+          mv $universal_aab_path $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.aab
+          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_${{env.COMMIT_SHA_SHORT}}_universal.aab"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: android artifacts (${{env.COMMIT_SHA_SHORT}})
+          path: ${{runner.temp}}/LavaScope*
+          if-no-files-found: warn

@@ -10,11 +10,13 @@ class Platform(Enum):
     ANDROID = "Android"
 
 
-if __name__ == "__main__":
-    release_link = "https://github.com/ChaserZ98/lavascope/releases/latest/download"
-    app_name = "LavaScope"
-    version = os.environ.get("NEXT_VERSION")
-    if version is None:
+RELEASE_LINK = "https://github.com/ChaserZ98/lavascope/releases/latest/download"
+APP_NAME = "LavaScope"
+VERSION = os.environ.get("NEXT_VERSION")
+
+
+def update_release_link():
+    if VERSION is None:
         raise ValueError("NEXT_VERSION is not set")
 
     new_links: list[tuple[Platform, str]] = []
@@ -23,20 +25,20 @@ if __name__ == "__main__":
         for line in f:
             match line:
                 case line if line.startswith("[Windows-latest-url]"):
-                    link = f"{release_link}/{app_name}_{version}_amd64-setup.exe"
+                    link = f"{RELEASE_LINK}/{APP_NAME}_{VERSION}_amd64-setup.exe"
                     print(f"[Windows-latest-url]: {link}")
                     new_links.append((Platform.WINDOWS, link))
 
                 case line if line.startswith("[Linux-latest-url]"):
-                    link = f"{release_link}/{app_name}_{version}_amd64.deb"
+                    link = f"{RELEASE_LINK}/{APP_NAME}_{VERSION}_amd64.deb"
                     print(f"[Linux-latest-url]: {link}")
                     new_links.append((Platform.LINUX, link))
                 case line if line.startswith("[MacOS-latest-url]"):
-                    link = f"{release_link}/{app_name}_{version}_universal.dmg"
+                    link = f"{RELEASE_LINK}/{APP_NAME}_{VERSION}_universal.dmg"
                     print(f"[MacOS-latest-url]: {link}")
                     new_links.append((Platform.MACOS, link))
                 case line if line.startswith("[Android-latest-url]"):
-                    link = f"{release_link}/{app_name}_{version}_universal.apk"
+                    link = f"{RELEASE_LINK}/{APP_NAME}_{VERSION}_universal.apk"
                     print(f"[Android-latest-url]: {link}")
                     new_links.append((Platform.ANDROID, link))
                 case _:
@@ -44,3 +46,7 @@ if __name__ == "__main__":
 
     for platform, link in new_links:
         print(f"Updated {platform.name} link to {link}")
+
+
+if __name__ == "__main__":
+    update_release_link()
