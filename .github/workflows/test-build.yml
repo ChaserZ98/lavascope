@@ -39,13 +39,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Get commit sha short
-        shell: python
-        run: |
-          import os
-          commit_sha_short = os.popen("git rev-parse --short HEAD").read().strip()
-          print(f"commit_sha_short: ${commit_sha_short}")
-          with open(os.getenv("GITHUB_ENV"), "a") as env_file:
-            env_file.write(f"COMMIT_SHA_SHORT={commit_sha_short}")
+        run: python CI/scripts/get_commit_sha_short.py
       - name: Show commit sha short
         run: echo $COMMIT_SHA_SHORT
       - name: Install dependencies (ubuntu only)
@@ -89,27 +83,7 @@ jobs:
       - name: Show artifact list and move to temp directory
         env:
           RELEASE_ACTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
-        shell: python
-        run: |
-          import json
-          import os
-          import shutil
-          from pathlib import Path
-          artifactArray = json.loads(os.getenv('RELEASE_ACTIFACTS', '[]'))
-          for artifact_path in artifactArray:
-            print(artifact_path)
-
-            dir_name = Path(artifact_path).parent
-            file_name = Path(artifact_path).name
-            l = file_name.split("_")
-            if len(l) > 1:
-              l[1] = os.getenv('COMMIT_SHA_SHORT')
-            new_file_name = "_".join(l)
-            temp_dir = Path(os.getenv('RUNNER_TEMP'))
-            
-            target_path = temp_dir.joinpath(new_file_name)
-            print(f"Moving and renaming ${artifact_path} to ${target_path}")
-            shutil.move(artifact_path, temp_dir.joinpath(new_file_name))
+        run: python CI/scripts/artifact_list_move_rename.py
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -130,8 +104,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Get commit sha short
-        run: |
-          echo "COMMIT_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        run: python CI/scripts/get_commit_sha_short.py
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
