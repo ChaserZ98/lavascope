@@ -35,8 +35,12 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Get commit sha short
+        shell: python
         run: |
-          echo "COMMIT_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          import os
+          commit_sha_short = os.popen("git rev-parse --short HEAD").read().strip()
+          with open(os.getenv("GITHUB_ENV"), "a") as env_file:
+            env_file.write(f"COMMIT_SHA_SHORT=${commit_sha_short}")
       - name: Show commit sha short
         run: echo $COMMIT_SHA_SHORT
       - name: Install dependencies (ubuntu only)
