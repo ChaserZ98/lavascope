@@ -58,6 +58,8 @@ jobs:
           restore-cache: true
           save-cache: true
           prune-cache: true
+      - name: Install python dependencies
+        run: uv sync
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -123,6 +125,8 @@ jobs:
           restore-cache: true
           save-cache: true
           prune-cache: true
+      - name: Install python dependencies
+        run: uv sync
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing
@@ -179,3 +183,10 @@ jobs:
           echo "Found universal AAB: $universal_aab_path"
           mv $universal_aab_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab
           echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab"
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            $RUNNER_TEMP/LavaScope_*.aab
+            $RUNNER_TEMP/LavaScope_*.apk
+          if-no-files-found: warn
