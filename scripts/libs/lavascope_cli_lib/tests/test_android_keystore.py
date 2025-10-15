@@ -84,7 +84,7 @@ def mock_subprocess_run(mocker):
 
 @pytest.fixture
 def mock_open(mocker):
-    return mocker.patch("builtins.open", mock.mock_open())
+    return mocker.patch("builtins.open", new_callable=mock.mock_open)
 
 
 def test_generate_keystore_removes_existing(

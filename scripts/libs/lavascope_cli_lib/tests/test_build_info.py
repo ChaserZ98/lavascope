@@ -1,5 +1,8 @@
-from unittest.mock import mock_open
+from dataclasses import dataclass
+from typing import Any
+from unittest import mock
 
+import pytest
 from lavascope_cli_lib.build_info import (
     BuildInfo,
     cargo_manifest_path,
@@ -10,6 +13,40 @@ from lavascope_cli_lib.build_info import (
     tauri_config_path,
     ui_manifest_path,
 )
+
+
+@pytest.fixture
+def mock_open(mocker):
+    return mocker.patch("builtins.open", new_callable=mock.mock_open)
+
+
+@pytest.fixture
+def mock_subprocess_check_output(mocker):
+    return mocker.patch("subprocess.check_output")
+
+
+@pytest.fixture
+def mock_json_dump(mocker):
+    return mocker.patch("json.dump")
+
+
+@dataclass
+class MockBuildInfoModule:
+    tauri_config_path: Any
+    root_dir: Any
+
+
+@pytest.fixture
+def mock_build_info_module(mocker, request):
+    tauri_config_path = mocker.patch("lavascope_cli_lib.build_info.tauri_config_path")
+    root_dir = mocker.patch("lavascope_cli_lib.build_info.ROOT_DIR")
+
+    return MockBuildInfoModule(tauri_config_path, root_dir)
+
+
+@pytest.fixture
+def mock_build_info_default_path(mocker):
+    return mocker.patch("lavascope_cli_lib.build_info.BuildInfo.default_path")
 
 
 def test_ui_path():
@@ -38,69 +75,52 @@ def test_tauri_config_path():
     )
 
 
-def test_cargo_package_version(mocker):
-    mocker.patch(
-        "builtins.open",
-        mock_open(
-            read_data="""\
-            [package]
-            name = "lavascope-tauri"
-            version = "0.1.0"
-            edit = "2024"
-            """
-        ),
-    )
+def test_cargo_package_version(mock_open):
+    mock_open.return_value.read.return_value = """\
+        [package]
+        name = "lavascope-tauri"
+        version = "0.1.0"
+        """
+
     assert get_cargo_package_version() == "0.1.0"
 
 
-def test_get_ui_version(mocker):
-    mocked_open = mock_open(
-        read_data="""\
+def test_get_ui_version(mock_open):
+    mock_open.return_value.read.return_value = """\
         {
-        "name": "@lavascope/ui",
-        "version": "0.1.0"
+            "name": "@lavascope/ui",
+            "version": "0.1.0"
         }
         """
-    )
-    mocker.patch("builtins.open", mocked_open)
 
     assert get_ui_version() == "0.1.0"
 
 
-def test_get_tauri_config_version(mocker):
-    mocked_open = mock_open(
-        read_data="""\
+def test_get_tauri_config_version(mock_build_info_module, mock_open):
+    mock_open.return_value.read.return_value = """\
         {
             "productName": "LavaScope",
             "version": "0.1.0"
         }
         """
-    )
-    mocker.patch("builtins.open", mocked_open)
-    mocked_tauri_config_path = mocker.patch(
-        "lavascope_cli_lib.build_info.tauri_config_path"
-    )
 
     version = get_tauri_config_version()
 
-    mocked_open.assert_called_once_with(mocked_tauri_config_path, "r")
+    mock_open.assert_called_once_with(mock_build_info_module.tauri_config_path, "r")
     assert version == "0.1.0"
 
 
-def test_get_commit_hash(mocker):
+def test_get_commit_hash(mock_subprocess_check_output):
     expected_hash = "1234567890abcdef"
-    mocked_subprocess_check_output = mocker.patch(
-        "lavascope_cli_lib.build_info.subprocess.check_output"
-    )
-    mocked_subprocess_check_output.return_value = expected_hash.encode("utf-8")
+    mock_subprocess_check_output.return_value = expected_hash.encode("utf-8")
 
     res = get_git_commit_hash()
 
-    mocked_subprocess_check_output.assert_called_once_with(["git", "rev-parse", "HEAD"])
+    mock_subprocess_check_output.assert_called_once_with(["git", "rev-parse", "HEAD"])
     assert res == expected_hash, f"{res} != {expected_hash}"
 
 
-def test_build_info_dump(mocker):
+def test_build_info_dump():
     ui_version = "0.1.0"
     cargo_package_version = "0.1.1"
     tauri_config_version = "0.1.2"
@@ -123,35 +143,34 @@ def test_build_info_dump(mocker):
     assert res == expected_dump_res, f"{res} != {expected_dump_res}"
 
 
-def test_build_info_save_to_file(mocker):
-    mocked_default_path = mocker.patch(
-        "lavascope_cli_lib.build_info.BuildInfo.default_path"
-    )
-    mocked_open = mocker.patch("builtins.open", mock_open())
-    mocked_json_dump = mocker.patch("lavascope_cli_lib.build_info.json.dump")
-
+def test_build_info_save_to_file(
+    mocker,
+    mock_build_info_module,
+    mock_open,
+    mock_json_dump,
+    mock_build_info_default_path,
+):
     build_info = BuildInfo("0.1.0", "0.1.1", "0.1.2", "1234567890abcdef")
 
     build_info.save_to_file()
 
-    mocked_open.assert_called_once_with(mocked_default_path(), "w")
-    mocked_open_handle = mocked_open()
-    mocked_json_dump.assert_called_once_with(
+    mock_open.assert_called_once_with(mock_build_info_default_path(), "w")
+    mock_open_handle = mock_open()
+    mock_json_dump.assert_called_once_with(
         {
             "ui_version": "0.1.0",
             "cargo_package_version": "0.1.1",
             "tauri_config_version": "0.1.2",
             "git_commit_hash": "1234567890abcdef",
         },
-        mocked_open_handle,
+        mock_open_handle,
         indent=4,
     )
 
 
-def test_build_info_default_path(mocker):
+def test_build_info_default_path(mock_build_info_module):
     expected_path = "/path/to/root/build-info.json"
-    mocked_root_dir = mocker.patch("lavascope_cli_lib.build_info.ROOT_DIR")
-    mocked_root_dir.joinpath.return_value = expected_path
+    mock_build_info_module.root_dir.joinpath.return_value = expected_path
 
     build_info = BuildInfo()
     res = build_info.default_path()
