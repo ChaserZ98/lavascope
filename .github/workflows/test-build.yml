@@ -103,6 +103,9 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+      - name: Get commit sha short
+        run: |
+          echo "COMMIT_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
@@ -167,7 +170,7 @@ jobs:
             filename=$(basename $apk)
             directory=$(dirname $apk)
             arch=$(echo $filename | cut -d'-' -f2)
-            new_filename=LavaScope_$RELEASE_VERSION_$arch.apk
+            new_filename=LavaScope_$COMMIT_SHA_SHORT_$arch.apk
             mv $apk $RUNNER_TEMP/$new_filename
             echo "Renamed APK: $RUNNER_TEMP/$new_filename"
           done
@@ -183,8 +186,8 @@ jobs:
             exit 1
           fi
           echo "Found universal APK: $universal_apk_path"
-          mv $universal_apk_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.apk
-          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.apk"
+          mv $universal_apk_path $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.apk
+          echo "Renamed universal APK: $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.apk"
 
           universal_aab_path=$output_dir/bundle/universalRelease/app-universal-release.aab
           if [ ! -f $universal_aab_path ]; then
@@ -192,8 +195,8 @@ jobs:
             exit 1
           fi
           echo "Found universal AAB: $universal_aab_path"
-          mv $universal_aab_path $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab
-          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_$RELEASE_VERSION_universal.aab"
+          mv $universal_aab_path $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.aab
+          echo "Renamed universal AAB: $RUNNER_TEMP/LavaScope_$COMMIT_SHA_SHORT_universal.aab"
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
