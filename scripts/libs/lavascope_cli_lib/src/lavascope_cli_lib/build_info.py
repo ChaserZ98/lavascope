@@ -35,8 +35,8 @@ def get_git_commit_hash() -> str:
 @dataclass
 class BuildInfo:
     ui_version: str = get_ui_version()
-    cargo_package_version: str = get_ui_version()
-    tauri_config_version: str = get_cargo_package_version()
+    cargo_package_version: str = get_cargo_package_version()
+    tauri_config_version: str = get_tauri_config_version()
     git_commit_hash: str = get_git_commit_hash()
 
     def dump(self):

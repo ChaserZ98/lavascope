@@ -166,7 +166,9 @@ def test_generate_properties(
     mock_generate_properties_module,
     mock_open,
 ):
-    generate_properties()
+    res = generate_properties()
+
+    assert res == mock_generate_properties_module.properties_path
 
     mock_open.assert_called_once_with(
         mock_generate_properties_module.properties_path, "w"
