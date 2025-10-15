@@ -6,6 +6,11 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+
 jobs:
   pytest:
     runs-on: ubuntu-22.04
@@ -24,4 +29,11 @@ jobs:
       - name: Install python dependencies
         run: uv sync
       - name: Run tests
-        run: uv run pytest
+        run: uv run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=lavascope_cli_lib > pytest-coverage.txt
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@v1
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
+          title: "Build Scripts Coverage Report"
+          junitxml-title: "Build Scripts Test Results"
