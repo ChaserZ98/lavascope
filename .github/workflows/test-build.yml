@@ -40,8 +40,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Get commit sha short
         run: python CI/scripts/get_commit_sha_short.py
-      - name: Show commit sha short
-        run: echo $COMMIT_SHA_SHORT
       - name: Install dependencies (ubuntu only)
         if: matrix.build == 'linux'
         run: |
