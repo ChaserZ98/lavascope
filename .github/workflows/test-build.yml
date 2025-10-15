@@ -80,6 +80,12 @@ jobs:
             for (const artifact of artifactArray) {
               console.log(`Artifact: ${artifact}`);
             }
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{matrix.os}} artifacts
+          path: ${{steps.tauri-build.outputs.artifactPaths}}
+          if-no-files-found: warn
   test-android-build:
     if: ${{ !startsWith(github.head_ref, 'release/')}}
     permissions:
