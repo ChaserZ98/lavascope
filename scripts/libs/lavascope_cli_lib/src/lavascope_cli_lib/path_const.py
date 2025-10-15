@@ -1,6 +1,6 @@
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).parent.parent.parent
+ROOT_DIR = Path(__file__).parent.parent.parent.parent.parent.parent
 
 FRONTEND_DIR = ROOT_DIR.joinpath("frontend")
 APP_UI_DIR = FRONTEND_DIR.joinpath("apps", "ui")

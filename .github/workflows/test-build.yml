@@ -49,10 +49,15 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./backend -> target"
-      - name: Setup Python
-        uses: actions/setup-python@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.12"
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -109,10 +114,15 @@ jobs:
         uses: swatinem/rust-cache@v2
         with:
           workspaces: "./backend -> target"
-      - name: Setup Python
-        uses: actions/setup-python@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
         with:
-          python-version: "3.12"
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing

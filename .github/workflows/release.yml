@@ -89,6 +89,15 @@ jobs:
         with:
           workspaces: "./backend -> target"
           shared-key: "android-release"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Setup Android signing
@@ -185,6 +194,15 @@ jobs:
         with:
           workspaces: "./backend -> target"
           shared-key: "macos-release-${{ matrix.build }}"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -259,6 +277,15 @@ jobs:
         with:
           workspaces: "./backend -> target"
           shared-key: "linux-release"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app
@@ -332,6 +359,15 @@ jobs:
         with:
           workspaces: "./backend -> target"
           shared-key: "windows-release"
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
       - name: Install frontend dependencies
         run: bun install --frozen-lockfile
       - name: Build Tauri app

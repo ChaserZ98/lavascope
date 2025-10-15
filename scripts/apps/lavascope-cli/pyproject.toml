@@ -1,0 +1,13 @@
+[project]
+name = "lavascope-cli"
+version = "0.1.0"
+description = "Build scripts cli for Lavascope"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+package = true
+
+[project.scripts]
+lavascope-cli = "main:lavascope_cli"

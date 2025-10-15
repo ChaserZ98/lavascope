@@ -1,9 +1,9 @@
 import json
 import subprocess
+import tomllib
 from dataclasses import dataclass
 
-import tomllib
-from common.path_const import APP_UI_DIR, BACKEND_TAURI_DIR, ROOT_DIR
+from .path_const import APP_UI_DIR, BACKEND_TAURI_DIR, ROOT_DIR
 
 ui_manifest_path = APP_UI_DIR.joinpath("package.json")
 cargo_manifest_path = BACKEND_TAURI_DIR.joinpath("Cargo.toml")
@@ -35,8 +35,8 @@ def get_git_commit_hash() -> str:
 @dataclass
 class BuildInfo:
     ui_version: str = get_ui_version()
-    cargo_package_version: str = get_ui_version()
-    tauri_config_version: str = get_cargo_package_version()
+    cargo_package_version: str = get_cargo_package_version()
+    tauri_config_version: str = get_tauri_config_version()
     git_commit_hash: str = get_git_commit_hash()
 
     def dump(self):
@@ -51,14 +51,10 @@ class BuildInfo:
         if not path:
             path = self.default_path()
 
-        print(f"Saving build info to {path}")
         with open(path, "w") as f:
             json.dump(self.dump(), f, indent=4)
 
+        return path
+
     def default_path(self):
         return ROOT_DIR.joinpath("build-info.json")
-
-
-if __name__ == "__main__":
-    version_metadata = BuildInfo()
-    version_metadata.save_to_file()
