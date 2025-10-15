@@ -17,7 +17,7 @@ def artifact_list_move_rename():
         temp_dir = Path(os.getenv("RUNNER_TEMP", ""))
 
         target_path = temp_dir.joinpath(new_file_name)
-        print(f"Moving and renaming ${artifact_path} to ${target_path}")
+        print(f"Moving and renaming {artifact_path} to {target_path}")
         shutil.move(artifact_path, temp_dir.joinpath(new_file_name))
 
 

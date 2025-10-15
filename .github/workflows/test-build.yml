@@ -80,7 +80,7 @@ jobs:
           args: ${{ matrix.args }}
       - name: Show artifact list and move to temp directory
         env:
-          RELEASE_ACTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
+          RELEASE_ARTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
         run: python CI/scripts/artifact_list_move_rename.py
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
