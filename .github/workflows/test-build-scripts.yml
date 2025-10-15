@@ -31,6 +31,7 @@ jobs:
       - name: Run tests
         run: uv run pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=lavascope_cli_lib > pytest-coverage.txt
       - name: Pytest coverage comment
+        if: ${{ github.event_name == 'pull_request' }}
         uses: MishaKav/pytest-coverage-comment@v1
         with:
           pytest-coverage-path: ./pytest-coverage.txt
