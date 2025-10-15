@@ -6,6 +6,10 @@ on:
       - main
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test-desktop-build:
     if: ${{ !startsWith(github.head_ref, 'release/')}}
