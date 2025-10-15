@@ -1,0 +1,27 @@
+name: Test Build Scripts
+run-name: "Test Build Scripts: ${{ github.event_name == 'pull_request' && github.event.pull_request.title || github.event_name }}"
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          version: 0.9.2
+          python-version: 3.12
+          enable-cache: true
+          restore-cache: true
+          save-cache: true
+          prune-cache: true
+      - name: Install python dependencies
+        run: uv sync
+      - name: Run tests
+        run: uv run pytest
