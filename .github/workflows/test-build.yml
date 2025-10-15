@@ -70,7 +70,7 @@ jobs:
         with:
           tauriScript: bun run tauri
           args: ${{ matrix.args }}
-      - name: Show Actifact list and move to temp directory
+      - name: Show artifact list and move to temp directory
         env:
           RELEASE_ACTIFACTS: ${{steps.tauri-build.outputs.artifactPaths}}
         shell: python
@@ -78,11 +78,11 @@ jobs:
           import json
           import os
           from pathlib import Path
-          artifactArray = json.loads(process.env.RELEASE_ACTIFACTS)
+          artifactArray = json.loads(os.getenv('RELEASE_ACTIFACTS', '[]'))
           for artifact in artifactArray:
             print(artifact)
             file_name = Path(artifact).name
-            temp_dir = Path(process.env.RUNNER_TEMP)
+            temp_dir = Path(os.getenv('RUNNER_TEMP'))
             os.move(artifact, temp_dir.joinpath(file_name))
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
