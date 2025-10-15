@@ -5,7 +5,7 @@ from pathlib import Path
 
 
 def artifact_list_move_rename():
-    artifactArray = json.loads(os.getenv("RELEASE_ACTIFACTS", "[]"))
+    artifactArray = json.loads(os.getenv("RELEASE_ARTIFACTS", "[]"))
     for artifact_path in artifactArray:
         print(artifact_path)
 
