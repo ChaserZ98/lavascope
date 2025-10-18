@@ -2,6 +2,7 @@ import "@lavascope/tailwind";
 
 import { Spinner } from "@heroui/react";
 import { initializeI18n } from "@lavascope/i18n";
+import { initTheme } from "@lavascope/ui/store/theme";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { QueryClient } from "@tanstack/react-query";
@@ -43,6 +44,7 @@ const persister = createIDBPersister("reactQuery");
 
 function initReact() {
     const root = document.getElementById("root");
+    initTheme();
     if (!root) throw new Error("Root element not found");
 
     const reactRoot = ReactDOM.createRoot(root);

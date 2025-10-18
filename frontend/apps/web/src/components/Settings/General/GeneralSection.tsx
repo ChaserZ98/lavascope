@@ -1,3 +1,4 @@
+import { ThemeBlock } from "@lavascope/ui/components/lavascope/settings/theme-block";
 import { useLingui } from "@lingui/react/macro";
 
 import { Section, SectionBody } from "../Section";
@@ -11,6 +12,7 @@ export default function GeneralSection() {
         <Section header={t`General`}>
             <SectionBody>
                 <LanguageBlock />
+                <ThemeBlock />
                 <AutoStartBlock />
             </SectionBody>
         </Section>

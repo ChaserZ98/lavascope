@@ -10,10 +10,9 @@
         "supported-browsers": "echo \"export default $(browserslist-useragent-regexp --allowHigherVersions);\" > ./src/utils/supportedBrowsers.ts"
     },
     "dependencies": {
-        "@heroui/react": "catalog:heroui",
+        "@lavascope/ui": "workspace:*",
         "@lavascope/i18n": "workspace:*",
         "@lavascope/log": "workspace:*",
-        "@lavascope/tailwind": "workspace:*",
         "@lingui/core": "catalog:i18n",
         "@lingui/react": "catalog:i18n",
         "@mdi/js": "^7.4.47",
@@ -42,6 +41,7 @@
         "zod": "^3.24.2"
     },
     "devDependencies": {
+        "@lavascope/tailwind": "workspace:*",
         "@lingui/babel-plugin-lingui-macro": "catalog:i18n",
         "@lingui/cli": "catalog:i18n",
         "@lingui/vite-plugin": "catalog:i18n",
