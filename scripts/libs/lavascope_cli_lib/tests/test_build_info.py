@@ -53,7 +53,7 @@ def test_ui_path():
     assert ui_manifest_path.exists(), f"{ui_manifest_path} does not exist"
     assert ui_manifest_path.is_file(), f"{ui_manifest_path} is not a file"
     assert (
-        ui_manifest_path.parent.name == "ui"
+        ui_manifest_path.parent.name == "web"
         and ui_manifest_path.parent.parent.name == "apps"
         and ui_manifest_path.parent.parent.parent.name == "frontend"
     ), f"{ui_manifest_path} is not in the correct directory"
@@ -88,7 +88,7 @@ def test_cargo_package_version(mock_open):
 def test_get_ui_version(mock_open):
     mock_open.return_value.read.return_value = """\
         {
-            "name": "@lavascope/ui",
+            "name": "@lavascope/web",
             "version": "0.1.0"
         }
         """
