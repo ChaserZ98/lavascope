@@ -7,11 +7,13 @@
     "type": "module",
     "private": true,
     "dependencies": {
-        "@heroui/react": "catalog:heroui",
         "tailwind-scrollbar": "catalog:tailwindcss"
     },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
     "devDependencies": {
-        "typescript": "catalog:",
-        "tailwindcss": "catalog:tailwindcss"
+        "tailwindcss": "catalog:tailwindcss",
+        "tw-animate-css": "catalog:shadcn"
     }
 }
