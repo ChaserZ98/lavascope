@@ -1,4 +1,4 @@
-import { Version as IPVersion } from "@/store/ip";
+import { Version as IPVersion } from "@lavascope/store";
 
 import type { NewRuleState } from "../rule";
 

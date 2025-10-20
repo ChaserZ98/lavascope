@@ -1,9 +1,9 @@
 import { Textarea } from "@heroui/react";
+import { Version as IPVersion } from "@lavascope/store";
 import { useParams } from "@tanstack/react-router";
 import { useSetAtom } from "jotai";
 
 import { type NewRuleState, setNewRuleAtom, SourceType } from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
 
 export default function SourceAddressCell({
     isDisabled,

@@ -7,6 +7,7 @@ import {
     TableHeader,
     TableRow,
 } from "@heroui/react";
+import { Version as IPVersion } from "@lavascope/store";
 import { useLingui } from "@lingui/react/macro";
 import { useParams } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
@@ -22,7 +23,6 @@ import {
     SourceType,
     toProtocolDisplay,
 } from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
 
 import {
     AddButtonCell,

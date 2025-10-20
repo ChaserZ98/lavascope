@@ -1,7 +1,6 @@
+import { Version } from "@lavascope/store";
 import { produce } from "immer";
 import { atom } from "jotai";
-
-import { Version } from "@/store/ip";
 
 import {
     initialNewRuleIPv4,

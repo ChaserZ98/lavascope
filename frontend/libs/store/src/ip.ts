@@ -1,4 +1,4 @@
-import type { LavaScopeFetch } from "@lavascope/hook";
+import type { LavaScopeFetch } from "@lavascope/fetch";
 import logging from "@lavascope/log";
 import { get as idbGet, set as idbSet, update as idbUpdate } from "idb-keyval";
 import { produce } from "immer";

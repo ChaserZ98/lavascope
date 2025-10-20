@@ -1,5 +1,6 @@
+import { Version as IPVersion } from "@lavascope/store";
+
 import type { LoadBalancerId } from "@/lib/vultr/types";
-import { Version as IPVersion } from "@/store/ip";
 
 export enum Protocol {
     ICMP = "icmp",

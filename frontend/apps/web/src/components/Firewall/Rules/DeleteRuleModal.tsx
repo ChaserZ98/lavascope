@@ -6,12 +6,12 @@ import {
     ModalFooter,
     ModalHeader,
 } from "@heroui/react";
+import { Version as IPVersion } from "@lavascope/store";
 import { Trans } from "@lingui/react/macro";
 import { useCallback, useState } from "react";
 
 import { useDeleteRuleMutation } from "@/hooks/Firewall";
 import { type Rule, toProtocolDisplay } from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
 
 export default function DeleteRuleModal({
     isOpen,

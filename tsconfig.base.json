@@ -10,9 +10,8 @@
 
         // Bundler mode
         "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
         "verbatimModuleSyntax": true,
-        "noEmit": true,
+        "noEmit": false,
 
         // Best practices
         "strict": true,
@@ -20,6 +19,15 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedIndexedAccess": true,
         "noImplicitOverride": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "noImplicitReturns": true,
+        "resolveJsonModule": true,
+        "stripInternal": true,
 
         // Some stricter flags (disabled by default)
         "noUnusedLocals": false,

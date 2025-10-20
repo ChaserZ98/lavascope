@@ -1,13 +1,14 @@
-import {
-    Button,
-    Link as HeroUILink,
-    Navbar,
-    NavbarBrand,
-    NavbarContent,
-    NavbarItem,
-    Tooltip,
-} from "@heroui/react";
-import { Image } from "@heroui/react";
+// import {
+//     Button,
+//     Link as HeroUILink,
+//     Navbar,
+//     NavbarBrand,
+//     NavbarContent,
+//     NavbarItem,
+//     Tooltip,
+// } from "@heroui/react";
+// import { Image } from "@heroui/react";
+import { Screen, screenSizeAtom } from "@lavascope/store";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiCog, mdiIpOutline, mdiWall } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -15,7 +16,6 @@ import { Link, useLocation } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 
 import appIcon from "@/assets/img/app-icon.png";
-import { Screen, screenSizeAtom } from "@/store/screen";
 
 import ThemeSwitch from "./ThemeSwitch";
 

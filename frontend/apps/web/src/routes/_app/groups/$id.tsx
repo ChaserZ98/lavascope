@@ -1,5 +1,8 @@
-import { Button, Tab, Tabs, useDisclosure } from "@heroui/react";
+import { Tab, Tabs, useDisclosure } from "@heroui/react";
+import { Version as IPVersion } from "@lavascope/store";
+import { Screen, screenSizeAtom } from "@lavascope/store";
 import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
+import { Button, Spinner } from "@lavascope/ui/components/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
@@ -12,8 +15,6 @@ import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import { useRulesQuery } from "@/hooks/Firewall/rules";
 import { type Rule, rulesAtom, type RuleState } from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
-import { Screen, screenSizeAtom } from "@/store/screen";
 
 export const Route = createFileRoute("/_app/groups/$id")({
     component: Rules,
@@ -118,7 +119,14 @@ function Rules() {
                 />
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
-                <Button onPress={handleRefresh} isLoading={isLoading}>
+                <Button onClick={handleRefresh}>
+                    {
+                        isLoading ?
+                            (
+                                <Spinner className="h-4 w-4" />
+                            ) :
+                            null
+                    }
                     <Trans>Refresh</Trans>
                 </Button>
                 <ProxySwitch />

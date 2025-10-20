@@ -69,7 +69,9 @@
         },
         "jotai": {
             "jotai": "^2.15.0",
-            "jotai-devtools": "^0.13.0"
+            "jotai-devtools": "^0.13.0",
+            "immer": "^10.1.1",
+            "jotai-immer": "^0.4.1"
         },
         "tanstack": {
             "@tanstack/react-query": "^5.90.2",
@@ -102,6 +104,9 @@
             "@mdi/js": "^7.4.47",
             "@mdi/react": "^1.6.1",
             "@tabler/icons-react": "^3.35.0"
+        },
+        "zod": {
+            "zod": "^3.24.2"
         }
     },
     "private": true,

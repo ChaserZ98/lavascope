@@ -1,12 +1,4 @@
 import logging from "@lavascope/log";
-import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui";
-import { Trans, useLingui } from "@lingui/react/macro";
-import { mdiPlus, mdiTrashCan } from "@mdi/js";
-import Icon from "@mdi/react";
-import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-
 import {
     addIPEndpointAtom,
     deleteIPEndpointAtom,
@@ -15,7 +7,14 @@ import {
     resetIPEndpointsAtom,
     restoreIPEndpointsAtom,
     Version,
-} from "@/store/ip";
+} from "@lavascope/store";
+import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui";
+import { Trans, useLingui } from "@lingui/react/macro";
+import { mdiPlus, mdiTrashCan } from "@mdi/js";
+import Icon from "@mdi/react";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IPEndpointsTableProps {
     version: Version;

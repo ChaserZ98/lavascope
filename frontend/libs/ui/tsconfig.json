@@ -1,10 +1,10 @@
 {
     "extends": "../../../tsconfig.base.json",
     "compilerOptions": {
-        "rootDirs": ["."],
-        "baseUrl": ".",
         "lib": ["ES2022", "DOM", "DOM.iterable"],
         "jsx": "react-jsx",
+        "jsxImportSource": "react",
+        "baseUrl": ".",
         "paths": {
             "@/*": ["./src/*"]
         }

@@ -8,12 +8,17 @@
     "peerDependencies": {
         "jotai": "catalog:jotai",
         "jotai-immer": "catalog:jotai",
+        "immer": "catalog:jotai",
         "typescript": "catalog:"
     },
     "dependencies": {
+        "@lavascope/fetch": "workspace:*",
+        "@lavascope/log": "workspace:*",
         "@tauri-apps/plugin-os": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri",
-        "@tauri-apps/plugin-autostart": "catalog:tauri"
+        "@tauri-apps/plugin-autostart": "catalog:tauri",
+        "zod": "catalog:zod",
+        "idb-keyval": "^6.2.1"
     },
     "devDependencies": {}
 }

@@ -1,10 +1,10 @@
 import { Select, SelectItem } from "@heroui/react";
+import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@lavascope/store";
 import { useLingui } from "@lingui/react/macro";
 import { useParams } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 
 import { type NewRuleState, setNewRuleAtom, SourceType } from "@/store/firewall";
-import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@/store/ip";
 
 export function getSource(
     sourceType: SourceType,
