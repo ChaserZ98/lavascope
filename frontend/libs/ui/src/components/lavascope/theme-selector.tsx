@@ -1,7 +1,7 @@
 import { useAtom, useSetAtom } from "jotai";
 
-import { Label } from "@/components/ui/label";
 import {
+    Label,
     Select,
     SelectContent,
     SelectGroup,
@@ -10,7 +10,7 @@ import {
     SelectSeparator,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui";
 import { setThemeAtom, themeAtom } from "@/store/theme";
 
 const DEFAULT_THEMES = [

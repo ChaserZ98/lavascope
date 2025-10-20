@@ -19,7 +19,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar";
+} from "@/components/ui";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { t } = useLingui();
@@ -66,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             className="data-[slot=sidebar-menu-button]:!p-1.5"
                         >
                             <Link to="/">
-                                <img src="/favicon.ico" className="!size-5" />
+                                <img src="/favicon.ico" className="!size-8" />
                                 <span className="text-base font-semibold">LavaScope</span>
                             </Link>
                         </SidebarMenuButton>

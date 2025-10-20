@@ -2,7 +2,7 @@ import { IconBrightness } from "@tabler/icons-react";
 import { useAtom, useSetAtom } from "jotai";
 import * as React from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui";
 import { setThemeAtom, Theme, themeAtom } from "@/store/theme";
 
 export function ModeToggle() {
