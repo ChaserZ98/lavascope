@@ -1,10 +1,9 @@
 import { DevPanelSection } from "@lavascope/ui/components/lavascope/settings/dev-panel";
 import { GeneralSection } from "@lavascope/ui/components/lavascope/settings/general/general-section";
 import { ProxySection } from "@lavascope/ui/components/lavascope/settings/proxy";
+import { SecretsSection } from "@lavascope/ui/components/lavascope/settings/secrets";
 import { Card, CardContent, CardFooter } from "@lavascope/ui/components/ui/card";
 import { createFileRoute } from "@tanstack/react-router";
-
-import SecretsSection from "@/components/Settings/SecretsSection";
 
 export const Route = createFileRoute("/_app/settings")({
     component: Settings,

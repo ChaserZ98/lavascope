@@ -1,5 +1,6 @@
 export * from "./auto-start";
 export * from "./firewall";
+export * from "./ip";
 export * from "./language";
 export * from "./platform";
 export * from "./proxy";

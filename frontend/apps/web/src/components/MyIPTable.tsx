@@ -1,5 +1,15 @@
-import { type LavaScopeFetch, useClipboard, useFetch } from "@lavascope/hook";
+import type { LavaScopeFetch } from "@lavascope/fetch";
+import { useClipboard, useFetch } from "@lavascope/hook";
 import logging from "@lavascope/log";
+import {
+    ipv4Atom,
+    ipv4EndpointsAtom,
+    ipv6Atom,
+    ipv6EndpointsAtom,
+    refreshAPI,
+    setIPAtom,
+    Version as IPVersion,
+} from "@lavascope/store";
 import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
 import { Button } from "@lavascope/ui/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@lavascope/ui/components/ui/table";
@@ -10,16 +20,6 @@ import Icon from "@mdi/react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
-
-import {
-    ipv4Atom,
-    ipv4EndpointsAtom,
-    ipv6Atom,
-    ipv6EndpointsAtom,
-    refreshAPI,
-    setIPAtom,
-    Version as IPVersion,
-} from "@/store/ip";
 
 export default function MyIPTable() {
     const ipv4 = useAtomValue(ipv4Atom);

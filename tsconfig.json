@@ -1,4 +1,8 @@
 {
     "extends": "./tsconfig.base.json",
-    "include": ["*.ts", "*.js"]
+    "files": [],
+    "compilerOptions": {
+        "noEmit": true
+    },
+    "include": ["eslint.config.ts"]
 }

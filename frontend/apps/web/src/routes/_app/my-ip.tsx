@@ -1,8 +1,8 @@
+import { Version } from "@lavascope/store";
 import { createFileRoute } from "@tanstack/react-router";
 
 import IPEndpointsTable from "@/components/IPEndpointsTable";
 import MyIPTable from "@/components/MyIPTable";
-import { Version } from "@/store/ip";
 
 export const Route = createFileRoute("/_app/my-ip")({
     component: MyIP,

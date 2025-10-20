@@ -1,11 +1,12 @@
 import { apiTokenAtom } from "@lavascope/store";
-import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
 import { Input } from "@lavascope/ui/components/ui";
 import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom } from "jotai";
 
-export default function SecretsSection() {
+import { Section, SectionBlock, SectionBody } from "./section";
+
+function SecretsSection() {
     const [apiToken, setApiToken] = useAtom(apiTokenAtom);
 
     const { t } = useLingui();
@@ -31,3 +32,5 @@ export default function SecretsSection() {
         </Section>
     );
 }
+
+export { SecretsSection };

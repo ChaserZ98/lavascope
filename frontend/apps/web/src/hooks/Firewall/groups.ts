@@ -1,4 +1,5 @@
 import logging from "@lavascope/log";
+import { Version as IPVersion } from "@lavascope/store";
 import { useLingui } from "@lingui/react/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
@@ -22,7 +23,6 @@ import {
     setGroupIsDeletingAtom,
     setGroupIsUpdatingAtom,
 } from "@/store/firewall";
-import { Version as IPVersion } from "@/store/ip";
 
 export function useCreateGroupMutation() {
     const vultrAPI = useVultrAPI();

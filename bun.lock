@@ -22,6 +22,7 @@
       "name": "@lavascope/web",
       "version": "0.1.2",
       "dependencies": {
+        "@lavascope/fetch": "workspace:*",
         "@lavascope/hook": "workspace:*",
         "@lavascope/i18n": "workspace:*",
         "@lavascope/log": "workspace:*",
@@ -46,9 +47,9 @@
         "@tauri-apps/plugin-shell": "catalog:tauri",
         "framer-motion": "^12.23.22",
         "idb-keyval": "^6.2.1",
-        "immer": "^10.1.1",
+        "immer": "catalog:jotai",
         "jotai": "catalog:jotai",
-        "jotai-immer": "^0.4.1",
+        "jotai-immer": "catalog:jotai",
         "react": "catalog:react",
         "react-dom": "catalog:react",
         "react-toastify": "^10.0.5",
@@ -75,9 +76,24 @@
         "vite-tsconfig-paths": "catalog:vite",
       },
     },
+    "frontend/libs/fetch": {
+      "name": "@lavascope/fetch",
+      "dependencies": {
+        "@lavascope/store": "workspace:*",
+        "@tauri-apps/api": "catalog:tauri",
+        "@tauri-apps/plugin-http": "catalog:tauri",
+      },
+      "devDependencies": {
+        "@types/react": "catalog:react",
+      },
+      "peerDependencies": {
+        "typescript": "catalog:",
+      },
+    },
     "frontend/libs/hook": {
       "name": "@lavascope/hook",
       "dependencies": {
+        "@lavascope/fetch": "workspace:*",
         "@lavascope/store": "workspace:*",
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-autostart": "catalog:tauri",
@@ -125,11 +141,16 @@
     "frontend/libs/store": {
       "name": "@lavascope/store",
       "dependencies": {
+        "@lavascope/fetch": "workspace:*",
+        "@lavascope/log": "workspace:*",
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-autostart": "catalog:tauri",
         "@tauri-apps/plugin-os": "catalog:tauri",
+        "idb-keyval": "^6.2.1",
+        "zod": "catalog:zod",
       },
       "peerDependencies": {
+        "immer": "catalog:jotai",
         "jotai": "catalog:jotai",
         "jotai-immer": "catalog:jotai",
         "typescript": "catalog:",
@@ -181,8 +202,6 @@
         "class-variance-authority": "catalog:shadcn",
         "clsx": "catalog:shadcn",
         "lucide-react": "catalog:shadcn",
-        "react": "catalog:react",
-        "react-dom": "catalog:react",
         "tailwind-merge": "catalog:shadcn",
       },
       "devDependencies": {
@@ -191,9 +210,12 @@
         "@types/react": "catalog:react",
         "@types/react-dom": "catalog:react",
         "jotai-devtools": "catalog:jotai",
+        "vite": "catalog:vite",
       },
       "peerDependencies": {
         "jotai": "catalog:jotai",
+        "react": "catalog:react",
+        "react-dom": "catalog:react",
         "typescript": "catalog:",
         "vite": "catalog:vite",
       },
@@ -229,8 +251,10 @@
       "@tabler/icons-react": "^3.35.0",
     },
     "jotai": {
+      "immer": "^10.1.1",
       "jotai": "^2.15.0",
       "jotai-devtools": "^0.13.0",
+      "jotai-immer": "^0.4.1",
     },
     "react": {
       "@types/react": "^19.2.2",
@@ -287,6 +311,9 @@
       "@vitejs/plugin-react": "^5.0.4",
       "vite": "^7.1.9",
       "vite-tsconfig-paths": "^5.1.4",
+    },
+    "zod": {
+      "zod": "^3.24.2",
     },
   },
   "packages": {
@@ -593,6 +620,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
+
+    "@lavascope/fetch": ["@lavascope/fetch@workspace:frontend/libs/fetch"],
 
     "@lavascope/hook": ["@lavascope/hook@workspace:frontend/libs/hook"],
 
