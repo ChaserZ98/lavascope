@@ -1,10 +1,9 @@
-import { Switch } from "@heroui/react";
+import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
+import { Switch } from "@lavascope/ui/components/ui";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom } from "jotai";
 
 import { showDevPanelAtom } from "@/store/settings";
-
-import { Section, SectionBlock, SectionBody } from "./Section";
 
 export default function DevPanelSection() {
     const isDevMode = !import.meta.env.PROD;
@@ -17,17 +16,13 @@ export default function DevPanelSection() {
     return (
         <Section header={t`Dev Panel`}>
             <SectionBody>
-                <SectionBlock>
+                <SectionBlock className="flex flex-row justify-between">
+                    <h2 className="font-bold text-lg">
+                        Jotai
+                    </h2>
                     <Switch
-                        classNames={{
-                            base: "group flex flex-row-reverse items-center justify-between py-2 w-full max-w-none bg-content2 transition-colors hover:bg-content3",
-                            hiddenInput: "w-full start-0",
-                            thumb: "ring-inset ring-0 group-hover:ring-1 group-hover:ring-primary",
-                            wrapper: "bg-content3 group-hover:bg-content4 me-4",
-                            label: "ms-4 text-content2-foreground transition-[color] ease-in-out duration-250",
-                        }}
-                        isSelected={showDevPanel.jotai}
-                        onValueChange={(value) =>
+                        checked={showDevPanel.jotai}
+                        onCheckedChange={(value) =>
                             setShowDevPanel((state) => {
                                 state.jotai = value;
                             })}
@@ -35,17 +30,13 @@ export default function DevPanelSection() {
                         Jotai
                     </Switch>
                 </SectionBlock>
-                <SectionBlock>
+                <SectionBlock className="justify-between">
+                    <h2 className="font-bold text-lg">
+                        Tanstack Router
+                    </h2>
                     <Switch
-                        classNames={{
-                            base: "group flex flex-row-reverse items-center justify-between py-2 w-full max-w-none bg-content2 transition-colors hover:bg-content3",
-                            hiddenInput: "w-full start-0",
-                            thumb: "ring-inset ring-0 group-hover:ring-1 group-hover:ring-primary",
-                            wrapper: "me-4 bg-content3 group-hover:bg-content4",
-                            label: "ms-4 text-content2-foreground transition-[color] ease-in-out duration-250",
-                        }}
-                        isSelected={showDevPanel.tanStack}
-                        onValueChange={(value) =>
+                        checked={showDevPanel.tanStack}
+                        onCheckedChange={(value) =>
                             setShowDevPanel((state) => {
                                 state.tanStack = value;
                             })}

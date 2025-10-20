@@ -1,7 +1,7 @@
 import "@lavascope/tailwind";
 
-import { Spinner } from "@heroui/react";
 import { initializeI18n } from "@lavascope/i18n";
+import { Spinner } from "@lavascope/ui/components/ui/spinner";
 import { initTheme } from "@lavascope/ui/store/theme";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -25,7 +25,10 @@ const router = createRouter({
     routeTree,
     defaultPendingComponent: () => (
         <div className="w-full h-full flex flex-col items-center justify-center">
-            <Spinner label="Loading..." />
+            <div>
+                <Spinner className="w-10 h-10" />
+                <p className="text-center">Loading...</p>
+            </div>
         </div>
     ),
     defaultErrorComponent: ({ error, reset }) => (

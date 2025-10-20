@@ -1,15 +1,5 @@
-import {
-    Button,
-    Input,
-    Table,
-    TableBody,
-    TableCell,
-    TableColumn,
-    TableHeader,
-    TableRow,
-    Tooltip,
-} from "@heroui/react";
 import logging from "@lavascope/log";
+import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiPlus, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -125,105 +115,86 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                         <Trans>IPv6 Endpoints</Trans>
                 }
             </h2>
-            <Table
-                isKeyboardNavigationDisabled
-                aria-label={
-                    version === Version.V4 ?
-                        t`IPv4 Endpoints` :
-                        t`IPv6 Endpoints`
-                }
-                className="text-wrap"
-                classNames={{
-                    wrapper: "transition-colors-opacity",
-                    th: "transition-colors-opacity text-xs sm:text-sm",
-                    td: "transition-colors-opacity text-xs sm:text-sm",
-                }}
-            >
-                <TableHeader>
-                    <TableColumn align="center">
-                        <Trans>URL</Trans>
-                    </TableColumn>
-                    <TableColumn align="center">
-                        <Trans>Actions</Trans>
-                    </TableColumn>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>
-                            <Input
-                                placeholder={t`Enter endpoint URL here`}
-                                aria-label="Endpoint URL"
-                                variant="faded"
-                                value={newEndpoint}
-                                onChange={(e) => setNewEndpoint(e.target.value)}
-                                classNames={{
-                                    base: "min-w-[80px]",
-                                    inputWrapper:
-                                        "transition-colors-opacity !duration-250",
-                                    input: "text-foreground transition-colors-opacity",
-                                }}
-                            />
-                        </TableCell>
-                        <TableCell>
-                            <Tooltip
-                                delay={500}
-                                closeDelay={150}
-                                content={t`Add endpoint`}
-                                size="sm"
-                                color="primary"
-                            >
-                                <Button
-                                    isIconOnly
-                                    size="sm"
-                                    variant="light"
-                                    color="primary"
-                                    isDisabled={newEndpoint.length === 0}
-                                    className="text-default-400 transition-colors-opacity hover:text-primary-400"
-                                    onPress={() => onAdd(version, newEndpoint, endpoints)}
-                                >
-                                    <Icon path={mdiPlus} size={0.75} />
-                                </Button>
-                            </Tooltip>
-                        </TableCell>
-                    </TableRow>
-                    <>
-                        {endpoints.map((endpoint, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{endpoint}</TableCell>
-                                <TableCell>
-                                    <Tooltip
-                                        delay={500}
-                                        closeDelay={150}
-                                        content={t`Delete`}
-                                        size="sm"
-                                        color="danger"
-                                    >
-                                        <Button
-                                            isIconOnly
-                                            size="sm"
-                                            variant="light"
-                                            color="danger"
-                                            className="text-default-400 transition-colors-opacity hover:text-danger-400"
-                                            onPress={() =>
-                                                onDelete(version, endpoint)}
-                                        >
-                                            <Icon
-                                                path={mdiTrashCan}
-                                                size={0.75}
-                                            />
-                                        </Button>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </>
-                </TableBody>
-            </Table>
-            <div className="flex gap-4 justify-center items-center flex-wrap">
-                <Button
-                    onPress={() => onReset(version)}
-                    className="bg-default hover:bg-default-100"
+            <div className="overflow-hidden border-2 rounded-lg px-2 w-full">
+                <Table
+                    aria-label={
+                        version === Version.V4 ?
+                            t`IPv4 Endpoints` :
+                            t`IPv6 Endpoints`
+                    }
+                    className="text-wrap"
                 >
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead className="text-center">
+                                <Trans>URL</Trans>
+                            </TableHead>
+                            <TableHead className="text-center">
+                                <Trans>Actions</Trans>
+                            </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow>
+                            <TableCell>
+                                <Input
+                                    placeholder={t`Enter endpoint URL here`}
+                                    aria-label="Endpoint URL"
+                                    value={newEndpoint}
+                                    onChange={(e) => setNewEndpoint(e.target.value)}
+                                />
+                            </TableCell>
+                            <TableCell>
+                                <Tooltip delayDuration={500}>
+                                    <TooltipTrigger asChild>
+                                        <Button
+                                            size="sm"
+                                            variant="default"
+                                            color="primary"
+                                            disabled={newEndpoint.length === 0}
+                                            onClick={() => onAdd(version, newEndpoint, endpoints)}
+                                        >
+                                            <Icon path={mdiPlus} size={0.75} />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <Trans>Add endpoint</Trans>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TableCell>
+                        </TableRow>
+                        <>
+                            {endpoints.map((endpoint, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{endpoint}</TableCell>
+                                    <TableCell>
+                                        <Tooltip delayDuration={500}>
+                                            <TooltipTrigger asChild>
+                                                <Button
+                                                    size="sm"
+                                                    variant="destructive"
+                                                    color="danger"
+                                                    onClick={() => onDelete(version, endpoint)}
+                                                >
+                                                    <Icon
+                                                        path={mdiTrashCan}
+                                                        size={0.75}
+                                                    />
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <Trans>Delete</Trans>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </>
+                    </TableBody>
+                </Table>
+            </div>
+            <div className="flex gap-4 justify-center items-center flex-wrap">
+                <Button onClick={() => onReset(version)}>
                     <Trans>Reset</Trans>
                 </Button>
             </div>

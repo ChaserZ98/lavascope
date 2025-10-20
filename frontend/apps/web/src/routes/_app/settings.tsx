@@ -1,5 +1,4 @@
-import { Card, CardBody, CardFooter, CardHeader, Divider } from "@heroui/react";
-import { Trans } from "@lingui/react/macro";
+import { Card, CardContent, CardFooter } from "@lavascope/ui/components/ui/card";
 import { createFileRoute } from "@tanstack/react-router";
 
 import DevPanelSection from "@/components/Settings/DevPanelSection";
@@ -14,19 +13,20 @@ export const Route = createFileRoute("/_app/settings")({
 function Settings() {
     return (
         <div className="flex px-2 justify-center select-none">
-            <Card className="mt-2 w-full max-w-sm [transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity]">
-                <CardHeader className="flex justify-center text-foreground text-lg sm:text-2xl transition-colors-opacity">
+            <Card className="mt-2 w-full [transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity]">
+                {/* <CardHeader className="text-foreground text-lg sm:text-2xl">
                     <h1>
-                        <Trans>Settings</Trans>
+                        <Trans>General</Trans>
                     </h1>
-                </CardHeader>
-                <Divider />
-                <CardBody>
+                </CardHeader> */}
+                {/* <Separator /> */}
+                {/* <Divider /> */}
+                <CardContent className="space-y-4">
                     <GeneralSection />
                     <DevPanelSection />
                     <SecretsSection />
                     <ProxySection />
-                </CardBody>
+                </CardContent>
                 <CardFooter className="flex justify-end"></CardFooter>
             </Card>
         </div>

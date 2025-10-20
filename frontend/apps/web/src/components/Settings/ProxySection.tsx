@@ -1,18 +1,14 @@
-import { Input } from "@heroui/react";
+import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
+import { Input } from "@lavascope/ui/components/ui/input";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
 import { Platform, platformAtom } from "@/store/environment";
 import { proxyAddressAtom } from "@/store/proxy";
-import { screenSizeAtom } from "@/store/screen";
-
-import { Section, SectionBlock, SectionBody } from "./Section";
 
 export default function ProxySection() {
     const platform = useAtomValue(platformAtom);
     if (platform === Platform.WEB) return null;
-
-    const screenSize = useAtomValue(screenSizeAtom);
 
     const [proxyAddress, setProxyAddress] = useAtom(proxyAddressAtom);
 
@@ -25,7 +21,6 @@ export default function ProxySection() {
                     <Input
                         type="text"
                         label={t`Address`}
-                        size={screenSize === "sm" ? "sm" : "md"}
                         placeholder={t`Enter http proxy address`}
                         value={proxyAddress}
                         onChange={(e) => setProxyAddress(e.target.value)}
