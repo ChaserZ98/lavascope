@@ -1,13 +1,12 @@
-import { Select, SelectItem } from "@heroui/react";
 import { dynamicActivate, Locale, toLocalString } from "@lavascope/i18n";
-import { useLingui } from "@lingui/react/macro";
+import { SectionBlock } from "@lavascope/ui/components/lavascope/settings/section";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@lavascope/ui/components/ui/select";
+import { Trans } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback } from "react";
 
 import { Platform, platformAtom } from "@/store/environment";
 import { languageAtom } from "@/store/language";
-
-import { SectionBlock } from "../Section";
 
 export default function LanguageBlock() {
     const [language, setLanguage] = useAtom(languageAtom);
@@ -22,28 +21,31 @@ export default function LanguageBlock() {
         [platform]
     );
 
-    const { t } = useLingui();
-
     return (
-        <SectionBlock>
+        <SectionBlock className="flex-row justify-between">
+            <h2 className="font-bold text-lg">
+                <Trans>Language</Trans>
+            </h2>
             <Select
-                selectionMode="single"
-                disallowEmptySelection
-                label={t`language`}
-                selectedKeys={new Set([language])}
-                onSelectionChange={(keys) =>
-                    handleLanguageChange(keys.currentKey as Locale, platform)}
-                classNames={{
-                    trigger: "px-4 rounded-none transition-colors-opacity",
-                    value: "transition-colors-opacity",
-                    popoverContent: "transition-colors-opacity",
-                }}
+                value={language}
+                onValueChange={(v) => handleLanguageChange(v as Locale, platform)}
             >
-                {Object.values(Locale).map((locale) => (
-                    <SelectItem key={locale}>
-                        {toLocalString(locale)}
-                    </SelectItem>
-                ))}
+                <SelectTrigger
+                    id="language-select"
+                    // className="px-4 py-2 data-[size=default]:h-full w-full rounded-none border-none bg-transparent dark:bg-transparent"
+                    className="w-full max-w-[200px]"
+                >
+                    <p className="text-base">{toLocalString(language)}</p>
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectGroup>
+                        {Object.values(Locale).map((locale) => (
+                            <SelectItem key={locale} value={locale}>
+                                {toLocalString(locale)}
+                            </SelectItem>
+                        ))}
+                    </SelectGroup>
+                </SelectContent>
             </Select>
         </SectionBlock>
     );

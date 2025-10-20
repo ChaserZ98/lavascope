@@ -1,6 +1,5 @@
-import { Button } from "@heroui/react";
-import { Image } from "@heroui/react";
 import logging from "@lavascope/log";
+import { Button } from "@lavascope/ui/components/ui/button";
 import { type ErrorComponentProps } from "@tanstack/react-router";
 
 import appIcon from "@/assets/img/app-icon.png";
@@ -11,14 +10,14 @@ export default function AppError({ error, reset }: ErrorComponentProps) {
     logging.error(`${error}`);
     return (
         <div className="w-full h-full px-4 flex flex-col items-center justify-center gap-2">
-            <Image alt="LavaScope Logo" src={appIcon} className="w-20 h-20" />
+            <img alt="LavaScope Logo" src={appIcon} className="w-20 h-20" />
             <h1 className="text-2xl sm:text-4xl sm:font-bold text-danger">
                 {errorName}
             </h1>
             <p className="text-base text-center sm:text-lg text-foreground">
                 {message}
             </p>
-            <Button onPress={reset}>Retry</Button>
+            <Button onClick={reset}>Retry</Button>
         </div>
     );
 }

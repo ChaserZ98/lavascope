@@ -1,4 +1,6 @@
-import { Button, Textarea, Tooltip } from "@heroui/react";
+import { Button } from "@lavascope/ui/components/ui/button";
+import { Textarea } from "@lavascope/ui/components/ui/textarea";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui/tooltip";
 import { useLingui } from "@lingui/react/macro";
 import { mdiCheck, mdiRestart, mdiShieldEdit, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
@@ -42,37 +44,38 @@ function DescriptionCell({
     return (
         <div className="flex gap-1">
             <Textarea
-                isDisabled={isDisabled}
-                minRows={1}
-                variant="faded"
+                disabled={isDisabled}
+                // minRows={1}
+                // variant="faded"
                 placeholder={t`Enter description here`}
                 value={newDescription}
-                classNames={{
-                    base: "min-w-[120px] max-w-[150px] min-h-8",
-                    inputWrapper:
-                        "px-1.5 py-1 min-h-fit rounded-lg transition-colors-opacity !duration-250",
-                    input: "resize-none overflow-y-auto h-5 text-balance text-foreground !ease-[ease] !duration-250 !transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity] placeholder:transition-colors-opacity",
-                }}
+                // classNames={{
+                //     base: "min-w-[120px] max-w-[150px] min-h-8",
+                //     inputWrapper:
+                //         "px-1.5 py-1 min-h-fit rounded-lg transition-colors-opacity !duration-250",
+                //     input: "resize-none overflow-y-auto h-5 text-balance text-foreground !ease-[ease] !duration-250 !transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity] placeholder:transition-colors-opacity",
+                // }}
                 onChange={(e) => setNewDescription(groupId, e.target.value)}
             />
             <Tooltip
-                content={t`Reset`}
-                delay={1000}
-                closeDelay={100}
-                isDisabled={isDisabled || newDescription === description}
-                color="default"
+                disableHoverableContent={isDisabled || newDescription === description}
+                delayDuration={1000}
             >
-                <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    color="default"
-                    className={`text-default-400 transition-colors-opacity ${newDescription === description ? "opacity-0" : ""}`}
-                    onPress={handleReset}
-                    isDisabled={isDisabled || newDescription === description}
-                >
-                    <Icon path={mdiRestart} size={0.75} />
-                </Button>
+                <TooltipTrigger asChild>
+                    <Button
+                        size="sm"
+                        variant="default"
+                        color="default"
+                        className={`text-default-400 transition-colors-opacity ${newDescription === description ? "opacity-0" : ""}`}
+                        onClick={handleReset}
+                        disabled={isDisabled || newDescription === description}
+                    >
+                        <Icon path={mdiRestart} size={0.75} />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    {t`Reset`}
+                </TooltipContent>
             </Tooltip>
         </div>
     );
@@ -153,74 +156,74 @@ function ActionCell({
     return (
         <div className="flex w-24 items-center justify-end">
             <Tooltip
-                content={t`Confirm`}
-                delay={1000}
-                closeDelay={100}
-                isDisabled={isDisabled || newDescription === description}
-                color="success"
+                delayDuration={1000}
+                disableHoverableContent={isDisabled || newDescription === description}
             >
-                <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    color="success"
-                    className={`text-default-400 transition-colors-opacity hover:text-success-400 ${newDescription === description && !isUpdating ? "opacity-0" : ""}`}
-                    onPress={() => handleConfirm(groupId, newDescription)}
-                    isDisabled={
-                        isDisabled || newDescription === description
-                    }
-                    isLoading={isUpdating}
-                >
-                    <Icon
-                        path={mdiCheck}
-                        size={0.75}
-                        className="cursor-pointer"
-                    />
-                </Button>
+                <TooltipTrigger asChild>
+                    <Button
+                        size="sm"
+                        variant="default"
+                        color="success"
+                        className={`text-default-400 transition-colors-opacity hover:text-success-400 ${newDescription === description && !isUpdating ? "opacity-0" : ""}`}
+                        onClick={() => handleConfirm(groupId, newDescription)}
+                        disabled={isDisabled || newDescription === description}
+                    >
+                        <Icon
+                            path={mdiCheck}
+                            size={0.75}
+                            className="cursor-pointer"
+                        />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    {t`Confirm`}
+                </TooltipContent>
             </Tooltip>
             <Tooltip
-                content={t`Edit Rules`}
-                delay={1000}
-                closeDelay={100}
-                isDisabled={isDisabled}
-                color="primary"
+                delayDuration={1000}
+                disableHoverableContent={isDisabled}
             >
-                <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    color="primary"
-                    to={`/groups/${groupId}`}
-                    className="text-default-400 transition-colors-opacity hover:text-primary-400"
-                    as={Link}
-                    isDisabled={isDisabled}
-                >
-                    <Icon
-                        path={mdiShieldEdit}
-                        size={0.75}
-                        className="cursor-pointer"
-                    />
-                </Button>
+                <TooltipTrigger asChild>
+                    <Button
+                        size="sm"
+                        variant="default"
+                        color="primary"
+                        className="text-default-400 transition-colors-opacity hover:text-primary-400"
+                        disabled={isDisabled}
+                        asChild
+                    >
+                        <Link to="/groups/$id" params={{ id: groupId }}>
+                            <Icon
+                                path={mdiShieldEdit}
+                                size={0.75}
+                                className="cursor-pointer"
+                            />
+                        </Link>
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    {t`Edit Rules`}
+                </TooltipContent>
             </Tooltip>
             <Tooltip
-                content={t`Delete`}
-                delay={1000}
-                closeDelay={100}
-                isDisabled={isDisabled}
-                color="danger"
+                delayDuration={1000}
+                disableHoverableContent={isDisabled}
             >
-                <Button
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    color="danger"
-                    className="text-default-400 transition-colors-opacity hover:text-danger-400"
-                    onPress={onDelete}
-                    isDisabled={isDisabled}
-                    isLoading={isDeleting}
-                >
-                    <Icon path={mdiTrashCan} size={0.75} />
-                </Button>
+                <TooltipTrigger asChild>
+                    <Button
+                        size="sm"
+                        variant="default"
+                        color="danger"
+                        className="text-default-400 transition-colors-opacity hover:text-danger-400"
+                        onClick={onDelete}
+                        disabled={isDisabled}
+                    >
+                        <Icon path={mdiTrashCan} size={0.75} />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                    {t`Delete`}
+                </TooltipContent>
             </Tooltip>
         </div>
     );

@@ -1,4 +1,3 @@
-import { Image } from "@heroui/react";
 import logging from "@lavascope/log";
 import { useLingui } from "@lingui/react/macro";
 import {
@@ -242,7 +241,7 @@ export default function TauriTitleBar() {
                 </button>
             </div>
             <div className="mx-0 flex items-center justify-center gap-1 sm:mx-auto">
-                <Image
+                <img
                     alt="LavaScope Logo"
                     src={appIcon}
                     className="px-1 w-10"

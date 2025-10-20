@@ -4,6 +4,8 @@ import { atom } from "jotai";
 import { atomWithImmer } from "jotai-immer";
 import { z } from "zod";
 
+import type { lavascopeFetch } from "@/hooks/fetch";
+
 export enum Version {
     V4 = "v4",
     V6 = "v6",
@@ -34,7 +36,7 @@ export const setIPAtom = atom(
 export const refreshAPI = async (
     version: Version,
     endpoints: string[],
-    fetchClient: typeof fetch,
+    fetchClient: lavascopeFetch,
     timeout: number = 5000
 ) => {
     const exclusiveAbortController = new AbortController();

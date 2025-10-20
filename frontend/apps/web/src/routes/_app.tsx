@@ -7,6 +7,7 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 
+import TauriTitleBar from "@/components/TauriTitleBar";
 import {
     IncompatiblePlatformError,
     useFocusWindow,
@@ -54,18 +55,20 @@ function RouteComponent() {
 
     return (
         <div className="flex flex-col pb-[calc(4rem+env(safe-area-inset-bottom))] w-full h-screen md:pb-0">
+            <TauriTitleBar />
             <SidebarProvider
                 defaultOpen
                 style={
                     {
-                        "--sidebar-width": "calc(var(--spacing) * 72)"
+                        "--sidebar-width": "calc(var(--spacing) * 60)",
+                        "--header-height": "calc(var(--spacing) * 16)"
                     } as React.CSSProperties
                 }
             >
                 <AppSidebar variant="inset" />
                 <SidebarInset>
                     <SiteHeader />
-                    <div className="flex flex-1 flex-col">
+                    <div className="flex flex-1 flex-col gap-4 p-4">
                         <Outlet />
                     </div>
                 </SidebarInset>

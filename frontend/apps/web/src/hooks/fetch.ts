@@ -15,7 +15,9 @@ export class ProxyError extends Error {
     }
 }
 
-export default function useFetch() {
+export type lavascopeFetch = typeof fetch | typeof tauriFetch;
+
+export default function useFetch(): lavascopeFetch {
     const useProxy = useAtomValue(useProxyAtom);
     const proxyAddress = useAtomValue(proxyAddressAtom);
 

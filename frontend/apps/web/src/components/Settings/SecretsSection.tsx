@@ -1,15 +1,12 @@
-import { Input } from "@heroui/react";
+import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
+import { Input } from "@lavascope/ui/components/ui";
+import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react/macro";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 
 import { apiTokenAtom } from "@/store/firewall";
-import { screenSizeAtom } from "@/store/screen";
-
-import { Section, SectionBlock, SectionBody } from "./Section";
 
 export default function SecretsSection() {
-    const screenSize = useAtomValue(screenSizeAtom);
-
     const [apiToken, setApiToken] = useAtom(apiTokenAtom);
 
     const { t } = useLingui();
@@ -17,18 +14,18 @@ export default function SecretsSection() {
     return (
         <Section header={t`Secrets`}>
             <SectionBody>
-                <SectionBlock>
+                <SectionBlock className="justify-between">
+                    <h2 className="font-bold text-lg">
+                        <Trans>
+                            API Token
+                        </Trans>
+                    </h2>
                     <Input
                         type="password"
-                        label={t`API Token`}
-                        size={screenSize === "sm" ? "sm" : "md"}
                         placeholder={t`Enter token here`}
                         value={apiToken}
                         onChange={(e) => setApiToken(e.target.value)}
-                        classNames={{
-                            input: "!text-default-500 focus:!text-foreground transition-colors-opacity",
-                            inputWrapper: "px-4",
-                        }}
+                        className="w-full max-w-[200px]"
                     />
                 </SectionBlock>
             </SectionBody>
