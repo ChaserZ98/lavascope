@@ -1,4 +1,6 @@
+import { type LavaScopeFetch, useClipboard, useFetch } from "@lavascope/hook";
 import logging from "@lavascope/log";
+import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
 import { Button } from "@lavascope/ui/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@lavascope/ui/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui/tooltip";
@@ -9,8 +11,6 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
 
-import useClipboard from "@/hooks/clipboard";
-import useFetch, { type lavascopeFetch } from "@/hooks/fetch";
 import {
     ipv4Atom,
     ipv4EndpointsAtom,
@@ -20,8 +20,6 @@ import {
     setIPAtom,
     Version as IPVersion,
 } from "@/store/ip";
-
-import ProxySwitch from "./ProxySwitch";
 
 export default function MyIPTable() {
     const ipv4 = useAtomValue(ipv4Atom);
@@ -40,7 +38,7 @@ export default function MyIPTable() {
         async (
             version: IPVersion,
             endpoints: string[],
-            fetchClient: lavascopeFetch
+            fetchClient: LavaScopeFetch
         ) => {
             if (endpoints.length === 0) {
                 toast.error(

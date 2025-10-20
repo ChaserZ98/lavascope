@@ -13,7 +13,7 @@ import { getCurrentWindow, Window } from "@tauri-apps/api/window";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import tauriNotify from "@/hooks/notification";
+import { tauriNotify } from "@/lib/notification";
 
 const mainWindowLabel = "main";
 const tauriTitleBarHeight = "2rem";

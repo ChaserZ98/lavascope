@@ -1,10 +1,9 @@
+import { useFetch } from "@lavascope/hook";
+import { apiTokenAtom } from "@lavascope/store";
 import { useAtomValue } from "jotai";
 import { useDeferredValue, useEffect, useRef } from "react";
 
 import { VultrAPI } from "@/lib/vultr";
-import { apiTokenAtom } from "@/store/firewall";
-
-import useFetch from "./fetch";
 
 export function useVultrAPI() {
     const fetchClient = useFetch();

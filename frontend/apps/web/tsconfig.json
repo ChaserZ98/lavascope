@@ -1,6 +1,6 @@
 {
     "extends": "../../../tsconfig.base.json",
-    "include": ["src", "*.{ts,tsx,js,jsx}"],
+    "include": ["src", "*.ts"],
     "compilerOptions": {
         "lib": ["DOM", "DOM.Iterable", "ES2022"],
         "target": "ES2022",

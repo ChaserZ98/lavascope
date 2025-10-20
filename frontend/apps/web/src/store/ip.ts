@@ -1,10 +1,9 @@
+import type { LavaScopeFetch } from "@lavascope/hook";
 import logging from "@lavascope/log";
 import { get as idbGet, set as idbSet, update as idbUpdate } from "idb-keyval";
+import { produce } from "immer";
 import { atom } from "jotai";
-import { atomWithImmer } from "jotai-immer";
 import { z } from "zod";
-
-import type { lavascopeFetch } from "@/hooks/fetch";
 
 export enum Version {
     V4 = "v4",
@@ -36,7 +35,7 @@ export const setIPAtom = atom(
 export const refreshAPI = async (
     version: Version,
     endpoints: string[],
-    fetchClient: lavascopeFetch,
+    fetchClient: LavaScopeFetch,
     timeout: number = 5000
 ) => {
     const exclusiveAbortController = new AbortController();
@@ -91,7 +90,7 @@ type EndpointState = {
     endpoints: string[];
     shouldUpdateFromDB: boolean;
 };
-export const ipv4EndpointStateAtom = atomWithImmer<EndpointState>({
+export const ipv4EndpointStateAtom = atom<EndpointState>({
     endpoints: defaultIPv4Endpoints,
     shouldUpdateFromDB: true,
 });
@@ -99,7 +98,7 @@ export const ipv4EndpointsAtom = atom(
     (get) => get(ipv4EndpointStateAtom).endpoints
 );
 
-export const ipv6EndpointStateAtom = atomWithImmer<EndpointState>({
+export const ipv6EndpointStateAtom = atom<EndpointState>({
     endpoints: defaultIPv6Endpoints,
     shouldUpdateFromDB: true,
 });
@@ -122,17 +121,17 @@ export const restoreIPEndpointsAtom = atom(null, async (_get, set, version) => {
                 defaultIPv4Endpoints :
                 defaultIPv6Endpoints;
         await idbSet(`${version}-endpoints`, defaultEndpoints);
-        set(atom, (state) => {
-            state.endpoints = defaultEndpoints;
-            state.shouldUpdateFromDB = false;
-        });
+        set(atom, produce((draft) => {
+            draft.endpoints = defaultEndpoints;
+            draft.shouldUpdateFromDB = false;
+        }));
         return;
     }
     const dbEndpoints = dbEndpointsResult.data;
-    set(atom, (state) => {
-        state.endpoints = dbEndpoints;
-        state.shouldUpdateFromDB = false;
-    });
+    set(atom, produce((draft) => {
+        draft.endpoints = dbEndpoints;
+        draft.shouldUpdateFromDB = false;
+    }));
 });
 export const addIPEndpointAtom = atom(
     null,
@@ -149,9 +148,9 @@ export const addIPEndpointAtom = atom(
                 return newEndpoints;
             }
         );
-        set(atom, (state) => {
-            state.endpoints.push(endpoint);
-        });
+        set(atom, produce((draft) => {
+            draft.endpoints.push(endpoint);
+        }));
     }
 );
 export const deleteIPEndpointAtom = atom(
@@ -168,9 +167,9 @@ export const deleteIPEndpointAtom = atom(
                 return newEndpoints || [];
             }
         );
-        set(atom, (state) => {
-            state.endpoints = state.endpoints.filter((e) => e !== endpoint);
-        });
+        set(atom, produce((draft) => {
+            draft.endpoints = draft.endpoints.filter((e) => e !== endpoint);
+        }));
     }
 );
 export const resetIPEndpointsAtom = atom(
@@ -185,8 +184,8 @@ export const resetIPEndpointsAtom = atom(
                 defaultIPv4Endpoints :
                 defaultIPv6Endpoints;
         await idbSet(`${version}-endpoints`, endpoints);
-        set(atom, (state) => {
-            state.endpoints = endpoints;
-        });
+        set(atom, produce((draft) => {
+            draft.endpoints = endpoints;
+        }));
     }
 );

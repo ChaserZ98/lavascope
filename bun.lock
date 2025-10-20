@@ -22,6 +22,7 @@
       "name": "@lavascope/web",
       "version": "0.1.2",
       "dependencies": {
+        "@lavascope/hook": "workspace:*",
         "@lavascope/i18n": "workspace:*",
         "@lavascope/log": "workspace:*",
         "@lavascope/store": "workspace:*",
@@ -74,6 +75,25 @@
         "vite-tsconfig-paths": "catalog:vite",
       },
     },
+    "frontend/libs/hook": {
+      "name": "@lavascope/hook",
+      "dependencies": {
+        "@lavascope/store": "workspace:*",
+        "@tauri-apps/api": "catalog:tauri",
+        "@tauri-apps/plugin-autostart": "catalog:tauri",
+        "@tauri-apps/plugin-clipboard-manager": "catalog:tauri",
+        "@tauri-apps/plugin-http": "catalog:tauri",
+        "@tauri-apps/plugin-os": "catalog:tauri",
+        "jotai": "catalog:jotai",
+        "react": "catalog:react",
+      },
+      "devDependencies": {
+        "@types/react": "catalog:react",
+      },
+      "peerDependencies": {
+        "typescript": "catalog:",
+      },
+    },
     "frontend/libs/i18n": {
       "name": "@lavascope/i18n",
       "dependencies": {
@@ -86,6 +106,8 @@
       },
       "devDependencies": {
         "@lingui/cli": "catalog:i18n",
+      },
+      "peerDependencies": {
         "typescript": "catalog:",
       },
     },
@@ -95,7 +117,7 @@
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-log": "catalog:tauri",
       },
-      "devDependencies": {
+      "peerDependencies": {
         "typescript": "catalog:",
         "vite": "catalog:vite",
       },
@@ -107,12 +129,10 @@
         "@tauri-apps/plugin-autostart": "catalog:tauri",
         "@tauri-apps/plugin-os": "catalog:tauri",
       },
-      "devDependencies": {
-        "typescript": "catalog:",
-      },
       "peerDependencies": {
         "jotai": "catalog:jotai",
         "jotai-immer": "catalog:jotai",
+        "typescript": "catalog:",
       },
     },
     "frontend/libs/tailwind": {
@@ -132,6 +152,7 @@
     "frontend/libs/ui": {
       "name": "@lavascope/ui",
       "dependencies": {
+        "@lavascope/hook": "workspace:*",
         "@lavascope/i18n": "workspace:*",
         "@lavascope/log": "workspace:*",
         "@lavascope/store": "workspace:*",
@@ -165,13 +186,16 @@
         "tailwind-merge": "catalog:shadcn",
       },
       "devDependencies": {
+        "@tanstack/react-router-devtools": "catalog:tanstack",
         "@types/bun": "catalog:",
         "@types/react": "catalog:react",
         "@types/react-dom": "catalog:react",
-        "typescript": "catalog:",
+        "jotai-devtools": "catalog:jotai",
       },
       "peerDependencies": {
         "jotai": "catalog:jotai",
+        "typescript": "catalog:",
+        "vite": "catalog:vite",
       },
     },
   },
@@ -569,6 +593,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.5", "", {}, "sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
+
+    "@lavascope/hook": ["@lavascope/hook@workspace:frontend/libs/hook"],
 
     "@lavascope/i18n": ["@lavascope/i18n@workspace:frontend/libs/i18n"],
 

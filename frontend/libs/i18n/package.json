@@ -8,6 +8,9 @@
     "scripts": {
         "extract": "lingui extract --clean --overwrite"
     },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
     "dependencies": {
         "react": "catalog:react",
         "@lingui/core": "catalog:i18n",
@@ -17,7 +20,6 @@
         "@tauri-apps/api": "catalog:tauri"
     },
     "devDependencies": {
-        "typescript": "catalog:",
         "@lingui/cli": "catalog:i18n"
     }
 }

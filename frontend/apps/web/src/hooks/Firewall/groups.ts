@@ -120,8 +120,36 @@ export function useGroupsQuery() {
     useEffect(() => {
         const data = groupsQuery.data;
         if (!data) return;
-        setGroupsState((state) => {
-            // add new groups or update existing ones
+        // setGroupsState((state) => {
+        //     // add new groups or update existing ones
+        //     data.forEach((group) => {
+        //         const groupId = group.id;
+        //         if (!state[groupId]) {
+        //             state[groupId] = {
+        //                 group,
+        //                 newRule: {
+        //                     [IPVersion.V4]: initialNewRuleIPv4,
+        //                     [IPVersion.V6]: initialNewRuleIPv6,
+        //                 },
+        //                 newDescription: group.description,
+        //                 isUpdating: false,
+        //                 isDeleting: false,
+        //                 isCreating: false,
+        //             };
+        //         } else {
+        //             state[groupId].group = group;
+        //         }
+        //     });
+        //     // remove groups that are no longer in the data
+        //     Object.keys(state).forEach((key) => {
+        //         if (!data.find((group) => group.id === key)) {
+        //             // ignore groups that are being created, updated, or deleted since they will be handled by their respective mutations
+        //             if (state[key]?.isCreating || state[key]?.isUpdating || state[key]?.isDeleting) return;
+        //             delete state[key];
+        //         }
+        //     });
+        // });
+        setGroupsState(produce((state) => {
             data.forEach((group) => {
                 const groupId = group.id;
                 if (!state[groupId]) {
@@ -148,7 +176,7 @@ export function useGroupsQuery() {
                     delete state[key];
                 }
             });
-        });
+        }));
     }, [groupsQuery.data]);
 
     return groupsQuery;
@@ -170,23 +198,40 @@ export function useGroupQuery(groupId: string) {
 
     useEffect(() => {
         if (!groupQuery.data) return;
-        setGroupsState((state) => {
-            if (!state[groupId]) {
-                state[groupId] = {
-                    group: groupQuery.data,
-                    newRule: {
-                        [IPVersion.V4]: initialNewRuleIPv4,
-                        [IPVersion.V6]: initialNewRuleIPv6,
-                    },
-                    newDescription: groupQuery.data.description,
-                    isUpdating: false,
-                    isDeleting: false,
-                    isCreating: false,
-                };
-            } else {
+        // setGroupsState((state) => {
+        //     if (!state[groupId]) {
+        //         state[groupId] = {
+        //             group: groupQuery.data,
+        //             newRule: {
+        //                 [IPVersion.V4]: initialNewRuleIPv4,
+        //                 [IPVersion.V6]: initialNewRuleIPv6,
+        //             },
+        //             newDescription: groupQuery.data.description,
+        //             isUpdating: false,
+        //             isDeleting: false,
+        //             isCreating: false,
+        //         };
+        //     } else {
+        //         state[groupId].group = groupQuery.data;
+        //     }
+        // });
+        setGroupsState(produce((state) => {
+            if (state[groupId]) {
                 state[groupId].group = groupQuery.data;
+                return;
             }
-        });
+            state[groupId] = {
+                group: groupQuery.data,
+                newRule: {
+                    [IPVersion.V4]: initialNewRuleIPv4,
+                    [IPVersion.V6]: initialNewRuleIPv6,
+                },
+                newDescription: groupQuery.data.description,
+                isUpdating: false,
+                isDeleting: false,
+                isCreating: false,
+            };
+        }));
     }, [groupQuery.data]);
 
     return groupQuery;

@@ -8,7 +8,7 @@ type Clipboard = {
     readText: () => Promise<string>;
 };
 
-export default function useClipboard() {
+function useClipboard() {
     const platform = useAtomValue(platformAtom);
 
     const clipboard = useMemo<Clipboard>(() => {
@@ -40,3 +40,5 @@ export default function useClipboard() {
 
     return clipboard;
 }
+
+export { type Clipboard, useClipboard };

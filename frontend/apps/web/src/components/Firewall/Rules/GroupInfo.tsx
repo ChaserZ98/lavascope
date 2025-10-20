@@ -1,9 +1,9 @@
 import { Divider, Tooltip } from "@heroui/react";
+import { languageAtom } from "@lavascope/store";
 import { Plural, Trans } from "@lingui/react/macro";
 import { useAtomValue } from "jotai";
 
 import { useGroupQuery } from "@/hooks/Firewall";
-import { languageAtom } from "@/store/language";
 
 function RelativeTime({ date }: { date: string }) {
     const now = new Date();
