@@ -1,3 +1,4 @@
+import { proxyAddressAtom, useProxyAtom } from "@lavascope/store";
 import { isTauri } from "@tauri-apps/api/core";
 import {
     type ClientOptions,
@@ -6,8 +7,6 @@ import {
 import { useAtomValue } from "jotai";
 import { useMemo } from "react";
 
-import { proxyAddressAtom, useProxyAtom } from "@/store/proxy";
-
 export class ProxyError extends Error {
     constructor(message: string) {
         super(message);
@@ -15,9 +14,9 @@ export class ProxyError extends Error {
     }
 }
 
-export type lavascopeFetch = typeof fetch | typeof tauriFetch;
+export type LavaScopeFetch = typeof fetch | typeof tauriFetch;
 
-export default function useFetch(): lavascopeFetch {
+export function useFetch(): LavaScopeFetch {
     const useProxy = useAtomValue(useProxyAtom);
     const proxyAddress = useAtomValue(proxyAddressAtom);
 
@@ -30,9 +29,7 @@ export default function useFetch(): lavascopeFetch {
                 init: Parameters<typeof fetch>[1]
             ) => {
                 if (useProxy && proxyAddress === "")
-                    throw new ProxyError(
-                        "Proxy is enabled but address is empty"
-                    );
+                    throw new ProxyError("Proxy is enabled but address is empty");
 
                 return tauriFetch(input, {
                     ...clientOptions,
@@ -50,5 +47,6 @@ export default function useFetch(): lavascopeFetch {
                 undefined,
         });
     }, [useProxy, proxyAddress]);
+
     return fetchMethod;
 }

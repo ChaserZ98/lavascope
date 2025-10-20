@@ -7,14 +7,13 @@
     "private": true,
     "peerDependencies": {
         "jotai": "catalog:jotai",
-        "jotai-immer": "catalog:jotai"
+        "jotai-immer": "catalog:jotai",
+        "typescript": "catalog:"
     },
     "dependencies": {
         "@tauri-apps/plugin-os": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-autostart": "catalog:tauri"
     },
-    "devDependencies": {
-        "typescript": "catalog:"
-    }
+    "devDependencies": {}
 }

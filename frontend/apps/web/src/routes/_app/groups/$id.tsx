@@ -1,4 +1,5 @@
 import { Button, Tab, Tabs, useDisclosure } from "@heroui/react";
+import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
@@ -9,7 +10,6 @@ import { toast } from "react-toastify";
 import DeleteRuleModal from "@/components/Firewall/Rules/DeleteRuleModal";
 import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
-import ProxySwitch from "@/components/ProxySwitch";
 import { useRulesQuery } from "@/hooks/Firewall/rules";
 import { type Rule, rulesAtom, type RuleState } from "@/store/firewall";
 import { Version as IPVersion } from "@/store/ip";

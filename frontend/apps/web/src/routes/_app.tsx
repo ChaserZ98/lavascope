@@ -1,3 +1,8 @@
+import {
+    IncompatiblePlatformError,
+    useFocusWindow,
+    WindowNotFoundError,
+} from "@lavascope/hook";
 import { dynamicActivate } from "@lavascope/i18n";
 import logging from "@lavascope/log";
 import { addScreenSizeListener, languageAtom, Platform, platformAtom, screenSizeAtom } from "@lavascope/store";
@@ -9,11 +14,6 @@ import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 
-import {
-    IncompatiblePlatformError,
-    useFocusWindow,
-    WindowNotFoundError,
-} from "@/hooks/window";
 import checkCompatibility from "@/utils/compatibility";
 
 export const Route = createFileRoute("/_app")({

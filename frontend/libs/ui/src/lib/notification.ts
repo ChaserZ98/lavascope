@@ -7,7 +7,7 @@ import {
 
 type Content = string | { title: string; body: string };
 
-export default async function tauriNotify(content: Content) {
+async function tauriNotify(content: Content) {
     let permissionGranted = await isPermissionGranted();
     if (!permissionGranted) {
         logging.info(
@@ -26,3 +26,5 @@ export default async function tauriNotify(content: Content) {
         sendNotification(content);
     }
 }
+
+export { tauriNotify };

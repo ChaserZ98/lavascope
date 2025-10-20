@@ -139,7 +139,39 @@ export function useRulesQuery(groupId: string) {
 
     useEffect(() => {
         const data = rulesQuery.data || [];
-        setRules((state) => {
+        // setRules((state) => {
+        //     data.forEach((rule) => {
+        //         const ruleIdString = rule.id.toString();
+        //         if (!state[groupId]) {
+        //             state[groupId] = {
+        //                 [ruleIdString]: {
+        //                     rule: rule as Rule,
+        //                     isDeleting: false,
+        //                     isCreating: false,
+        //                 },
+        //             };
+        //             return;
+        //         }
+        //         if (!state[groupId][ruleIdString]) {
+        //             state[groupId][rule.id.toString()] = {
+        //                 rule: rule as Rule,
+        //                 isDeleting: false,
+        //                 isCreating: false,
+        //             };
+        //             return;
+        //         }
+        //         state[groupId][ruleIdString].rule = rule as Rule;
+        //     });
+        //     Object.keys(state[groupId] || {}).forEach((key) => {
+        //         if (!data.find((rule) => rule.id.toString() === key)) {
+        //             if (!state[groupId]) return;
+        //             if (!state[groupId][key]) return;
+        //             if (state[groupId][key].isDeleting || state[groupId][key].isCreating) return;
+        //             delete state[groupId][key];
+        //         }
+        //     });
+        // });
+        setRules(produce((state) => {
             data.forEach((rule) => {
                 const ruleIdString = rule.id.toString();
                 if (!state[groupId]) {
@@ -170,7 +202,7 @@ export function useRulesQuery(groupId: string) {
                     delete state[groupId][key];
                 }
             });
-        });
+        }));
     }, [rulesQuery.data]);
 
     return rulesQuery;

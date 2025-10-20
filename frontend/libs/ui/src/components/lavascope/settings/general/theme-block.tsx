@@ -4,7 +4,7 @@ import { useAtom, useSetAtom } from "jotai";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui";
 
-import { SectionBlock } from "./section";
+import { SectionBlock } from "../section";
 
 function ThemeBlock() {
     const [theme] = useAtom(themeAtom);

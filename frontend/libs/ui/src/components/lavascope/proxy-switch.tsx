@@ -1,11 +1,9 @@
-import { Platform, platformAtom } from "@lavascope/store";
+import { Platform, platformAtom, useProxyAtom } from "@lavascope/store";
 import { Label, Switch } from "@lavascope/ui/components/ui";
 import { Trans } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
-import { useProxyAtom } from "@/store/proxy";
-
-export default function ProxySwitch() {
+function ProxySwitch() {
     const platform = useAtomValue(platformAtom);
     if (platform === Platform.WEB) return null;
 
@@ -30,3 +28,5 @@ export default function ProxySwitch() {
 
     );
 }
+
+export { ProxySwitch };

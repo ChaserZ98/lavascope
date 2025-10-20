@@ -6,7 +6,6 @@
         "./components/*": "./src/components/*.tsx",
         "./components/ui": "./src/components/ui/index.ts",
         "./lib/*": "./src/lib/*.ts",
-        "./hooks/*": "./src/hooks/*.ts",
         "./store/*": "./src/store/*.ts",
         "./images/*": "./src/images/*"
     },
@@ -14,19 +13,23 @@
         "shadcn": "bunx --bun shadcn@latest"
     },
     "peerDependencies": {
-        "jotai": "catalog:jotai"
+        "jotai": "catalog:jotai",
+        "typescript": "catalog:",
+        "vite": "catalog:vite"
     },
     "devDependencies": {
         "@types/bun": "catalog:",
-        "typescript": "catalog:",
         "@types/react": "catalog:react",
-        "@types/react-dom": "catalog:react"
+        "@types/react-dom": "catalog:react",
+        "jotai-devtools": "catalog:jotai",
+        "@tanstack/react-router-devtools": "catalog:tanstack"
     },
     "dependencies": {
         "@lavascope/tailwind": "workspace:*",
         "@lavascope/log": "workspace:*",
         "@lavascope/store": "workspace:*",
         "@lavascope/i18n": "workspace:*",
+        "@lavascope/hook": "workspace:*",
         "react": "catalog:react",
         "react-dom": "catalog:react",
         "@radix-ui/react-avatar": "catalog:shadcn",
