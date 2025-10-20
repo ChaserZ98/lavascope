@@ -1,11 +1,11 @@
-import { Section, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
-import { ThemeBlock } from "@lavascope/ui/components/lavascope/settings/theme-block";
 import { useLingui } from "@lingui/react/macro";
 
-import AutoStartBlock from "./AutoStartBlock";
-import LanguageBlock from "./Language";
+import { AutoStartBlock } from "./auto-start-block";
+import { LanguageBlock } from "./language-block";
+import { Section, SectionBody } from "./section";
+import { ThemeBlock } from "./theme-block";
 
-export default function GeneralSection() {
+function GeneralSection() {
     const { t } = useLingui();
 
     return (
@@ -20,3 +20,5 @@ export default function GeneralSection() {
         </Section>
     );
 }
+
+export { GeneralSection };

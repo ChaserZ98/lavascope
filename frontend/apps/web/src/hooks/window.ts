@@ -1,8 +1,7 @@
+import { Platform, platformAtom } from "@lavascope/store";
 import { Window } from "@tauri-apps/api/window";
 import { useAtomValue } from "jotai";
 import { useCallback } from "react";
-
-import { Platform, platformAtom } from "@/store/environment";
 
 export class IncompatiblePlatformError extends Error {
     constructor() {

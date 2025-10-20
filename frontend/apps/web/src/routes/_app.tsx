@@ -1,21 +1,19 @@
 import { dynamicActivate } from "@lavascope/i18n";
 import logging from "@lavascope/log";
+import { addScreenSizeListener, languageAtom, Platform, platformAtom, screenSizeAtom } from "@lavascope/store";
 import { AppSidebar } from "@lavascope/ui/components/lavascope/app-sidebar";
 import { SiteHeader } from "@lavascope/ui/components/lavascope/site-header";
+import { TauriTitleBar } from "@lavascope/ui/components/lavascope/tauri-title-bar";
 import { SidebarInset, SidebarProvider } from "@lavascope/ui/components/ui/sidebar";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 
-import TauriTitleBar from "@/components/TauriTitleBar";
 import {
     IncompatiblePlatformError,
     useFocusWindow,
     WindowNotFoundError,
 } from "@/hooks/window";
-import { platformAtom } from "@/store/environment";
-import { languageAtom } from "@/store/language";
-import { addScreenSizeListener, screenSizeAtom } from "@/store/screen";
 import checkCompatibility from "@/utils/compatibility";
 
 export const Route = createFileRoute("/_app")({
@@ -30,6 +28,8 @@ function RouteComponent() {
     const language = useAtomValue(languageAtom);
 
     const focusWindow = useFocusWindow("main");
+
+    const tauriTitleBarHeight = platform === Platform.WINDOWS ? "calc(var(--spacing) * 8)" : "0rem";
 
     useEffect(() => {
         focusWindow()
@@ -54,14 +54,22 @@ function RouteComponent() {
     }, []);
 
     return (
-        <div className="flex flex-col pb-[calc(4rem+env(safe-area-inset-bottom))] w-full h-screen md:pb-0">
-            <TauriTitleBar />
+        <div
+            className="flex flex-col pb-[calc(4rem+env(safe-area-inset-bottom))] w-full h-screen select-none md:pb-0"
+        >
+            <TauriTitleBar style={
+                {
+                    "--tauri-title-bar-height": tauriTitleBarHeight
+                } as React.CSSProperties
+            }
+            />
             <SidebarProvider
                 defaultOpen
                 style={
                     {
                         "--sidebar-width": "calc(var(--spacing) * 60)",
-                        "--header-height": "calc(var(--spacing) * 16)"
+                        "--header-height": "calc(var(--spacing) * 16)",
+                        "--tauri-title-bar-height": tauriTitleBarHeight
                     } as React.CSSProperties
                 }
             >

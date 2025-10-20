@@ -1,8 +1,8 @@
+import { GeneralSection } from "@lavascope/ui/components/lavascope/settings/general-section";
 import { Card, CardContent, CardFooter } from "@lavascope/ui/components/ui/card";
 import { createFileRoute } from "@tanstack/react-router";
 
 import DevPanelSection from "@/components/Settings/DevPanelSection";
-import GeneralSection from "@/components/Settings/General/GeneralSection";
 import ProxySection from "@/components/Settings/ProxySection";
 import SecretsSection from "@/components/Settings/SecretsSection";
 

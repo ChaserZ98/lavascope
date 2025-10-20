@@ -1,14 +1,18 @@
 {
-    "name": "@lavascope/platform",
+    "name": "@lavascope/store",
     "exports": {
         ".": "./src/index.ts"
     },
     "type": "module",
     "private": true,
-    "dependencies": {
+    "peerDependencies": {
         "jotai": "catalog:jotai",
+        "jotai-immer": "catalog:jotai"
+    },
+    "dependencies": {
         "@tauri-apps/plugin-os": "catalog:tauri",
-        "@tauri-apps/api": "catalog:tauri"
+        "@tauri-apps/api": "catalog:tauri",
+        "@tauri-apps/plugin-autostart": "catalog:tauri"
     },
     "devDependencies": {
         "typescript": "catalog:"

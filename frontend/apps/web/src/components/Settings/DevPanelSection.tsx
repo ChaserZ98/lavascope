@@ -1,9 +1,8 @@
+import { showDevPanelAtom } from "@lavascope/store";
 import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
 import { Switch } from "@lavascope/ui/components/ui";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom } from "jotai";
-
-import { showDevPanelAtom } from "@/store/settings";
 
 export default function DevPanelSection() {
     const isDevMode = !import.meta.env.PROD;
