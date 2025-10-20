@@ -1,3 +1,4 @@
+import { setThemeAtom, themeAtom } from "@lavascope/store";
 import { useAtom, useSetAtom } from "jotai";
 
 import {
@@ -11,7 +12,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui";
-import { setThemeAtom, themeAtom } from "@/store/theme";
 
 const DEFAULT_THEMES = [
     {

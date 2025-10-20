@@ -12,7 +12,7 @@
         "react": "catalog:react",
         "@lingui/core": "catalog:i18n",
         "@lingui/react": "catalog:i18n",
-        "@lavascope/platform": "workspace:*",
+        "@lavascope/store": "workspace:*",
         "@lavascope/log": "workspace:*",
         "@tauri-apps/api": "catalog:tauri"
     },

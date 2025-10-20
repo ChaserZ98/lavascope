@@ -1,5 +1,10 @@
-import { Locale } from "@lavascope/i18n";
 import { atom } from "jotai";
+
+export enum Locale {
+    en = "en",
+    zh = "zh",
+    zh_hant = "zh-Hant",
+}
 
 function createInitialLanguage(): Locale {
     let cachedLanguage: string | null = localStorage.getItem("language");

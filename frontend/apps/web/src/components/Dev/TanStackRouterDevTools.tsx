@@ -1,7 +1,6 @@
+import { showDevPanelAtom } from "@lavascope/store";
 import { useAtomValue } from "jotai";
 import { lazy, Suspense } from "react";
-
-import { showDevPanelAtom } from "@/store/settings";
 
 export default function TanStackRouterDevtools() {
     const showDevPanel = useAtomValue(showDevPanelAtom);

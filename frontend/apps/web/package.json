@@ -13,6 +13,7 @@
         "@lavascope/ui": "workspace:*",
         "@lavascope/i18n": "workspace:*",
         "@lavascope/log": "workspace:*",
+        "@lavascope/store": "workspace:*",
         "@lingui/core": "catalog:i18n",
         "@lingui/react": "catalog:i18n",
         "@mdi/js": "^7.4.47",

@@ -1,9 +1,7 @@
 import logging from "@lavascope/log";
-import { Platform } from "@lavascope/platform";
+import { Locale, Platform } from "@lavascope/store";
 import { i18n } from "@lingui/core";
 import { invoke } from "@tauri-apps/api/core";
-
-import { Locale } from "./type";
 
 export function toLocalString(locale: Locale): string {
     switch (locale) {

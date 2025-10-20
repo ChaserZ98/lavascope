@@ -1,8 +1,8 @@
 import "@lavascope/tailwind";
 
 import { initializeI18n } from "@lavascope/i18n";
+import { initTheme } from "@lavascope/store";
 import { Spinner } from "@lavascope/ui/components/ui/spinner";
-import { initTheme } from "@lavascope/ui/store/theme";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
 import { QueryClient } from "@tanstack/react-query";

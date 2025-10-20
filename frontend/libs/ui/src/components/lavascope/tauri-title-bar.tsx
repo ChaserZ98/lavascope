@@ -1,4 +1,6 @@
 import logging from "@lavascope/log";
+import { Platform, platformAtom } from "@lavascope/store";
+import { Button } from "@lavascope/ui/components/ui";
 import { useLingui } from "@lingui/react/macro";
 import {
     mdiWindowClose,
@@ -11,13 +13,12 @@ import { getCurrentWindow, Window } from "@tauri-apps/api/window";
 import { useAtomValue } from "jotai";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import appIcon from "@/assets/img/app-icon.png";
 import tauriNotify from "@/hooks/notification";
-import { Platform, platformAtom } from "@/store/environment";
 
 const mainWindowLabel = "main";
+const tauriTitleBarHeight = "2rem";
 
-export default function TauriTitleBar() {
+function TauriTitleBar({ style }: React.ComponentProps<"div">) {
     const platform = useAtomValue(platformAtom);
 
     const mainWindowRef = useRef<Window | null>(null);
@@ -209,19 +210,25 @@ export default function TauriTitleBar() {
 
     return (
         <div
-            className="sticky flex w-full h-8 select-none z-50"
+            className="sticky flex w-full h-(--tauri-title-bar-height) select-none z-50 bg-sidebar"
+            style={
+                {
+                    "--tauri-title-bar-height": tauriTitleBarHeight,
+                    ...style
+                } as React.CSSProperties
+            }
             onMouseDown={onWindowDrag}
         >
             <div className="absolute flex items-center justify-center right-0 h-full">
-                <button
-                    className="text-default-400 h-full px-2 hover:bg-default-400 hover:text-default-foreground cursor-default transition-colors-opacity duration-75"
+                <Button
+                    className="h-full px-2 cursor-default bg-sidebar text-sidebar-foreground"
                     onMouseDown={(e) => e.stopPropagation()}
                     onMouseUp={onWindowMinimize}
                 >
                     <Icon path={mdiWindowMinimize} size={1} />
-                </button>
-                <button
-                    className="text-default-400 h-full px-2 hover:bg-default-400 hover:text-default-foreground cursor-default transition-colors-opacity duration-75"
+                </Button>
+                <Button
+                    className="h-full px-2 cursor-default bg-sidebar text-sidebar-foreground"
                     onMouseUp={onWindowMaximize}
                     onMouseDown={(e) => e.stopPropagation()}
                 >
@@ -231,25 +238,27 @@ export default function TauriTitleBar() {
                         }
                         size={1}
                     />
-                </button>
-                <button
-                    className="text-default-400 h-full px-2 hover:bg-danger hover:text-default-foreground cursor-default transition-colors-opacity duration-75"
+                </Button>
+                <Button
+                    className="h-full px-2 cursor-default bg-sidebar text-sidebar-foreground hover:bg-destructive hover:text-destructive-foreground"
                     onMouseUp={onWindowClose}
                     onMouseDown={(e) => e.stopPropagation()}
                 >
                     <Icon path={mdiWindowClose} size={1} />
-                </button>
+                </Button>
             </div>
             <div className="mx-0 flex items-center justify-center gap-1 sm:mx-auto">
                 <img
                     alt="LavaScope Logo"
-                    src={appIcon}
+                    src="/favicon.ico"
                     className="px-1 w-10"
                 />
-                <h1 className="hidden text-default-400 font-bold text-medium sm:block">
+                <h1 className="hidden text-sidebar-foreground font-bold text-medium sm:block">
                     LavaScope
                 </h1>
             </div>
         </div>
     );
 }
+
+export { TauriTitleBar };

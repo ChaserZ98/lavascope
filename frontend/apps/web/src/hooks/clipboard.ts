@@ -1,8 +1,7 @@
+import { Platform, platformAtom } from "@lavascope/store";
 import { readText, writeText } from "@tauri-apps/plugin-clipboard-manager";
 import { useAtomValue } from "jotai";
 import { useMemo } from "react";
-
-import { Platform, platformAtom } from "@/store/environment";
 
 type Clipboard = {
     writeText: (text: string) => Promise<void>;

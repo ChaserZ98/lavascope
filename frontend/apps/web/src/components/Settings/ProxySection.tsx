@@ -1,9 +1,10 @@
+import { Platform, platformAtom } from "@lavascope/store";
 import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
+import { Label } from "@lavascope/ui/components/ui";
 import { Input } from "@lavascope/ui/components/ui/input";
-import { useLingui } from "@lingui/react/macro";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 
-import { Platform, platformAtom } from "@/store/environment";
 import { proxyAddressAtom } from "@/store/proxy";
 
 export default function ProxySection() {
@@ -17,17 +18,22 @@ export default function ProxySection() {
     return (
         <Section header={t`Proxy`}>
             <SectionBody>
-                <SectionBlock>
+                <SectionBlock className="justify-between">
+                    <Label className="font-bold text-lg">
+                        <Trans>
+                            Address
+                        </Trans>
+                    </Label>
                     <Input
                         type="text"
-                        label={t`Address`}
                         placeholder={t`Enter http proxy address`}
                         value={proxyAddress}
                         onChange={(e) => setProxyAddress(e.target.value)}
-                        classNames={{
-                            input: "!text-default-500 focus:!text-foreground transition-colors-opacity",
-                            inputWrapper: "px-4",
-                        }}
+                        className="w-full max-w-[200px]"
+                        // classNames={{
+                        //     input: "!text-default-500 focus:!text-foreground transition-colors-opacity",
+                        //     inputWrapper: "px-4",
+                        // }}
                     />
                 </SectionBlock>
             </SectionBody>
