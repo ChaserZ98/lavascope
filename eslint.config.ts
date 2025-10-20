@@ -1,6 +1,7 @@
 import pluginJs from "@eslint/js";
 import stylistic from "@stylistic/eslint-plugin";
 import pluginQuery from "@tanstack/eslint-plugin-query";
+import { defineConfig } from "eslint/config";
 import pluginLingui from "eslint-plugin-lingui";
 import pluginReact from "eslint-plugin-react";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
@@ -8,16 +9,17 @@ import unusedImports from "eslint-plugin-unused-imports";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-/** @type {import('eslint').Linter.Config[]} */
-export default [
+export default defineConfig([
     {
         files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"],
+        languageOptions: {
+            globals: globals.browser
+        },
     },
-    { languageOptions: { globals: globals.browser } },
     pluginJs.configs.recommended,
-    ...tseslint.configs.recommended,
-    pluginReact.configs.flat.recommended,
-    pluginReact.configs.flat["jsx-runtime"],
+    tseslint.configs.recommended,
+    ...(pluginReact.configs.flat?.recommended ? [pluginReact.configs.flat.recommended] : []),
+    ...(pluginReact.configs.flat?.["jsx-runtime"] ? [pluginReact.configs.flat["jsx-runtime"]] : []),
     pluginLingui.configs["flat/recommended"],
     {
         settings: {
@@ -71,5 +73,13 @@ export default [
             "@stylistic/quote-props": ["off"],
             "@stylistic/jsx-one-expression-per-line": ["off"],
         }
+    },
+    {
+        ignores: [
+            "**/node_modules/**",
+            "**/dist/**",
+            "backend/**",
+            "**/.venv/**"
+        ],
     }
-];
+]);
