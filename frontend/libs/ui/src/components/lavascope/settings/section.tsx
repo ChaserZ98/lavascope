@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Separator } from "@/components/ui";
 import { cn } from "@/lib/utils";
 
 interface SectionProps extends React.PropsWithChildren {
@@ -11,18 +12,19 @@ interface SectionProps extends React.PropsWithChildren {
 }
 
 export const Section: React.FC<SectionProps> = (props) => {
-    const baseClassName =
-        props.classNames?.base || "flex flex-col max-w-[400px] w-full";
+    const baseClassName = cn("w-full", props.classNames?.base);
+    const headerClassName = cn("text-2xl", props.classNames?.header);
 
     return (
         <div className={baseClassName}>
             {props.header && (
                 <SectionHeader
-                    className={props.classNames?.header}
+                    className={headerClassName}
                     header={props.header}
                 />
             )}
             {props.children}
+            <Separator />
         </div>
     );
 };
@@ -45,7 +47,7 @@ export const SectionHeader: React.FC<SectionHeaderProps> = (props) => {
 };
 
 export const SectionBody: React.FC<React.ComponentProps<"div">> = (props) => {
-    const bodyClassName = props.className || "flex flex-col py-2";
+    const bodyClassName = cn("flex flex-col py-4 space-y-2", props.className);
     return (
         <div {...props} className={bodyClassName}>
             {props.children}
@@ -56,7 +58,7 @@ export const SectionBody: React.FC<React.ComponentProps<"div">> = (props) => {
 export const SectionBlock: React.FC<React.ComponentProps<"div">> = (props) => {
     const blockClassName =
         cn(
-            "flex flex-col overflow-hidden w-full border-b-1 border-default bg-default-100 first:rounded-t-large last:rounded-b-large last:border-b-0",
+            "flex overflow-hidden w-full",
             props.className,
         );
     return (

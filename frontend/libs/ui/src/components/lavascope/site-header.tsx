@@ -2,8 +2,7 @@ import { type MacroMessageDescriptor, msg } from "@lingui/core/macro";
 import { useLingui } from "@lingui/react/macro";
 import { useRouterState } from "@tanstack/react-router";
 
-import { Separator } from "@/components/ui/separator";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator, SidebarTrigger } from "@/components/ui";
 
 const titleDescriptor: Record<string, MacroMessageDescriptor> = {
     "groups": msg`Groups`,
