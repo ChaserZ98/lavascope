@@ -4,6 +4,7 @@
     "exports": {
         ".": "./src/index.ts",
         "./components/*": "./src/components/*.tsx",
+        "./components/ui": "./src/components/ui/index.ts",
         "./lib/*": "./src/lib/*.ts",
         "./hooks/*": "./src/hooks/*.ts",
         "./store/*": "./src/store/*.ts",
@@ -20,8 +21,8 @@
     },
     "dependencies": {
         "@lavascope/tailwind": "workspace:*",
-        "@lingui/react": "catalog:i18n",
         "@lingui/core": "catalog:i18n",
+        "@lingui/react": "catalog:i18n",
         "@radix-ui/react-avatar": "^1.1.10",
         "@radix-ui/react-dialog": "^1.1.15",
         "@radix-ui/react-dropdown-menu": "^2.1.16",
