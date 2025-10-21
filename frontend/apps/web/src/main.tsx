@@ -15,19 +15,13 @@ import AppError from "./AppError";
 import { routeTree } from "./routeTree.gen";
 import { createIDBPersister } from "./utils/persister";
 
-declare module "@tanstack/react-router" {
-    interface Register {
-        router: typeof router;
-    }
-}
-
 const router = createRouter({
     routeTree,
     defaultPendingComponent: () => (
         <div className="w-full h-full flex flex-col items-center justify-center">
-            <div>
+            <div className="flex items-center justify-center gap-2">
                 <Spinner className="w-10 h-10" />
-                <p className="text-center">Loading...</p>
+                <p>Loading...</p>
             </div>
         </div>
     ),

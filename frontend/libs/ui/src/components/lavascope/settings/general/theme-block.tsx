@@ -1,4 +1,4 @@
-import { setThemeAtom, Theme, themeAtom } from "@lavascope/store";
+import { setThemeWithAnimateAtom, Theme, themeAtom } from "@lavascope/store";
 import { Trans } from "@lingui/react/macro";
 import { useAtom, useSetAtom } from "jotai";
 
@@ -8,7 +8,7 @@ import { SectionBlock } from "../section";
 
 function ThemeBlock() {
     const [theme] = useAtom(themeAtom);
-    const setTheme = useSetAtom(setThemeAtom);
+    const setThemeWithAnimate = useSetAtom(setThemeWithAnimateAtom);
 
     return (
         <SectionBlock className="flex-row items-center justify-between gap-3">
@@ -22,7 +22,7 @@ function ThemeBlock() {
                 size="lg"
                 onValueChange={(value) => {
                     if (value === "") return;
-                    setTheme(value as Theme);
+                    setThemeWithAnimate(value as Theme, 500);
                 }}
                 className="w-full max-w-[200px]"
             >

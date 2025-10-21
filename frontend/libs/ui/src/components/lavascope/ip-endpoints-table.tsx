@@ -13,15 +13,67 @@ import { Trans, useLingui } from "@lingui/react/macro";
 import { mdiPlus, mdiTrashCan } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { type ChangeEventHandler, type ComponentProps, type KeyboardEventHandler, useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+
+function AddButton({ onClick, disabled }: ComponentProps<typeof Button>) {
+    return (
+        <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild className="cursor-pointer">
+                <Button
+                    size="sm"
+                    variant="default"
+                    color="primary"
+                    disabled={disabled}
+                    onClick={onClick}
+                >
+                    <Icon path={mdiPlus} size={0.75} />
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+                <Trans>Add endpoint</Trans>
+            </TooltipContent>
+        </Tooltip>
+    );
+}
+
+function DeleteButton({ onClick }: ComponentProps<typeof Button>) {
+    return (
+        <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild className="cursor-pointer">
+                <Button
+                    size="sm"
+                    variant="destructive"
+                    color="danger"
+                    onClick={onClick}
+                >
+                    <Icon
+                        path={mdiTrashCan}
+                        size={0.75}
+                    />
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+                <Trans>Delete</Trans>
+            </TooltipContent>
+        </Tooltip>
+    );
+}
+
+function validateURL(url: string): boolean {
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 interface IPEndpointsTableProps {
     version: Version;
 }
 
-export default function IPEndpointsTable(props: IPEndpointsTableProps) {
-    const { version } = props;
+function IPEndpointsTable({ version }: IPEndpointsTableProps) {
     const endpointState = useAtomValue(
         version === Version.V4 ? ipv4EndpointStateAtom : ipv6EndpointStateAtom
     );
@@ -43,39 +95,41 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
             logging.info(`Reset ${version} endpoints`);
         } catch (err) {
             logging.error(`Failed to reset ${version} endpoints: ${err}`);
-            const message =
-                err instanceof Error ? err.message : "unknown error";
-            toast.error(t`Failed to reset ${version} endpoints: ${message}`);
+            const message = err instanceof Error ? err.message : "Unknown error";
+            toast.error(() => <Trans>Failed to reset {version} endpoints</Trans>, { description: message });
         }
     }, []);
-    const onAdd = useCallback(
-        async (version: Version, endpoint: string, endpoints: string[]) => {
-            const value = endpoint.trim();
-            if (value === "") {
-                logging.warn(`Endpoint URL cannot be empty`);
-                toast.warn(t`Endpoint URL cannot be empty`);
-                return;
-            }
-            if (endpoints.includes(value)) {
-                logging.warn(`Endpoint URL already exists`);
-                toast.warn(t`Endpoint URL already exists`);
-                return;
-            }
-            try {
-                await addEndpoint(version, value);
-                setNewEndpoint("");
-                logging.info(`Added endpoint ${value} to ${version} endpoints`);
-            } catch (err) {
-                logging.error(
-                    `Failed to add ${value} to ${version} endpoints: ${err}`
-                );
-                const message =
-                    err instanceof Error ? err.message : "unknown error";
-                toast.error(t`Failed to add endpoint URL: ${message}`);
-            }
-        },
-        []
-    );
+
+    const onAdd = useCallback(async (version: Version, endpoint: string, endpoints: string[]) => {
+        const value = endpoint.trim();
+        if (value === "") {
+            logging.warn(`Endpoint URL cannot be empty`);
+            toast.warning(() => <Trans>Endpoint URL cannot be empty</Trans>);
+            return;
+        }
+        if (!validateURL(value)) {
+            logging.warn(`${value} is not a valid URL`);
+            toast.warning(() => <Trans>{value} is not a valid URL</Trans>);
+            return;
+        }
+        if (endpoints.includes(value)) {
+            logging.warn(`Endpoint URL already exists`);
+            toast.warning(() => <Trans>Endpoint URL already exists</Trans>);
+            return;
+        }
+        try {
+            await addEndpoint(version, value);
+            setNewEndpoint("");
+            logging.info(`Added endpoint ${value} to ${version} endpoints`);
+        } catch (err) {
+            logging.error(
+                `Failed to add ${value} to ${version} endpoints: ${err}`
+            );
+            const message = err instanceof Error ? err.message : "Unknown error";
+            toast.error(() => <Trans>Failed to add endpoint URL</Trans>, { description: message });
+        }
+    }, []);
+
     const onDelete = useCallback(async (version: Version, endpoint: string) => {
         logging.info(`Deleting ${version} endpoint ${endpoint}`);
         try {
@@ -85,22 +139,26 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
             logging.error(
                 `Failed to delete ${version} endpoint ${endpoint}: ${err}`
             );
-            const message =
-                err instanceof Error ? err.message : "unknown error";
-            toast.error(
-                t`Failed to delete the endpoint ${endpoint}: ${message}`
-            );
+            const message = err instanceof Error ? err.message : "Unknown error";
+            toast.error(() => <Trans>Failed to delete the endpoint {endpoint}</Trans>, { description: message });
         }
     }, []);
+
+    const handleNewEndpointInput = useCallback<ChangeEventHandler<HTMLInputElement>>((e) => {
+        setNewEndpoint(e.target.value);
+    }, []);
+
+    const handleNewEndpointInputSubmit = useCallback<KeyboardEventHandler<HTMLInputElement>>((e) => {
+        if (e.key !== "Enter") return;
+        onAdd(version, newEndpoint, endpoints);
+    }, [version, newEndpoint, endpoints]);
 
     useEffect(() => {
         if (shouldUpdateFromDB) {
             restoreEndpoints(version).catch((err: Error) => {
                 logging.error(`Failed to restore ${version} endpoints: ${err}`);
                 const message = err.message;
-                toast.error(
-                    t`Failed to restore ${version} endpoints: ${message}`
-                );
+                toast.error(() => <Trans>Failed to restore {version} endpoints</Trans>, { description: message });
             });
         }
     }, [shouldUpdateFromDB]);
@@ -140,26 +198,15 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                                     placeholder={t`Enter endpoint URL here`}
                                     aria-label="Endpoint URL"
                                     value={newEndpoint}
-                                    onChange={(e) => setNewEndpoint(e.target.value)}
+                                    onChange={handleNewEndpointInput}
+                                    onKeyDown={handleNewEndpointInputSubmit}
                                 />
                             </TableCell>
                             <TableCell>
-                                <Tooltip delayDuration={500}>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            size="sm"
-                                            variant="default"
-                                            color="primary"
-                                            disabled={newEndpoint.length === 0}
-                                            onClick={() => onAdd(version, newEndpoint, endpoints)}
-                                        >
-                                            <Icon path={mdiPlus} size={0.75} />
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <Trans>Add endpoint</Trans>
-                                    </TooltipContent>
-                                </Tooltip>
+                                <AddButton
+                                    onClick={() => onAdd(version, newEndpoint, endpoints)}
+                                    disabled={newEndpoint.length === 0}
+                                />
                             </TableCell>
                         </TableRow>
                         <>
@@ -167,24 +214,7 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                                 <TableRow key={index}>
                                     <TableCell>{endpoint}</TableCell>
                                     <TableCell>
-                                        <Tooltip delayDuration={500}>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    size="sm"
-                                                    variant="destructive"
-                                                    color="danger"
-                                                    onClick={() => onDelete(version, endpoint)}
-                                                >
-                                                    <Icon
-                                                        path={mdiTrashCan}
-                                                        size={0.75}
-                                                    />
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <Trans>Delete</Trans>
-                                            </TooltipContent>
-                                        </Tooltip>
+                                        <DeleteButton onClick={() => onDelete(version, endpoint)} />
                                     </TableCell>
                                 </TableRow>
                             ))}
@@ -193,10 +223,12 @@ export default function IPEndpointsTable(props: IPEndpointsTableProps) {
                 </Table>
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
-                <Button onClick={() => onReset(version)}>
+                <Button onClick={() => onReset(version)} className="cursor-pointer">
                     <Trans>Reset</Trans>
                 </Button>
             </div>
         </div>
     );
 }
+
+export { IPEndpointsTable };

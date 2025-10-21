@@ -18,8 +18,8 @@
         "@lavascope/fetch": "workspace:*",
         "@lingui/core": "catalog:i18n",
         "@lingui/react": "catalog:i18n",
-        "@mdi/js": "^7.4.47",
-        "@mdi/react": "^1.6.1",
+        "@mdi/js": "catalog:icon",
+        "@mdi/react": "catalog:icon",
         "@tailwindcss/vite": "catalog:tailwindcss",
         "@tanstack/react-query": "catalog:tanstack",
         "@tanstack/react-query-persist-client": "catalog:tanstack",
@@ -40,8 +40,7 @@
         "jotai-immer": "catalog:jotai",
         "react": "catalog:react",
         "react-dom": "catalog:react",
-        "react-toastify": "^10.0.5",
-        "zod": "^3.24.2"
+        "zod": "catalog:zod"
     },
     "devDependencies": {
         "@lavascope/tailwind": "workspace:*",

@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 import { useMemo } from "react";
 
 type Clipboard = {
-    writeText: (text: string) => Promise<void>;
+    writeText: typeof writeText | typeof navigator.clipboard.writeText;
     readText: () => Promise<string>;
 };
 
@@ -18,12 +18,14 @@ function useClipboard() {
                 readText,
             };
         }
+
         if (window.isSecureContext) {
             return {
-                writeText: navigator.clipboard.writeText,
-                readText: navigator.clipboard.readText,
+                writeText: async (text: string) => await navigator.clipboard.writeText(text),
+                readText: async () => await navigator.clipboard.readText(),
             };
         }
+
         return {
             writeText: async () => {
                 throw new Error(
