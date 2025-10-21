@@ -40,7 +40,8 @@
         "jotai-immer": "catalog:jotai",
         "react": "catalog:react",
         "react-dom": "catalog:react",
-        "zod": "catalog:zod"
+        "zod": "catalog:zod",
+        "sonner": "catalog:shadcn"
     },
     "devDependencies": {
         "@lavascope/tailwind": "workspace:*",

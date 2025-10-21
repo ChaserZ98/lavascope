@@ -1,6 +1,6 @@
 import logging from "@lavascope/log";
 import { Platform } from "@lavascope/store";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import supportedBrowsers from "./supportedBrowsers";
 

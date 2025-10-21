@@ -106,6 +106,7 @@
   --shadow-2xl: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
 }
 
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -159,8 +160,9 @@
   --shadow-2xl: var(--shadow-2xl);
 }
 
-::view-transition-old(root),
-::view-transition-new(root) { 
-    animation: none;
-    mix-blend-mode: normal;
-}
+@import "./theme/neutral.css";
+@import "./theme/starry-night.css";
+@import "./theme/stone.css";
+@import "./theme/zinc.css";
+@import "./theme/orange.css";
+@import "./theme/caffeine.css";

@@ -127,20 +127,19 @@ function TauriTitleBar({ style }: React.ComponentProps<"div">) {
         const addMainWindowOnCloseListener = async () => {
             const window = await Window.getByLabel(mainWindowLabel);
             mainWindowRef.current = window;
-            if (window) {
-                unlistenCloseRef.current = await window.onCloseRequested(
-                    async (event) => {
-                        event.preventDefault();
-                        await window.hide();
-                        if (isFirstClosed.current) {
-                            await tauriNotify(
-                                t`The application is still running in the background.`
-                            );
-                            isFirstClosed.current = false;
-                        }
+            if (!window) return;
+            unlistenCloseRef.current = await window.onCloseRequested(
+                async (event) => {
+                    event.preventDefault();
+                    await window.hide();
+                    if (isFirstClosed.current) {
+                        await tauriNotify(
+                            t`The application is still running in the background.`
+                        );
+                        isFirstClosed.current = false;
                     }
-                );
-            }
+                }
+            );
         };
         const addWindowResizeListener = async () => {
             const currentWindow = getCurrentWindow();

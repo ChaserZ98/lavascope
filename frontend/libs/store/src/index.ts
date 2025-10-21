@@ -1,4 +1,5 @@
 export * from "./auto-start";
+export * from "./color-scheme";
 export * from "./firewall";
 export * from "./ip";
 export * from "./language";

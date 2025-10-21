@@ -7,7 +7,8 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@import "./theme.css";
+@import "./theme-variables.css";
+@import "./view-transition.css";
 
 @layer base {
   * {
