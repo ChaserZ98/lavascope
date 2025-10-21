@@ -98,7 +98,8 @@
             "@radix-ui/react-switch": "^1.2.6",
             "@radix-ui/react-toggle": "^1.1.10",
             "@radix-ui/react-toggle-group": "^1.1.11",
-            "@radix-ui/react-tooltip": "^1.2.8"
+            "@radix-ui/react-tooltip": "^1.2.8",
+            "sonner": "^2.0.7"
         },
         "icon": {
             "@mdi/js": "^7.4.47",
@@ -106,7 +107,7 @@
             "@tabler/icons-react": "^3.35.0"
         },
         "zod": {
-            "zod": "^3.24.2"
+            "zod": "^4.1.12"
         }
     },
     "private": true,
@@ -122,7 +123,8 @@
         "preview": "bun run preview:web",
         "preview:web": "bun run --cwd frontend/apps/web preview",
         "tauri": "tauri",
-        "i18n:extract": "bun run --cwd frontend/libs/i18n extract"
+        "i18n:extract": "bun run --cwd frontend/libs/i18n extract",
+        "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
     },
     "type": "module",
     "workspaces": [
