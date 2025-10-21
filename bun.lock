@@ -52,6 +52,7 @@
         "jotai-immer": "catalog:jotai",
         "react": "catalog:react",
         "react-dom": "catalog:react",
+        "sonner": "catalog:shadcn",
         "zod": "catalog:zod",
       },
       "devDependencies": {
