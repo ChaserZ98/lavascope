@@ -9,7 +9,7 @@ lavascope-state = { path = "crates/lavascope-state" }
 lavascope-logging = { path = "crates/lavascope-logging" }
 
 tauri = "2.8.5"
-tauri-build = "2.4.1"
+tauri-build = "2.5.0"
 tauri-plugin-shell = "2.3.1"
 tauri-plugin-notification = "2.3.1"
 tauri-plugin-http = "2.5.2"
