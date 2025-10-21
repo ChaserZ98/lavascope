@@ -1,7 +1,7 @@
 import "@lavascope/tailwind";
 
 import { initializeI18n } from "@lavascope/i18n";
-import { initTheme } from "@lavascope/store";
+import { initColorScheme, initTheme } from "@lavascope/store";
 import { Spinner } from "@lavascope/ui/components/ui/spinner";
 import { i18n } from "@lingui/core";
 import { I18nProvider } from "@lingui/react";
@@ -42,6 +42,7 @@ const persister = createIDBPersister("reactQuery");
 function initReact() {
     const root = document.getElementById("root");
     initTheme();
+    initColorScheme();
     if (!root) throw new Error("Root element not found");
 
     const reactRoot = ReactDOM.createRoot(root);

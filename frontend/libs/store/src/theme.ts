@@ -1,69 +1,54 @@
 import { atom } from "jotai";
 
 export enum Theme {
-    LIGHT = "light",
-    DARK = "dark",
-    AUTO = "auto",
+    Caffeine = "caffeine",
+    Neutral = "neutral",
+    Orange = "orange",
+    StarryNight = "starry-night",
+    Stone = "stone",
+    Zinc = "zinc",
 }
 
+const STORAGE_KEY = "theme";
+
 export function initTheme(): Theme {
-    let cachedTheme: string | null = localStorage.getItem("theme");
+    let cachedTheme: string | null = localStorage.getItem(STORAGE_KEY);
+    console.log(cachedTheme);
     if (
         !cachedTheme ||
         !(Object.values(Theme) as string[]).includes(cachedTheme)
     ) {
-        localStorage.setItem("theme", Theme.AUTO);
-        cachedTheme = Theme.AUTO;
+        localStorage.setItem(STORAGE_KEY, Theme.StarryNight);
+        cachedTheme = Theme.StarryNight;
     }
 
     const root = window.document.documentElement;
-    root.classList.remove(Theme.DARK, Theme.LIGHT, Theme.AUTO);
-
-    if (cachedTheme === Theme.AUTO) {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? Theme.DARK : Theme.LIGHT;
-        root.classList.add(systemTheme);
-    } else {
-        root.classList.add(cachedTheme);
-    }
+    root.dataset.theme = cachedTheme;
 
     return cachedTheme as Theme;
 }
 
-export const themeAtom = atom(Theme.AUTO);
+export const themeAtom = atom(initTheme());
 
 export const setThemeAtom = atom(null, (_get, set, theme: Theme) => {
     set(themeAtom, theme);
-    localStorage.setItem("theme", theme);
+    localStorage.setItem(STORAGE_KEY, theme);
 
     const root = window.document.documentElement;
-    root.classList.remove(Theme.DARK, Theme.LIGHT, Theme.AUTO);
-    if (theme === Theme.AUTO) {
-        const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? Theme.DARK : Theme.LIGHT;
-        root.classList.add(systemTheme);
-        return;
-    }
-    root.classList.add(theme);
+    root.dataset.theme = theme;
 });
 
-export const setThemeWithAnimateAtom = atom(null, async (get, set, theme: Theme, duration: number = 300) => {
+export const setThemeWithAnimationAtom = atom(null, async (get, set, theme: Theme, duration: number = 300) => {
     const oldTheme = get(themeAtom);
 
     if (oldTheme === theme) return;
 
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? Theme.DARK : Theme.LIGHT;
-
     set(themeAtom, theme);
-    localStorage.setItem("theme", theme);
-
-    const oldDocTheme = oldTheme === Theme.AUTO ? systemTheme : oldTheme;
-    const newDocTheme = theme === Theme.AUTO ? systemTheme : theme;
-
-    if (oldDocTheme === newDocTheme) return;
+    localStorage.setItem(STORAGE_KEY, theme);
 
     await document.startViewTransition(() => {
         const root = window.document.documentElement;
-        root.classList.remove(Theme.DARK, Theme.LIGHT, Theme.AUTO);
-        root.classList.add(newDocTheme);
+        root.dataset.theme = theme;
     }).ready;
 
     const startPoint = { x: 0, y: 0 };

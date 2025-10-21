@@ -1,4 +1,4 @@
-import { setThemeAtom, themeAtom } from "@lavascope/store";
+import { colorSchemeAtom, setColorSchemeAtom } from "@lavascope/store";
 import { useAtom, useSetAtom } from "jotai";
 
 import {
@@ -51,8 +51,8 @@ const MONO_THEMES = [
 ];
 
 export function ThemeSelector() {
-    const [theme] = useAtom(themeAtom);
-    const setTheme = useSetAtom(setThemeAtom);
+    const [theme] = useAtom(colorSchemeAtom);
+    const setTheme = useSetAtom(setColorSchemeAtom);
 
     return (
         <div className="flex items-center gap-2">
