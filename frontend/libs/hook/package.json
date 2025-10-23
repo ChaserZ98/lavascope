@@ -5,9 +5,6 @@
     },
     "type": "module",
     "private": true,
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
     "dependencies": {
         "@lavascope/store": "workspace:*",
         "@lavascope/fetch": "workspace:*",
@@ -20,6 +17,8 @@
         "jotai": "catalog:jotai"
     },
     "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:",
         "@types/react": "catalog:react"
     }
 }

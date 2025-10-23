@@ -1,10 +1,11 @@
 import { dynamicActivate, toLocalString } from "@lavascope/i18n";
 import { languageAtom, Locale, Platform, platformAtom } from "@lavascope/store";
-import { SectionBlock } from "@lavascope/ui/components/lavascope/settings/section";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@lavascope/ui/components/ui";
 import { Trans } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
 import { useCallback } from "react";
+
+import { SectionBlock } from "#components/lavascope/settings/section";
 
 function LanguageBlock() {
     const [language, setLanguage] = useAtom(languageAtom);

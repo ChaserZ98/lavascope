@@ -1,4 +1,4 @@
-import { apiTokenAtom } from "@lavascope/store";
+import { VultrFirewall } from "@lavascope/store/firewlall";
 import { Input } from "@lavascope/ui/components/ui";
 import { Trans } from "@lingui/react/macro";
 import { useLingui } from "@lingui/react/macro";
@@ -7,7 +7,7 @@ import { useAtom } from "jotai";
 import { Section, SectionBlock, SectionBody } from "./section";
 
 function SecretsSection() {
-    const [apiToken, setApiToken] = useAtom(apiTokenAtom);
+    const [apiToken, setApiToken] = useAtom(VultrFirewall.apiTokenAtom);
 
     const { t } = useLingui();
 

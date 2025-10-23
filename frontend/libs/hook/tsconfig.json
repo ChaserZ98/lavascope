@@ -1,11 +1,7 @@
 {
-    "extends": "../../../tsconfig.base.json",
+    "extends": "@lavascope/ts-config/base.json",
     "compilerOptions": {
-        "baseUrl": ".",
-        "lib": ["ES2022", "DOM", "DOM.iterable"],
-        "paths": {
-            "@/*": ["./src/*"]
-        }
+        "lib": ["ES2022", "DOM", "DOM.iterable"]
     },
     "include": ["src"]
 }

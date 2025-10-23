@@ -8,7 +8,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui";
+} from "#components/ui";
 
 export type NavSecondaryItem = {
     title: string;

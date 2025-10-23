@@ -44,6 +44,7 @@
         "sonner": "catalog:shadcn"
     },
     "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
         "@lavascope/tailwind": "workspace:*",
         "@lingui/babel-plugin-lingui-macro": "catalog:i18n",
         "@lingui/cli": "catalog:i18n",

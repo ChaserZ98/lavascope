@@ -4,9 +4,9 @@ import {
     deleteIPEndpointAtom,
     ipv4EndpointStateAtom,
     ipv6EndpointStateAtom,
+    IPVersion,
     resetIPEndpointsAtom,
     restoreIPEndpointsAtom,
-    Version,
 } from "@lavascope/store";
 import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -70,12 +70,12 @@ function validateURL(url: string): boolean {
 }
 
 interface IPEndpointsTableProps {
-    version: Version;
+    version: IPVersion;
 }
 
 function IPEndpointsTable({ version }: IPEndpointsTableProps) {
     const endpointState = useAtomValue(
-        version === Version.V4 ? ipv4EndpointStateAtom : ipv6EndpointStateAtom
+        version === IPVersion.V4 ? ipv4EndpointStateAtom : ipv6EndpointStateAtom
     );
     const endpoints = endpointState.endpoints;
     const shouldUpdateFromDB = endpointState.shouldUpdateFromDB;
@@ -89,7 +89,7 @@ function IPEndpointsTable({ version }: IPEndpointsTableProps) {
 
     const { t } = useLingui();
 
-    const onReset = useCallback(async (version: Version) => {
+    const onReset = useCallback(async (version: IPVersion) => {
         try {
             await resetEndpoints(version);
             logging.info(`Reset ${version} endpoints`);
@@ -100,7 +100,7 @@ function IPEndpointsTable({ version }: IPEndpointsTableProps) {
         }
     }, []);
 
-    const onAdd = useCallback(async (version: Version, endpoint: string, endpoints: string[]) => {
+    const onAdd = useCallback(async (version: IPVersion, endpoint: string, endpoints: string[]) => {
         const value = endpoint.trim();
         if (value === "") {
             logging.warn(`Endpoint URL cannot be empty`);
@@ -130,7 +130,7 @@ function IPEndpointsTable({ version }: IPEndpointsTableProps) {
         }
     }, []);
 
-    const onDelete = useCallback(async (version: Version, endpoint: string) => {
+    const onDelete = useCallback(async (version: IPVersion, endpoint: string) => {
         logging.info(`Deleting ${version} endpoint ${endpoint}`);
         try {
             await deleteEndpoints(version, endpoint);
@@ -167,7 +167,7 @@ function IPEndpointsTable({ version }: IPEndpointsTableProps) {
         <div className="flex flex-col px-8 py-4 gap-4 items-center select-none">
             <h2 className="text-lg font-bold text-foreground transition-colors-opacity sm:text-2xl">
                 {
-                    version === Version.V4 ?
+                    version === IPVersion.V4 ?
                         <Trans>IPv4 Endpoints</Trans> :
                         <Trans>IPv6 Endpoints</Trans>
                 }
@@ -175,7 +175,7 @@ function IPEndpointsTable({ version }: IPEndpointsTableProps) {
             <div className="overflow-hidden border-2 rounded-lg px-2 w-full">
                 <Table
                     aria-label={
-                        version === Version.V4 ?
+                        version === IPVersion.V4 ?
                             t`IPv4 Endpoints` :
                             t`IPv6 Endpoints`
                     }

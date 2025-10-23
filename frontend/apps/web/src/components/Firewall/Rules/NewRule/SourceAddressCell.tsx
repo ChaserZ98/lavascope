@@ -1,5 +1,5 @@
 import { Textarea } from "@heroui/react";
-import { Version as IPVersion } from "@lavascope/store";
+import { IPVersion } from "@lavascope/store";
 import { useParams } from "@tanstack/react-router";
 import { useSetAtom } from "jotai";
 

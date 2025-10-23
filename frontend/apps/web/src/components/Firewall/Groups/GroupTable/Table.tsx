@@ -8,15 +8,15 @@ import {
     TableRow,
     useDisclosure,
 } from "@heroui/react";
+import { VultrFirewall } from "@lavascope/store/firewlall";
 import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useAtomValue } from "jotai";
 import { useCallback, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import { useGroupsQuery } from "@/hooks/Firewall";
 import type { IFirewallGroup } from "@/lib/vultr/types";
-import { groupsStateAtom } from "@/store/firewall";
 
 import Group from "../Group";
 import { CreateGroupModal } from "../Modal";
@@ -27,7 +27,7 @@ import TablePagination from "./Pagination";
 export default function GroupTable() {
     const { t } = useLingui();
 
-    const groupsState = useAtomValue(groupsStateAtom);
+    const groupsState = useAtomValue(VultrFirewall.groupsStateAtom);
 
     const { refetch } = useGroupsQuery();
 

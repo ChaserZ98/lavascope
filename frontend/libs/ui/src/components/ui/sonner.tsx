@@ -1,4 +1,4 @@
-import { colorSchemeAtom, Theme } from "@lavascope/store";
+import { ColorScheme, colorSchemeAtom } from "@lavascope/store";
 import { useAtomValue } from "jotai";
 import {
     CircleCheckIcon,
@@ -10,9 +10,9 @@ import {
 import { Toaster as Sonner, type ToasterProps } from "sonner";
 
 const Toaster = ({ ...props }: ToasterProps) => {
-    const theme = useAtomValue(colorSchemeAtom);
+    const colorScheme = useAtomValue(colorSchemeAtom);
 
-    const sonnerTheme = theme === Theme.AUTO ? "system" : theme;
+    const sonnerTheme = colorScheme === ColorScheme.AUTO ? "system" : colorScheme;
 
     return (
         <Sonner

@@ -19,7 +19,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from "@/components/ui";
+} from "#components/ui";
 
 export function NavDocuments({
     items,

@@ -9,11 +9,10 @@
     "dependencies": {
         "tailwind-scrollbar": "catalog:tailwindcss"
     },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
     "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
         "tailwindcss": "catalog:tailwindcss",
-        "tw-animate-css": "catalog:shadcn"
+        "tw-animate-css": "catalog:shadcn",
+        "typescript": "catalog:"
     }
 }

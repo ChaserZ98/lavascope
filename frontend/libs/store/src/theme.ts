@@ -13,7 +13,6 @@ const STORAGE_KEY = "theme";
 
 export function initTheme(): Theme {
     let cachedTheme: string | null = localStorage.getItem(STORAGE_KEY);
-    console.log(cachedTheme);
     if (
         !cachedTheme ||
         !(Object.values(Theme) as string[]).includes(cachedTheme)
@@ -23,7 +22,7 @@ export function initTheme(): Theme {
     }
 
     const root = window.document.documentElement;
-    root.dataset.theme = cachedTheme;
+    root.dataset["theme"] = cachedTheme;
 
     return cachedTheme as Theme;
 }
@@ -35,7 +34,7 @@ export const setThemeAtom = atom(null, (_get, set, theme: Theme) => {
     localStorage.setItem(STORAGE_KEY, theme);
 
     const root = window.document.documentElement;
-    root.dataset.theme = theme;
+    root.dataset["theme"] = theme;
 });
 
 export const setThemeWithAnimationAtom = atom(null, async (get, set, theme: Theme, duration: number = 300) => {
@@ -48,7 +47,7 @@ export const setThemeWithAnimationAtom = atom(null, async (get, set, theme: Them
 
     await document.startViewTransition(() => {
         const root = window.document.documentElement;
-        root.dataset.theme = theme;
+        root.dataset["theme"] = theme;
     }).ready;
 
     const startPoint = { x: 0, y: 0 };

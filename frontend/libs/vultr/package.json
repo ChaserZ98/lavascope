@@ -1,0 +1,12 @@
+{
+    "name": "@lavascope/vultr",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "peerDependencies": {
+        "typescript": "catalog:"
+    },
+    "dependencies": {},
+    "devDependencies": {}
+}

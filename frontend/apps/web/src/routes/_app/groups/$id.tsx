@@ -1,6 +1,7 @@
 import { Tab, Tabs, useDisclosure } from "@heroui/react";
-import { Version as IPVersion } from "@lavascope/store";
+import { IPVersion } from "@lavascope/store";
 import { Screen, screenSizeAtom } from "@lavascope/store";
+import { VultrFirewall } from "@lavascope/store/firewlall";
 import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
 import { Button, Spinner } from "@lavascope/ui/components/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
@@ -8,13 +9,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { useCallback, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import DeleteRuleModal from "@/components/Firewall/Rules/DeleteRuleModal";
 import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
 import RulesTable from "@/components/Firewall/Rules/RulesTable";
 import { useRulesQuery } from "@/hooks/Firewall/rules";
-import { type Rule, rulesAtom, type RuleState } from "@/store/firewall";
 
 export const Route = createFileRoute("/_app/groups/$id")({
     component: Rules,
@@ -32,22 +32,22 @@ function Rules() {
     const screenSize = useAtomValue(screenSizeAtom);
     const rulesState = useAtomValue(
         selectAtom(
-            rulesAtom,
+            VultrFirewall.rulesAtom,
             useCallback((state) => state[groupId] || {}, [groupId])
         )
     );
 
-    const [selectedRule, setSelectedRule] = useState<Rule | null>(null);
+    const [selectedRule, setSelectedRule] = useState<VultrFirewall.Rule | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     // const rulesIsLoading = rulesQuery.isFetching;
     const ipv4Rules = Object.values(rulesState).filter(
-        (state): state is RuleState =>
+        (state): state is VultrFirewall.RuleState =>
             state !== undefined && state.rule.ip_type === IPVersion.V4
     );
     const ipv6Rules = Object.values(rulesState).filter(
-        (state): state is RuleState =>
+        (state): state is VultrFirewall.RuleState =>
             state !== undefined && state.rule.ip_type === IPVersion.V6
     );
 
@@ -66,7 +66,7 @@ function Rules() {
         }
         setIsLoading(false);
     }, []);
-    const onRuleDelete = useCallback((rule: Rule) => {
+    const onRuleDelete = useCallback((rule: VultrFirewall.Rule) => {
         setSelectedRule(rule);
         deleteModal.onOpen();
     }, []);

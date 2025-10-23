@@ -6,20 +6,19 @@ import {
     ipv4EndpointsAtom,
     ipv6Atom,
     ipv6EndpointsAtom,
+    IPVersion,
     refreshAPI,
     setIPAtom,
-    Version as IPVersion,
 } from "@lavascope/store";
-import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
-import { Button } from "@lavascope/ui/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@lavascope/ui/components/ui/table";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui/tooltip";
 import { Trans } from "@lingui/react/macro";
 import { mdiCheck, mdiContentCopy, mdiRefresh } from "@mdi/js";
 import Icon from "@mdi/react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { type ComponentProps, type MouseEventHandler, useCallback, useState } from "react";
 import { toast } from "sonner";
+
+import { ProxySwitch } from "#components/lavascope";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
 
 function CopyButton({ onClick }: ComponentProps<typeof Button>) {
     const [copied, setCopied] = useState(false);

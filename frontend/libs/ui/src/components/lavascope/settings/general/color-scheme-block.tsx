@@ -2,7 +2,7 @@ import { ColorScheme, colorSchemeAtom, setColorSchemeWithAnimationAtom } from "@
 import { Trans } from "@lingui/react/macro";
 import { useAtomValue, useSetAtom } from "jotai";
 
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui";
+import { ToggleGroup, ToggleGroupItem } from "#components/ui";
 
 import { SectionBlock } from "../section";
 

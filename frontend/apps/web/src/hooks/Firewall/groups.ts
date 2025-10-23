@@ -1,11 +1,11 @@
 import logging from "@lavascope/log";
-import { Version as IPVersion } from "@lavascope/store";
+import { IPVersion } from "@lavascope/store";
 import { useLingui } from "@lingui/react/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import { useVultrAPI } from "@/hooks/vultr";
 import type { IListGroupsResponse } from "@/lib/vultr";

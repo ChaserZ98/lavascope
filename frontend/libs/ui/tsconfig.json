@@ -1,13 +1,8 @@
 {
-    "extends": "../../../tsconfig.base.json",
+    "extends": "@lavascope/ts-config/react-library.json",
     "compilerOptions": {
-        "lib": ["ES2022", "DOM", "DOM.iterable"],
-        "jsx": "react-jsx",
-        "jsxImportSource": "react",
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["./src/*"]
-        }
+        "lib": ["ES2022", "DOM"],
+        "types": ["vite/client"]
     },
     "include": ["src"]
 }

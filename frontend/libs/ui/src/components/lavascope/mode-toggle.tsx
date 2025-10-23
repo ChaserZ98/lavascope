@@ -1,17 +1,17 @@
-import { colorSchemeAtom, setColorSchemeAtom, Theme } from "@lavascope/store";
+import { ColorScheme, colorSchemeAtom, setColorSchemeAtom } from "@lavascope/store";
 import { IconBrightness } from "@tabler/icons-react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import * as React from "react";
 
-import { Button } from "@/components/ui";
+import { Button } from "#components/ui";
 
 export function ModeToggle() {
-    const [theme] = useAtom(colorSchemeAtom);
-    const setTheme = useSetAtom(setColorSchemeAtom);
+    const colorScheme = useAtomValue(colorSchemeAtom);
+    const setColorScheme = useSetAtom(setColorSchemeAtom);
 
     const toggleTheme = React.useCallback(() => {
-        setTheme(theme === Theme.DARK ? Theme.LIGHT : Theme.DARK);
-    }, [theme, setTheme]);
+        setColorScheme(colorScheme === ColorScheme.DARK ? ColorScheme.LIGHT : ColorScheme.DARK);
+    }, [colorScheme, setColorScheme]);
 
     return (
         <Button
