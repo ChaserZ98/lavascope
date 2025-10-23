@@ -5,7 +5,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { produce } from "immer";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 import { ErrorResponse, type IListRulesResponse } from "@/lib/vultr";
 import {

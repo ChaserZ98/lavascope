@@ -11,7 +11,7 @@ import {
     SelectSeparator,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui";
+} from "#components/ui";
 
 const DEFAULT_THEMES = [
     {

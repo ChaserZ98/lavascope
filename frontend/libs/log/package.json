@@ -5,12 +5,13 @@
     },
     "type": "module",
     "private": true,
-    "peerDependencies": {
-        "typescript": "catalog:",
-        "vite": "catalog:vite"
-    },
     "dependencies": {
         "@tauri-apps/plugin-log": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri"
+    },
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "vite": "catalog:vite",
+        "typescript": "catalog:"
     }
 }

@@ -1,13 +1,14 @@
-import { Version } from "@lavascope/store";
 import { produce } from "immer";
 import { atom } from "jotai";
+
+import { IPVersion } from "#ip";
 
 import {
     initialNewRuleIPv4,
     initialNewRuleIPv6,
     type NewRuleState,
 } from "../rule";
-import type { GroupState } from "./types";
+import type { GroupState } from "./type";
 
 export type GroupsState = Record<string, GroupState | undefined>;
 
@@ -47,11 +48,11 @@ export const setNewRuleAtom = atom(
 
 export const resetNewRuleAtom = atom(
     null,
-    (_get, set, groupId: string, version: Version) => {
+    (_get, set, groupId: string, version: IPVersion) => {
         set(groupsStateAtom, produce((draft) => {
             if (!draft[groupId]) return;
             draft[groupId].newRule[version] =
-                version === Version.V4 ?
+                version === IPVersion.V4 ?
                     initialNewRuleIPv4 :
                     initialNewRuleIPv6;
         }));

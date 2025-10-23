@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Separator } from "@/components/ui";
-import { cn } from "@/lib/utils";
+import { Separator } from "#components/ui";
+import { cn } from "#lib/utils";
 
 interface SectionProps extends React.PropsWithChildren {
     header?: string;

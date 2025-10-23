@@ -10,11 +10,13 @@ import { AppSidebar } from "@lavascope/ui/components/lavascope/app-sidebar";
 import { SiteHeader } from "@lavascope/ui/components/lavascope/site-header";
 import { TauriTitleBar } from "@lavascope/ui/components/lavascope/tauri-title-bar";
 import { SidebarInset, SidebarProvider } from "@lavascope/ui/components/ui/sidebar";
+import { Trans } from "@lingui/react/macro";
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
+import { toast } from "sonner";
 
-import checkCompatibility from "@/utils/compatibility";
+import { checkCompatibility, CompatibilityError } from "@/utils/compatibility";
 
 export const Route = createFileRoute("/_app")({
     component: RouteComponent,
@@ -48,7 +50,16 @@ function RouteComponent() {
                 logging.error(`Failed to focus main window: ${e}`);
             });
         dynamicActivate(language, platform);
-        checkCompatibility(platform);
+        try {
+            checkCompatibility(platform);
+        } catch (e) {
+            const message = e instanceof CompatibilityError ? e.message : "Unknown Error";
+            toast.warning(
+                () => <Trans>Compatibility Warning</Trans>,
+                { description: message }
+            );
+        }
+
         const removeScreenSizeListener = addScreenSizeListener(setScreenSize);
         return () => removeScreenSizeListener();
     }, []);

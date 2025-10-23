@@ -1,4 +1,4 @@
-import { Version } from "@lavascope/store";
+import { IPVersion } from "@lavascope/store";
 import { IPEndpointsTable, MyIPTable } from "@lavascope/ui/components/lavascope";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -13,8 +13,8 @@ function MyIP() {
                 <MyIPTable />
             </div>
             <div className="flex flex-wrap w-full justify-center">
-                <IPEndpointsTable version={Version.V4} />
-                <IPEndpointsTable version={Version.V6} />
+                <IPEndpointsTable version={IPVersion.V4} />
+                <IPEndpointsTable version={IPVersion.V6} />
             </div>
         </div>
     );

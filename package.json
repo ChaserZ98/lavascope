@@ -1,29 +1,30 @@
 {
     "name": "lavascope",
     "devDependencies": {
-        "@tauri-apps/cli": "catalog:tauri",
-        "typescript": "catalog:",
-        "eslint": "catalog:eslint",
-        "typescript-eslint": "catalog:eslint",
+        "@lavascope/ts-config": "workspace:*",
         "@eslint/js": "catalog:eslint",
         "@stylistic/eslint-plugin": "catalog:eslint",
+        "@tanstack/eslint-plugin-query": "catalog:tanstack",
+        "@tauri-apps/cli": "catalog:tauri",
+        "eslint": "catalog:eslint",
+        "eslint-plugin-lingui": "catalog:i18n",
         "eslint-plugin-react": "catalog:eslint",
         "eslint-plugin-simple-import-sort": "catalog:eslint",
         "eslint-plugin-unused-imports": "catalog:eslint",
-        "eslint-plugin-lingui": "catalog:i18n",
-        "@tanstack/eslint-plugin-query": "catalog:tanstack",
-        "globals": "^16.4.0"
+        "globals": "^16.4.0",
+        "typescript": "catalog:",
+        "typescript-eslint": "catalog:eslint"
     },
     "catalog": {
         "typescript": "^5.9.2",
-        "@types/bun": "^1.2.20"
+        "@types/bun": "^1.2.20",
+        "@types/node": "^24.9.1"
     },
     "catalogs": {
         "tailwindcss": {
             "tailwindcss": "^4.1.14",
             "@tailwindcss/vite": "^4.1.14",
-            "tailwind-scrollbar": "^4.0.2",
-            "clsx": "^2.1.1"
+            "tailwind-scrollbar": "^4.0.2"
         },
         "i18n": {
             "@lingui/vite-plugin": "^5.4.1",
@@ -31,6 +32,7 @@
             "@lingui/detect-locale": "^5.4.1",
             "@lingui/react": "^5.4.1",
             "@lingui/cli": "^5.4.1",
+            "@lingui/conf": "^5.5.1",
             "vite-plugin-babel-macros": "^1.0.6",
             "eslint-plugin-lingui": "^0.10.0",
             "@lingui/babel-plugin-lingui-macro": "^5.5.1"

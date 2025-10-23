@@ -1,3 +1,4 @@
+import { VultrFirewall } from "@lavascope/store/firewlall";
 import { Button } from "@lavascope/ui/components/ui/button";
 import { Textarea } from "@lavascope/ui/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@lavascope/ui/components/ui/tooltip";
@@ -10,7 +11,6 @@ import { selectAtom } from "jotai/utils";
 import { useCallback, useEffect } from "react";
 
 import { useUpdateGroupMutation } from "@/hooks/Firewall";
-import { groupsStateAtom, setNewDescriptionAtom } from "@/store/firewall";
 
 function IdCell({ groupId }: { groupId: string }) {
     return (
@@ -31,7 +31,7 @@ function DescriptionCell({
 }) {
     const { t } = useLingui();
 
-    const setNewDescription = useSetAtom(setNewDescriptionAtom);
+    const setNewDescription = useSetAtom(VultrFirewall.setNewDescriptionAtom);
 
     const handleReset = useCallback(() => {
         setNewDescription(groupId, description);
@@ -136,7 +136,7 @@ function ActionCell({
 
     const newDescription = useAtomValue(
         selectAtom(
-            groupsStateAtom,
+            VultrFirewall.groupsStateAtom,
             useCallback(
                 (state) => state[groupId]?.newDescription ?? description,
                 [groupId]

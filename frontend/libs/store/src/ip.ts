@@ -5,7 +5,7 @@ import { produce } from "immer";
 import { atom } from "jotai";
 import * as z from "zod";
 
-export enum Version {
+export enum IPVersion {
     V4 = "v4",
     V6 = "v6",
 }
@@ -14,26 +14,26 @@ type IPState = {
     value: string;
     refreshing: boolean;
 };
-const createIPAtoms = (version: Version) =>
+const createIPAtoms = (version: IPVersion) =>
     atom<IPState>({
         value: localStorage.getItem(`ip${version}`) || "",
         refreshing: false,
     });
 
-export const ipv4Atom = createIPAtoms(Version.V4);
-export const ipv6Atom = createIPAtoms(Version.V6);
+export const ipv4Atom = createIPAtoms(IPVersion.V4);
+export const ipv6Atom = createIPAtoms(IPVersion.V6);
 
 export const setIPAtom = atom(
     null,
-    (_get, set, version: Version, ip: IPState) => {
-        const ipAtom = version === Version.V4 ? ipv4Atom : ipv6Atom;
+    (_get, set, version: IPVersion, ip: IPState) => {
+        const ipAtom = version === IPVersion.V4 ? ipv4Atom : ipv6Atom;
         set(ipAtom, ip);
         localStorage.setItem(`ip${version}`, ip.value);
     }
 );
 
 export const refreshAPI = async (
-    version: Version,
+    version: IPVersion,
     endpoints: string[],
     fetchClient: LavaScopeFetch,
     timeout: number = 5000
@@ -108,7 +108,7 @@ export const ipv6EndpointsAtom = atom(
 
 export const restoreIPEndpointsAtom = atom(null, async (_get, set, version) => {
     logging.info(`Restoring ${version} endpoints from DB`);
-    const atom = version === Version.V4 ?
+    const atom = version === IPVersion.V4 ?
         ipv4EndpointStateAtom :
         ipv6EndpointStateAtom;
     const endpointsSchema = z.array(z.url());
@@ -117,7 +117,7 @@ export const restoreIPEndpointsAtom = atom(null, async (_get, set, version) => {
     );
     if (!dbEndpointsResult.success) {
         logging.info(`No ${version} endpoints found in DB`);
-        const defaultEndpoints = version === Version.V4 ?
+        const defaultEndpoints = version === IPVersion.V4 ?
             defaultIPv4Endpoints :
             defaultIPv6Endpoints;
         await idbSet(`${version}-endpoints`, defaultEndpoints);
@@ -135,8 +135,8 @@ export const restoreIPEndpointsAtom = atom(null, async (_get, set, version) => {
 });
 export const addIPEndpointAtom = atom(
     null,
-    async (_get, set, version: Version, endpoint: string) => {
-        const atom = version === Version.V4 ?
+    async (_get, set, version: IPVersion, endpoint: string) => {
+        const atom = version === IPVersion.V4 ?
             ipv4EndpointStateAtom :
             ipv6EndpointStateAtom;
         await idbUpdate(
@@ -154,8 +154,8 @@ export const addIPEndpointAtom = atom(
 );
 export const deleteIPEndpointAtom = atom(
     null,
-    async (_get, set, version: Version, endpoint: string) => {
-        const atom = version === Version.V4 ?
+    async (_get, set, version: IPVersion, endpoint: string) => {
+        const atom = version === IPVersion.V4 ?
             ipv4EndpointStateAtom :
             ipv6EndpointStateAtom;
         await idbUpdate(
@@ -172,11 +172,11 @@ export const deleteIPEndpointAtom = atom(
 );
 export const resetIPEndpointsAtom = atom(
     null,
-    async (_get, set, version: Version) => {
-        const atom = version === Version.V4 ?
+    async (_get, set, version: IPVersion) => {
+        const atom = version === IPVersion.V4 ?
             ipv4EndpointStateAtom :
             ipv6EndpointStateAtom;
-        const endpoints = version === Version.V4 ?
+        const endpoints = version === IPVersion.V4 ?
             defaultIPv4Endpoints :
             defaultIPv6Endpoints;
         await idbSet(`${version}-endpoints`, endpoints);

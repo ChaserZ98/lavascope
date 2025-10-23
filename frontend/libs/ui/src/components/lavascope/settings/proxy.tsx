@@ -1,10 +1,10 @@
 import { Platform, platformAtom } from "@lavascope/store";
 import { proxyAddressAtom } from "@lavascope/store";
-import { Section, SectionBlock, SectionBody } from "@lavascope/ui/components/lavascope/settings/section";
-import { Label } from "@lavascope/ui/components/ui";
-import { Input } from "@lavascope/ui/components/ui/input";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useAtom, useAtomValue } from "jotai";
+
+import { Section, SectionBlock, SectionBody } from "#components/lavascope/settings/section";
+import { Input, Label } from "#components/ui";
 
 function ProxySection() {
     const platform = useAtomValue(platformAtom);

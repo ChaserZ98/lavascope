@@ -1,8 +1,4 @@
 {
-    "extends": "./tsconfig.base.json",
-    "files": [],
-    "compilerOptions": {
-        "noEmit": true
-    },
+    "extends": "@lavascope/ts-config/base.json",
     "include": ["eslint.config.ts"]
 }

@@ -9,8 +9,8 @@ import {
 import { Link } from "@tanstack/react-router";
 import * as React from "react";
 
-import { NavMain } from "@/components/lavascope/nav-main";
-import { NavSecondary, type NavSecondaryItem } from "@/components/lavascope/nav-secondary";
+import { NavMain } from "#components/lavascope/nav-main";
+import { NavSecondary, type NavSecondaryItem } from "#components/lavascope/nav-secondary";
 import {
     Sidebar,
     SidebarContent,
@@ -19,7 +19,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui";
+} from "#components/ui";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const { t } = useLingui();

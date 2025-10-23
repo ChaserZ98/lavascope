@@ -5,15 +5,14 @@
     },
     "type": "module",
     "private": true,
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
     "dependencies": {
         "@lavascope/store": "workspace:*",
         "@tauri-apps/plugin-http": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri"
     },
     "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:",
         "@types/react": "catalog:react"
     }
 }

@@ -1,6 +1,7 @@
-import { Version as IPVersion } from "@lavascope/store";
 import { produce } from "immer";
 import { atom } from "jotai";
+
+import { IPVersion } from "#ip";
 
 import {
     type CreateRule,
@@ -9,7 +10,7 @@ import {
     type ProtocolSelection,
     type RuleState,
     SourceType,
-} from "./types";
+} from "./type";
 
 export function toProtocolDisplay(protocol: Protocol, port: string): string {
     if (port === "53") return "DNS";

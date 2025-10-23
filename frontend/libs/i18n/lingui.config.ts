@@ -1,4 +1,5 @@
 import { defineConfig } from "@lingui/cli";
+import type { LinguiConfig } from "@lingui/conf";
 
 export default defineConfig({
     sourceLocale: "en",
@@ -13,4 +14,4 @@ export default defineConfig({
     ],
     orderBy: "origin",
     compileNamespace: "ts"
-});
+} satisfies LinguiConfig);

@@ -2,7 +2,7 @@ import { showDevPanelAtom } from "@lavascope/store";
 import { useLingui } from "@lingui/react/macro";
 import { useAtom } from "jotai";
 
-import { Switch } from "@/components/ui";
+import { Switch } from "#components/ui";
 
 import { Section, SectionBlock, SectionBody } from "./section";
 

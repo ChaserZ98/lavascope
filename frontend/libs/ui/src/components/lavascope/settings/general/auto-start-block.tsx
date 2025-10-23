@@ -1,11 +1,12 @@
 import logging from "@lavascope/log";
 import { Platform, platformAtom, setAutoStartAtom, setInitialAutoStartAtom } from "@lavascope/store";
 import { autoStartAtom } from "@lavascope/store";
-import { SectionBlock } from "@lavascope/ui/components/lavascope/settings/section";
-import { Switch } from "@lavascope/ui/components/ui/switch";
 import { Trans } from "@lingui/react/macro";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useCallback, useEffect } from "react";
+
+import { SectionBlock } from "#components/lavascope/settings/section";
+import { Switch } from "#components/ui";
 
 function AutoStartBlock() {
     const platform = useAtomValue(platformAtom);

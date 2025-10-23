@@ -1,7 +1,4 @@
 {
-    "extends": "../../../tsconfig.base.json",
-    "include": ["src"],
-    "compilerOptions": {
-        "lib": ["ES2022", "DOM"]
-    }
+    "extends": "@lavascope/ts-config/base.json",
+    "include": ["src"]
 }

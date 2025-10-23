@@ -1,5 +1,5 @@
 import { Select, SelectItem } from "@heroui/react";
-import { ipv4Atom, ipv6Atom, Version as IPVersion } from "@lavascope/store";
+import { ipv4Atom, ipv6Atom, IPVersion } from "@lavascope/store";
 import { useLingui } from "@lingui/react/macro";
 import { useParams } from "@tanstack/react-router";
 import { useAtomValue, useSetAtom } from "jotai";

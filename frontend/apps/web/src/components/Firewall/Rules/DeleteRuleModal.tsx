@@ -6,7 +6,7 @@ import {
     ModalFooter,
     ModalHeader,
 } from "@heroui/react";
-import { Version as IPVersion } from "@lavascope/store";
+import { IPVersion } from "@lavascope/store";
 import { Trans } from "@lingui/react/macro";
 import { useCallback, useState } from "react";
 

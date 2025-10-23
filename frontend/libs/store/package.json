@@ -1,24 +1,33 @@
 {
     "name": "@lavascope/store",
     "exports": {
-        ".": "./src/index.ts"
+        ".": "./src/index.ts",
+        "./firewlall": "./src/firewall/index.ts"
+    },
+    "imports": {
+        "#*": "./src/*.ts",
+        "#firewall/*": "./src/firewall/*.ts"
     },
     "type": "module",
     "private": true,
     "peerDependencies": {
         "jotai": "catalog:jotai",
-        "jotai-immer": "catalog:jotai",
-        "immer": "catalog:jotai",
-        "typescript": "catalog:"
+        "jotai-immer": "catalog:jotai"
     },
     "dependencies": {
         "@lavascope/fetch": "workspace:*",
         "@lavascope/log": "workspace:*",
+        "@lavascope/vultr": "workspace:*",
         "@tauri-apps/plugin-os": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-autostart": "catalog:tauri",
         "zod": "catalog:zod",
+        "immer": "catalog:jotai",
         "idb-keyval": "^6.2.1"
     },
-    "devDependencies": {}
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:",
+        "vite": "catalog:vite"
+    }
 }

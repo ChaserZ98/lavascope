@@ -2,31 +2,37 @@
     "name": "@lavascope/ui",
     "type": "module",
     "exports": {
-        ".": "./src/index.ts",
-        "./components/*": "./src/components/*.tsx",
         "./components/ui": "./src/components/ui/index.ts",
+        "./components/ui/*": "./src/components/ui/*.tsx",
         "./components/lavascope": "./src/components/lavascope/index.ts",
+        "./components/lavascope/*": "./src/components/lavascope/*.tsx",
         "./lib/*": "./src/lib/*.ts",
-        "./store/*": "./src/store/*.ts",
         "./images/*": "./src/images/*"
+    },
+    "imports": {
+        "#components/ui": "./src/components/ui/index.ts",
+        "#components/ui/*": "./src/components/ui/*.tsx",
+        "#components/lavascope": "./src/components/lavascope/index.ts",
+        "#components/lavascope/*": "./src/components/lavascope/*.tsx",
+        "#lib/*": "./src/lib/*.ts",
+        "#images/*": "./src/images/*"
     },
     "scripts": {
         "shadcn": "bunx --bun shadcn@latest"
     },
     "peerDependencies": {
-        "jotai": "catalog:jotai",
-        "typescript": "catalog:",
-        "vite": "catalog:vite",
-        "react": "catalog:react",
-        "react-dom": "catalog:react"
+        "jotai": "catalog:jotai"
     },
     "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "@types/node": "catalog:",
         "@types/bun": "catalog:",
         "@types/react": "catalog:react",
         "@types/react-dom": "catalog:react",
         "jotai-devtools": "catalog:jotai",
         "@tanstack/react-router-devtools": "catalog:tanstack",
-        "vite": "catalog:vite"
+        "vite": "catalog:vite",
+        "typescript": "catalog:"
     },
     "dependencies": {
         "@lavascope/fetch": "workspace:*",
@@ -35,6 +41,8 @@
         "@lavascope/log": "workspace:*",
         "@lavascope/store": "workspace:*",
         "@lavascope/tailwind": "workspace:*",
+        "react": "catalog:react",
+        "react-dom": "catalog:react",
         "@lingui/core": "catalog:i18n",
         "@lingui/react": "catalog:i18n",
         "@mdi/js": "catalog:icon",

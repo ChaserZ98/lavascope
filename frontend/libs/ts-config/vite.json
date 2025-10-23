@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "extends": "./base.json",
+    "compilerOptions": {
+        "target": "es2022",
+        "useDefineForClassFields": true,
+        "module": "esnext",
+        "lib": ["ES2022", "DOM"],
+        "sourceMap": true,
+        "noEmit": true
+    },
+    "exclude": ["node_modules"]
+}
