@@ -13,7 +13,7 @@ function ColorSchemeBlock() {
     return (
         <SectionBlock className="flex-row items-center justify-between gap-3">
             <h2 className="font-bold text-lg">
-                <Trans>Color Mode</Trans>
+                <Trans>Color Scheme</Trans>
             </h2>
             <ToggleGroup
                 type="single"

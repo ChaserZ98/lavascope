@@ -8,6 +8,7 @@
     "dependencies": {
         "@lavascope/store": "workspace:*",
         "@lavascope/fetch": "workspace:*",
+        "@lavascope/vultr": "workspace:*",
         "react": "catalog:react",
         "@tauri-apps/plugin-os": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri",

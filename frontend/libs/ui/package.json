@@ -21,7 +21,8 @@
         "shadcn": "bunx --bun shadcn@latest"
     },
     "peerDependencies": {
-        "jotai": "catalog:jotai"
+        "jotai": "catalog:jotai",
+        "jotai-devtools": "catalog:jotai"
     },
     "devDependencies": {
         "@lavascope/ts-config": "workspace:*",
@@ -41,6 +42,7 @@
         "@lavascope/log": "workspace:*",
         "@lavascope/store": "workspace:*",
         "@lavascope/tailwind": "workspace:*",
+        "@lavascope/vultr": "workspace:*",
         "@lingui/core": "catalog:i18n",
         "@lingui/react": "catalog:i18n",
         "@mdi/js": "catalog:icon",
@@ -61,6 +63,7 @@
         "@radix-ui/react-toggle-group": "catalog:shadcn",
         "@radix-ui/react-tooltip": "catalog:shadcn",
         "@tabler/icons-react": "catalog:icon",
+        "@tanstack/react-query": "catalog:tanstack",
         "@tanstack/react-router": "catalog:tanstack",
         "@tanstack/react-table": "catalog:tanstack",
         "@tauri-apps/api": "catalog:tauri",
@@ -68,6 +71,7 @@
         "@tauri-apps/plugin-os": "catalog:tauri",
         "class-variance-authority": "catalog:shadcn",
         "clsx": "catalog:shadcn",
+        "immer": "catalog:jotai",
         "lucide-react": "catalog:shadcn",
         "react": "catalog:react",
         "react-dom": "catalog:react",

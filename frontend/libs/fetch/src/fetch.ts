@@ -25,7 +25,7 @@ function createTauriFetch(clientOptions?: ClientOptions) {
     };
 }
 export function initFetch(clientOptions: ClientOptions): LavaScopeFetch {
-    if (!isTauri()) return fetch;
+    if (!isTauri()) return (input: RequestInfo | URL, init?: RequestInit) => fetch(input, init);
 
     return createTauriFetch(clientOptions);
 }

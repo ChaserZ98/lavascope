@@ -1,3 +1,5 @@
+import type { LavaScopeFetch } from "@lavascope/fetch";
+
 import type {
     ICreateGroupParams,
     ICreateGroupResponse,
@@ -21,13 +23,13 @@ import type { Endpoint, IParams, IVultrAPI } from "./types";
 
 export class VultrAPI implements IVultrAPI {
     apiToken: string;
-    fetchClient: typeof fetch;
+    fetchClient: LavaScopeFetch;
     baseUrl: string;
     timeout: number;
 
     constructor(props?: {
         apiToken?: string;
-        fetchClient?: typeof fetch;
+        fetchClient?: LavaScopeFetch;
         baseUrl?: string;
         timeout?: number;
     }) {
