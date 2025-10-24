@@ -1,19 +1,17 @@
-import { Tab, Tabs, useDisclosure } from "@heroui/react";
 import { IPVersion } from "@lavascope/store";
 import { Screen, screenSizeAtom } from "@lavascope/store";
 import { VultrFirewall } from "@lavascope/store/firewlall";
-import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
-import { Button, Spinner } from "@lavascope/ui/components/ui";
-import { Trans, useLingui } from "@lingui/react/macro";
+import { ProxySwitch } from "@lavascope/ui/components/lavascope";
+import { Button, Spinner, Tabs, TabsContent, TabsList, TabsTrigger } from "@lavascope/ui/components/ui";
+import { Trans } from "@lingui/react/macro";
 import { createFileRoute } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
-import DeleteRuleModal from "@/components/Firewall/Rules/DeleteRuleModal";
 import GroupInfo from "@/components/Firewall/Rules/GroupInfo";
-import RulesTable from "@/components/Firewall/Rules/RulesTable";
+import { RulesTable } from "@/components/Firewall/Rules/RulesTable";
 import { useRulesQuery } from "@/hooks/Firewall/rules";
 
 export const Route = createFileRoute("/_app/groups/$id")({
@@ -23,9 +21,7 @@ export const Route = createFileRoute("/_app/groups/$id")({
 function Rules() {
     const { id: groupId = "" } = Route.useParams();
 
-    const deleteModal = useDisclosure();
-
-    const { t } = useLingui();
+    // const deleteModal = useDisclosure();
 
     const rulesQuery = useRulesQuery(groupId);
 
@@ -37,7 +33,7 @@ function Rules() {
         )
     );
 
-    const [selectedRule, setSelectedRule] = useState<VultrFirewall.Rule | null>(null);
+    // const [selectedRule, setSelectedRule] = useState<VultrFirewall.Rule | null>(null);
 
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -62,14 +58,14 @@ function Rules() {
             const message = res.error instanceof Error ?
                 res.error.message :
                 res.error;
-            toast.error(t`Failed to fetch firewall rules: ${message}`);
+            toast.error(() => <Trans>Failed to fetch firewall rules</Trans>, { description: message });
         }
         setIsLoading(false);
     }, []);
-    const onRuleDelete = useCallback((rule: VultrFirewall.Rule) => {
-        setSelectedRule(rule);
-        deleteModal.onOpen();
-    }, []);
+    // const onRuleDelete = useCallback((rule: VultrFirewall.Rule) => {
+    //     setSelectedRule(rule);
+    //     deleteModal.onOpen();
+    // }, []);
 
     return (
         <div className="flex flex-col px-8 pb-4 gap-4 items-center select-none">
@@ -79,29 +75,53 @@ function Rules() {
             <GroupInfo groupId={groupId} />
             <div className="flex flex-col w-full relative bg-content1 p-4 overflow-auto rounded-large shadow-small shadow-content1 transition-[color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow] ease-[ease] duration-250 max-w-fit min-h-60">
                 <Tabs
+                    defaultValue={IPVersion.V4}
                     aria-label="Options"
-                    isVertical={screenSize === Screen.SM ? false : true}
+                    orientation={screenSize === Screen.SM ? "horizontal" : "vertical"}
+                    // isVertical={screenSize === Screen.SM ? false : true}
                     color="primary"
-                    radius="lg"
-                    size={screenSize === Screen.SM ? "sm" : "md"}
-                    variant="solid"
-                    classNames={{
-                        base: "flex justify-center md:px-2",
-                        tabList:
-                            "transition-colors-opacity bg-content2 my-auto",
-                        cursor: "transition-colors-opacity",
-                        tab: "transition-colors-opacity",
-                        panel: "overflow-auto md:px-0",
-                    }}
+                    // radius="lg"
+                    // size={screenSize === Screen.SM ? "sm" : "md"}
+                    // variant="solid"
+                    // classNames={{
+                    //     base: "flex justify-center md:px-2",
+                    //     tabList:
+                    //         "transition-colors-opacity bg-content2 my-auto",
+                    //     cursor: "transition-colors-opacity",
+                    //     tab: "transition-colors-opacity",
+                    //     panel: "overflow-auto md:px-0",
+                    // }}
                 >
-                    <Tab key="IPv4" title="IPv4">
+                    <TabsList>
+                        <TabsTrigger value={IPVersion.V4}>IPv4</TabsTrigger>
+                        <TabsTrigger value={IPVersion.V6}>IPv6</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value={IPVersion.V4}>
+                        <RulesTable
+                            groupId={groupId}
+                            ipVersion={IPVersion.V4}
+                            rules={ipv4Rules}
+                            isLoading={isLoading}
+                            // onRuleDelete={onRuleDelete}
+                        />
+                    </TabsContent>
+                    <TabsContent value={IPVersion.V6}>
+                        <RulesTable
+                            groupId={groupId}
+                            ipVersion={IPVersion.V6}
+                            rules={ipv6Rules}
+                            isLoading={isLoading}
+                            // onRuleDelete={onRuleDelete}
+                        />
+                    </TabsContent>
+                    {/* <Tab key="IPv4" title="IPv4">
                         <RulesTable
                             ipVersion={IPVersion.V4}
                             rules={ipv4Rules}
                             isLoading={isLoading}
                             onRuleDelete={onRuleDelete}
                         />
-                    </Tab>
+                    </TabsList>
                     <Tab key="IPv6" title="IPv6">
                         <RulesTable
                             ipVersion={IPVersion.V6}
@@ -109,14 +129,14 @@ function Rules() {
                             isLoading={isLoading}
                             onRuleDelete={onRuleDelete}
                         />
-                    </Tab>
+                    </Tab> */}
                 </Tabs>
-                <DeleteRuleModal
+                {/* <DeleteRuleModal
                     isOpen={deleteModal.isOpen}
                     rule={selectedRule}
                     groupId={groupId}
                     onClose={handleModalClose}
-                />
+                /> */}
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button onClick={handleRefresh}>

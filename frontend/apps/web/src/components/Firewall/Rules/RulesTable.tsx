@@ -1,5 +1,4 @@
 import {
-    Pagination,
     Table,
     TableBody,
     TableCell,
@@ -8,8 +7,8 @@ import {
     TableRow,
 } from "@heroui/react";
 import { IPVersion } from "@lavascope/store";
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@lavascope/ui/components/ui";
 import { useLingui } from "@lingui/react/macro";
-import { useParams } from "@tanstack/react-router";
 import { useAtomValue } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { useCallback, useState } from "react";
@@ -18,7 +17,6 @@ import {
     groupsStateAtom,
     initialNewRuleIPv4,
     initialNewRuleIPv6,
-    type Rule,
     type RuleState,
     SourceType,
     toProtocolDisplay,
@@ -41,16 +39,37 @@ import {
     SourceTypeCell,
 } from "./Rule";
 
+type RulesPaginationProps = {
+    page?: number;
+    total?: number;
+};
+
+function RulesPagination({ page = 1, total = 1 }: RulesPaginationProps) {
+    return (
+        <Pagination>
+            <PaginationContent>
+                <PaginationItem>
+                    <PaginationPrevious>
+                    </PaginationPrevious>
+                </PaginationItem>
+                <PaginationItem>
+                    <PaginationNext></PaginationNext>
+                </PaginationItem>
+            </PaginationContent>
+        </Pagination>
+    );
+}
+
 type RulesTableProps = {
+    groupId: string;
     ipVersion: IPVersion;
     rules: RuleState[];
     isLoading?: boolean;
-    onRuleDelete: (rule: Rule) => void;
 };
-export default function RulesTable(props: RulesTableProps) {
-    const { id: groupId = "" } = useParams({
-        from: "/_app/groups/$id",
-    });
+function RulesTable({ groupId, ipVersion, rules, isLoading }: RulesTableProps) {
+    // const { id: groupId = "" } = useParams({
+    //     from: "/_app/groups/$id",
+    // });
 
     const { t } = useLingui();
 
@@ -59,14 +78,12 @@ export default function RulesTable(props: RulesTableProps) {
             selectAtom(
                 groupsStateAtom,
                 useCallback(
-                    (state) => state[groupId]?.newRule[props.ipVersion],
-                    [groupId, props.ipVersion]
+                    (state) => state[groupId]?.newRule[ipVersion],
+                    [groupId, ipVersion]
                 )
             )
         ) ||
-        (props.ipVersion === IPVersion.V4 ?
-            initialNewRuleIPv4 :
-            initialNewRuleIPv6);
+        (ipVersion === IPVersion.V4 ? initialNewRuleIPv4 : initialNewRuleIPv6);
 
     const [page, setPage] = useState(1);
 
@@ -74,7 +91,7 @@ export default function RulesTable(props: RulesTableProps) {
     const pages = Math.ceil(props.rules.length / rowsPerPage) || 1;
     if (page > pages) setPage(pages);
 
-    const rules = props.rules.slice(
+    const displayedRules = rules.slice(
         (page - 1) * rowsPerPage,
         page * rowsPerPage
     );
@@ -88,13 +105,14 @@ export default function RulesTable(props: RulesTableProps) {
                 td: "align-top transition-colors-opacity text-xs sm:text-sm text-foreground font-mono",
                 base:
                     "overflow-x-auto" +
-                    (props.isLoading ? "animate-pulse" : ""),
+                    (isLoading ? "animate-pulse" : ""),
             }}
             isKeyboardNavigationDisabled
             topContent={(
                 <div className="sticky left-1/2 -translate-x-1/2 w-fit">
-                    <Pagination
-                        isDisabled={props.isLoading}
+                    <RulesPagination />
+                    {/* <Pagination
+                        isDisabled={isLoading}
                         showControls
                         color="primary"
                         variant="flat"
@@ -106,7 +124,7 @@ export default function RulesTable(props: RulesTableProps) {
                             prev: "text-foreground transition-colors-opacity bg-content3 [&[data-hover=true]:not([data-active=true])]:bg-content4 data-[disabled=true]:text-default-400",
                             next: "text-foreground transition-colors-opacity bg-content3 [&[data-hover=true]:not([data-active=true])]:bg-content4 data-[disabled=true]:text-default-400",
                         }}
-                    />
+                    /> */}
                 </div>
             )}
         >
@@ -128,43 +146,43 @@ export default function RulesTable(props: RulesTableProps) {
                 <TableRow>
                     <TableCell>
                         <NewRuleProtocolCell
-                            isDisabled={props.isLoading}
+                            isDisabled={isLoading}
                             newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRulePortCell
-                            isDisabled={props.isLoading}
+                            isDisabled={isLoading}
                             newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRuleSourceTypeCell
-                            isDisabled={props.isLoading}
+                            isDisabled={isLoading}
                             newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRuleSourceAddressCell
-                            isDisabled={props.isLoading}
+                            isDisabled={isLoading}
                             newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <NewRuleNotesCell
-                            isDisabled={props.isLoading}
+                            isDisabled={isLoading}
                             newRule={newRule}
                         />
                     </TableCell>
                     <TableCell>
                         <AddButtonCell
                             newRule={newRule}
-                            isDisabled={props.isLoading}
+                            isDisabled={isLoading}
                         />
                     </TableCell>
                 </TableRow>
                 <>
-                    {rules.map((ruleState, index) => (
+                    {displayedRules.map((ruleState, index) => (
                         <TableRow key={index} className={ruleState.isDeleting || ruleState.isCreating ? "animate-pulse" : ""}>
                             <TableCell>
                                 <ProtocolCell
@@ -199,10 +217,10 @@ export default function RulesTable(props: RulesTableProps) {
                             <TableCell>
                                 <DeleteButtonCell
                                     isDisabled={
-                                        props.isLoading || ruleState.isDeleting
+                                        isLoading || ruleState.isDeleting
                                     }
                                     isLoading={ruleState.isDeleting}
-                                    onDelete={() => props.onRuleDelete(ruleState.rule)}
+                                    // onDelete={() => props.onRuleDelete(ruleState.rule)}
                                 />
                             </TableCell>
                         </TableRow>
@@ -212,3 +230,5 @@ export default function RulesTable(props: RulesTableProps) {
         </Table>
     );
 }
+
+export { RulesTable };

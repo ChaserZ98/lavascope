@@ -1,7 +1,7 @@
 import { useFetch } from "@lavascope/hook";
 import { VultrFirewall } from "@lavascope/store/firewlall";
 import { useAtomValue } from "jotai";
-import { useDeferredValue, useEffect, useRef } from "react";
+import { useDeferredValue, useMemo } from "react";
 
 import { VultrAPI } from "@/lib/vultr";
 
@@ -11,17 +11,12 @@ export function useVultrAPI() {
 
     const deferredApiToken = useDeferredValue(apiToken);
 
-    const vultrAPI = useRef<VultrAPI>(
-        new VultrAPI({
+    const vultrAPI = useMemo(() => {
+        return new VultrAPI({
             apiToken: deferredApiToken,
             fetchClient,
-        })
-    );
-
-    useEffect(() => {
-        vultrAPI.current.apiToken = deferredApiToken;
-        vultrAPI.current.fetchClient = fetchClient;
+        });
     }, [deferredApiToken, fetchClient]);
 
-    return vultrAPI.current;
+    return vultrAPI;
 }

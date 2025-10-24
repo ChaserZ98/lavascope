@@ -1,5 +1,6 @@
 export * from "./app-sidebar";
 export * from "./dev";
+export * from "./firewall";
 export * from "./ip-endpoints-table";
 export * from "./mode-toggle";
 export * from "./my-ip-table";
