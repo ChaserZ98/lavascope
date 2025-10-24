@@ -8,6 +8,7 @@ import { Input, Label } from "#components/ui";
 
 function ProxySection() {
     const platform = useAtomValue(platformAtom);
+
     if (platform === Platform.WEB) return null;
 
     const [proxyAddress, setProxyAddress] = useAtom(proxyAddressAtom);

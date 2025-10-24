@@ -312,5 +312,6 @@ export function useDeleteGroupMutation() {
             setGroupIsDeleting(groupId, false);
         },
     });
+
     return deleteGroupMutation;
 }

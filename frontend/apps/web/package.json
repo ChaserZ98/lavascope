@@ -37,7 +37,6 @@
         "idb-keyval": "^6.2.1",
         "immer": "catalog:jotai",
         "jotai": "catalog:jotai",
-        "jotai-immer": "catalog:jotai",
         "react": "catalog:react",
         "react-dom": "catalog:react",
         "zod": "catalog:zod",
@@ -57,11 +56,11 @@
         "@vitejs/plugin-legacy": "catalog:vite",
         "@vitejs/plugin-react": "catalog:vite",
         "browserslist-useragent-regexp": "^4.1.3",
-        "jotai-devtools": "catalog:jotai",
         "rollup-plugin-visualizer": "^6.0.4",
         "typescript": "catalog:",
         "vite": "catalog:vite",
         "vite-plugin-babel-macros": "catalog:i18n",
-        "vite-tsconfig-paths": "catalog:vite"
+        "vite-tsconfig-paths": "catalog:vite",
+        "jotai-devtools": "catalog:jotai"
     }
 }

@@ -6,7 +6,6 @@
     "type": "module",
     "private": true,
     "dependencies": {
-        "@lavascope/store": "workspace:*",
         "@tauri-apps/plugin-http": "catalog:tauri",
         "@tauri-apps/api": "catalog:tauri"
     },
