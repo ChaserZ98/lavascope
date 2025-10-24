@@ -1,15 +1,6 @@
-import {
-    Button,
-    Table,
-    TableBody,
-    TableCell,
-    TableColumn,
-    TableHeader,
-    TableRow,
-    useDisclosure,
-} from "@heroui/react";
 import { VultrFirewall } from "@lavascope/store/firewlall";
 import { ProxySwitch } from "@lavascope/ui/components/lavascope/proxy-switch";
+import { Button, Spinner } from "@lavascope/ui/components/ui";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useAtomValue } from "jotai";
 import { useCallback, useState } from "react";
@@ -24,7 +15,7 @@ import DeleteGroupModal from "../Modal/DeleteGroupModal";
 import CreateGroupButton from "./CreateGroupButton";
 import TablePagination from "./Pagination";
 
-export default function GroupTable() {
+function GroupTable() {
     const { t } = useLingui();
 
     const groupsState = useAtomValue(VultrFirewall.groupsStateAtom);
@@ -45,7 +36,7 @@ export default function GroupTable() {
             const message = res.error instanceof Error ?
                 res.error.message :
                 res.error;
-            toast.error(t`Failed to fetch firewall groups: ${message}`);
+            toast.error(() => <Trans>Failed to refresh firewall groups</Trans>, { description: message });
         }
         setIsLoading(false);
     }, []);
@@ -162,10 +153,13 @@ export default function GroupTable() {
             <CreateGroupModal isOpen={createModal.isOpen} onClose={createModal.onClose} />
             <div className="flex gap-4 justify-center items-center flex-wrap">
                 <Button
-                    onPress={handleRefreshGroups}
-                    isLoading={isLoading}
+                    onClick={handleRefreshGroups}
+                    disabled={isLoading}
                     className="bg-default hover:bg-default-100"
                 >
+                    {
+                        isLoading && <Spinner />
+                    }
                     <Trans>Refresh</Trans>
                 </Button>
                 <ProxySwitch />
@@ -173,3 +167,5 @@ export default function GroupTable() {
         </div>
     );
 }
+
+export { GroupTable };

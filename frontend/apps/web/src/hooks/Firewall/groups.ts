@@ -1,5 +1,6 @@
 import logging from "@lavascope/log";
 import { IPVersion } from "@lavascope/store";
+import { VultrFirewall } from "@lavascope/store/firewlall";
 import { useLingui } from "@lingui/react/macro";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
@@ -9,20 +10,6 @@ import { toast } from "sonner";
 
 import { useVultrAPI } from "@/hooks/vultr";
 import type { IListGroupsResponse } from "@/lib/vultr";
-import {
-    addGroupStateAtom,
-    deleteGroupStateAtom,
-    getCreatingGroupCountAtom,
-    getGroupDescriptionAtom,
-    groupsStateAtom,
-    type GroupState,
-    initialNewRuleIPv4,
-    initialNewRuleIPv6,
-    persistCreatingGroupAtom,
-    setDescriptionAtom,
-    setGroupIsDeletingAtom,
-    setGroupIsUpdatingAtom,
-} from "@/store/firewall";
 
 export function useCreateGroupMutation() {
     const vultrAPI = useVultrAPI();
@@ -31,10 +18,10 @@ export function useCreateGroupMutation() {
 
     const { t } = useLingui();
 
-    const getCreatingGroupCount = useSetAtom(getCreatingGroupCountAtom);
-    const addGroupState = useSetAtom(addGroupStateAtom);
-    const deleteGroupState = useSetAtom(deleteGroupStateAtom);
-    const persistCreatingGroup = useSetAtom(persistCreatingGroupAtom);
+    const getCreatingGroupCount = useSetAtom(VultrFirewall.getCreatingGroupCountAtom);
+    const addGroupState = useSetAtom(VultrFirewall.addGroupStateAtom);
+    const deleteGroupState = useSetAtom(VultrFirewall.deleteGroupStateAtom);
+    const persistCreatingGroup = useSetAtom(VultrFirewall.persistCreatingGroupAtom);
 
     const createGroupMutation = useMutation({
         mutationFn: async (description: string) => await vultrAPI.firewall.createGroup({ description }),
@@ -52,8 +39,8 @@ export function useCreateGroupMutation() {
                     max_rule_count: 0
                 },
                 newRule: {
-                    [IPVersion.V4]: initialNewRuleIPv4,
-                    [IPVersion.V6]: initialNewRuleIPv6,
+                    [IPVersion.V4]: VultrFirewall.initialNewRuleIPv4,
+                    [IPVersion.V6]: VultrFirewall.initialNewRuleIPv6,
                 },
                 newDescription: description,
                 isUpdating: false,
@@ -70,11 +57,11 @@ export function useCreateGroupMutation() {
         },
         onSuccess: async (data, _, { creatingGroupId }) => {
             const group = data.firewall_group;
-            const groupState: GroupState = {
+            const groupState: VultrFirewall.GroupState = {
                 group,
                 newRule: {
-                    [IPVersion.V4]: initialNewRuleIPv4,
-                    [IPVersion.V6]: initialNewRuleIPv6,
+                    [IPVersion.V4]: VultrFirewall.initialNewRuleIPv4,
+                    [IPVersion.V6]: VultrFirewall.initialNewRuleIPv6,
                 },
                 newDescription: group.description,
                 isUpdating: false,
@@ -92,7 +79,7 @@ export function useCreateGroupMutation() {
             if (context !== undefined) context.restore();
             logging.error(`Failed to create the new firewall group: ${err}`);
             const message = err.message || "unknown error";
-            toast.error(t`Failed to create the new firewall group: ${message}`);
+            toast.error(t`Failed to create the new firewall group`, { description: message });
         },
         retry: false,
     });
@@ -111,7 +98,7 @@ export function useGroupsQuery() {
         retry: false,
     });
 
-    const setGroupsState = useSetAtom(groupsStateAtom);
+    const setGroupsState = useSetAtom(VultrFirewall.groupsStateAtom);
 
     useEffect(() => {
         if (groupsQuery.isError) logging.error(`Failed to fetch firewall groups: ${groupsQuery.error}`);
@@ -156,8 +143,8 @@ export function useGroupsQuery() {
                     state[groupId] = {
                         group,
                         newRule: {
-                            [IPVersion.V4]: initialNewRuleIPv4,
-                            [IPVersion.V6]: initialNewRuleIPv6,
+                            [IPVersion.V4]: VultrFirewall.initialNewRuleIPv4,
+                            [IPVersion.V6]: VultrFirewall.initialNewRuleIPv6,
                         },
                         newDescription: group.description,
                         isUpdating: false,
@@ -194,7 +181,7 @@ export function useGroupQuery(groupId: string) {
         retry: false,
     });
 
-    const setGroupsState = useSetAtom(groupsStateAtom);
+    const setGroupsState = useSetAtom(VultrFirewall.groupsStateAtom);
 
     useEffect(() => {
         if (!groupQuery.data) return;
@@ -223,8 +210,8 @@ export function useGroupQuery(groupId: string) {
             state[groupId] = {
                 group: groupQuery.data,
                 newRule: {
-                    [IPVersion.V4]: initialNewRuleIPv4,
-                    [IPVersion.V6]: initialNewRuleIPv6,
+                    [IPVersion.V4]: VultrFirewall.initialNewRuleIPv4,
+                    [IPVersion.V6]: VultrFirewall.initialNewRuleIPv6,
                 },
                 newDescription: groupQuery.data.description,
                 isUpdating: false,
@@ -244,9 +231,9 @@ export function useUpdateGroupMutation() {
 
     const { t } = useLingui();
 
-    const setGroupIsUpdating = useSetAtom(setGroupIsUpdatingAtom);
-    const setGroupDescription = useSetAtom(setDescriptionAtom);
-    const getGroupDescription = useSetAtom(getGroupDescriptionAtom);
+    const setGroupIsUpdating = useSetAtom(VultrFirewall.setGroupIsUpdatingAtom);
+    const setGroupDescription = useSetAtom(VultrFirewall.setDescriptionAtom);
+    const getGroupDescription = useSetAtom(VultrFirewall.getGroupDescriptionAtom);
 
     const updateGroupMutation = useMutation({
         mutationFn: async ({ groupId, description }: { groupId: string; description: string }) =>
@@ -293,8 +280,8 @@ export function useDeleteGroupMutation() {
 
     const queryClient = useQueryClient();
 
-    const setGroupIsDeleting = useSetAtom(setGroupIsDeletingAtom);
-    const deleteGroupState = useSetAtom(deleteGroupStateAtom);
+    const setGroupIsDeleting = useSetAtom(VultrFirewall.setGroupIsDeletingAtom);
+    const deleteGroupState = useSetAtom(VultrFirewall.deleteGroupStateAtom);
 
     const deleteGroupMutation = useMutation({
         mutationKey: ["groups"],

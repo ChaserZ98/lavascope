@@ -4,9 +4,9 @@
     "exports": {
         ".": "./src/index.ts"
     },
-    "peerDependencies": {
-        "typescript": "catalog:"
-    },
     "dependencies": {},
-    "devDependencies": {}
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:"
+    }
 }
