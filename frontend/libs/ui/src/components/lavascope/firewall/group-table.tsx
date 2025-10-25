@@ -4,8 +4,8 @@ import { IPVersion } from "@lavascope/store";
 import { VultrFirewall } from "@lavascope/store/firewlall";
 import type { IListGroupsResponse } from "@lavascope/vultr";
 import { Trans, useLingui } from "@lingui/react/macro";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
 import {
     type ColumnDef,
     type ColumnFiltersState,
@@ -27,7 +27,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { ProxySwitch } from "#components/lavascope";
-import { Button, Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger, Input, Label, Spinner, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
+import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger, Input, Label, Spinner, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
 
 const idColumn: ColumnDef<VultrFirewall.Group> = {
     id: "ID",
@@ -43,7 +43,7 @@ const descriptionColumn: ColumnDef<VultrFirewall.Group> = {
             <Trans>Description</Trans>
         </div>
     ),
-    cell: ({ row, column }) => <div className="lowercase text-center">{row.getValue(column.id)}</div>,
+    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>,
 };
 const dateCreatedColumn: ColumnDef<VultrFirewall.Group> = {
     id: "Date Created",
@@ -121,8 +121,10 @@ const actionsColumn: ColumnDef<VultrFirewall.Group> = {
             <div className="flex gap-2 justify-center items-center">
                 <Tooltip delayDuration={1000}>
                     <TooltipTrigger asChild>
-                        <Button size="icon-sm" className="bg-transparent text-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground" onClick={() => navigator.clipboard.writeText(group.id)}>
-                            <SquarePenIcon />
+                        <Button size="icon-sm" className="bg-transparent text-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground" asChild>
+                            <Link to="/groups/$id" params={{ id: row.original.id }}>
+                                <SquarePenIcon />
+                            </Link>
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent className="select-none" color="primary">
@@ -132,28 +134,6 @@ const actionsColumn: ColumnDef<VultrFirewall.Group> = {
                 <DeleteGroupButton group={group} />
             </div>
         );
-
-        // return (
-        //     <DropdownMenu>
-        //         <DropdownMenuTrigger asChild>
-        //             <Button variant="ghost" className="h-8 w-8 p-0">
-        //                 <span className="sr-only">Open menu</span>
-        //                 <MoreHorizontal />
-        //             </Button>
-        //         </DropdownMenuTrigger>
-        //         <DropdownMenuContent align="end">
-        //             <DropdownMenuLabel className="text-foreground">Actions</DropdownMenuLabel>
-        //             <DropdownMenuItem
-        //                 onClick={() => navigator.clipboard.writeText(payment.id)}
-        //             >
-        //                 Copy payment ID
-        //             </DropdownMenuItem>
-        //             <DropdownMenuSeparator />
-        //             <DropdownMenuItem>View customer</DropdownMenuItem>
-        //             <DropdownMenuItem>View payment details</DropdownMenuItem>
-        //         </DropdownMenuContent>
-        //     </DropdownMenu>
-        // );
     },
 };
 
@@ -320,16 +300,16 @@ function CreateGroupButton() {
             }}
         >
             <Tooltip delayDuration={1000}>
-                <DialogTrigger asChild>
-                    <TooltipTrigger asChild>
-                        <Button
-                            className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                            onClick={() => setOpen(true)}
-                        >
+                <TooltipTrigger asChild>
+                    <Button
+                        className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                        onClick={() => setOpen(true)}
+                    >
+                        <DialogTrigger asChild>
                             <PlusIcon />
-                        </Button>
-                    </TooltipTrigger>
-                </DialogTrigger>
+                        </DialogTrigger>
+                    </Button>
+                </TooltipTrigger>
                 <TooltipContent className="select-none">
                     <Trans>Create Group</Trans>
                 </TooltipContent>
@@ -339,6 +319,7 @@ function CreateGroupButton() {
                     <DialogTitle>
                         <Trans>New Firewall Group</Trans>
                     </DialogTitle>
+                    <DialogDescription />
                 </DialogHeader>
                 <div className="space-y-3">
                     <Label htmlFor="new-description">
@@ -436,16 +417,16 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
             onOpenChange={(v) => setOpen(v)}
         >
             <Tooltip delayDuration={1000}>
-                <TooltipTrigger>
-                    <DialogTrigger asChild>
-                        <Button
-                            size="icon-sm"
-                            className="bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
-                            onClick={() => setOpen(true)}
-                        >
+                <TooltipTrigger asChild>
+                    <Button
+                        size="icon-sm"
+                        className="bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
+                        onClick={() => setOpen(true)}
+                    >
+                        <DialogTrigger asChild>
                             <TrashIcon />
-                        </Button>
-                    </DialogTrigger>
+                        </DialogTrigger>
+                    </Button>
                 </TooltipTrigger>
                 <TooltipContent className="select-none" color="destructive">
                     <Trans>Delete</Trans>
@@ -458,7 +439,8 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
                             Are you sure you want to delete this firewall group?
                         </Trans>
                     </DialogTitle>
-                    <DialogDescription className="text-popover-foreground">
+                    <DialogDescription />
+                    <div className="text-popover-foreground">
                         <p>
                             <span>
                                 <Trans>ID: </Trans>
@@ -497,7 +479,7 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
                                 {group.instance_count}
                             </span>
                         </p>
-                    </DialogDescription>
+                    </div>
                 </DialogHeader>
                 <DialogFooter>
                     <Button
@@ -697,11 +679,6 @@ function GroupTable() {
                 </Table>
             </div>
             <div className="flex items-center justify-center space-x-2 py-4">
-                {/* <div className="text-muted-foreground flex-1 text-sm">
-                    <Trans>
-                        {selectedRows} of {totalRows} row(s) selected.
-                    </Trans>
-                </div> */}
                 <div className="space-x-2">
                     <Button
                         variant="outline"

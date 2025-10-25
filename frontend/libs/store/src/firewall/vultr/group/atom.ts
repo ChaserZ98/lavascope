@@ -124,3 +124,9 @@ export const getCreatingGroupCountAtom = atom(
         return Object.values(state).filter((group) => group?.isCreating).length;
     }
 );
+
+// export const getGroupAtom = atom(null, (get, _set, groupId: string) => {
+//     const state = get(groupsStateAtom);
+//     return state[groupId]?.group;
+// });
+export const groupAtom = atom((get, groupId: string) => get(groupsStateAtom)[groupId]?.group);

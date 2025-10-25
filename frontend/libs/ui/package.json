@@ -30,7 +30,6 @@
         "@types/bun": "catalog:",
         "@types/react": "catalog:react",
         "@types/react-dom": "catalog:react",
-        "jotai-devtools": "catalog:jotai",
         "@tanstack/react-router-devtools": "catalog:tanstack",
         "vite": "catalog:vite",
         "typescript": "catalog:"

@@ -14,7 +14,10 @@ export type Group = {
 
 export type GroupState = {
     group: Group;
-    newRule: Record<IPVersion, NewRuleState>;
+    newRule: {
+        [IPVersion.V4]: NewRuleState;
+        [IPVersion.V6]: NewRuleState;
+    };
     newDescription: string;
     /**
      * True -> the group's update mutation is in progress.

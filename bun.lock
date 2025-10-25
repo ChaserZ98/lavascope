@@ -230,7 +230,6 @@
         "@types/node": "catalog:",
         "@types/react": "catalog:react",
         "@types/react-dom": "catalog:react",
-        "jotai-devtools": "catalog:jotai",
         "typescript": "catalog:",
         "vite": "catalog:vite",
       },
