@@ -22,7 +22,7 @@ import {
 } from "@tanstack/react-table";
 import { produce } from "immer";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ArrowUpDown, ChevronDown, ChevronLeftIcon, ChevronRightIcon, PlusIcon, SquarePenIcon, TrashIcon } from "lucide-react";
+import { ArrowUpDown, ChevronDown, ChevronLeftIcon, ChevronRightIcon, PlusIcon, RefreshCwIcon, SquarePenIcon, TrashIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -320,7 +320,7 @@ function CreateGroupButton() {
             }}
         >
             <Tooltip delayDuration={1000}>
-                <DialogTrigger>
+                <DialogTrigger asChild>
                     <TooltipTrigger asChild>
                         <Button
                             className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
@@ -355,7 +355,7 @@ function CreateGroupButton() {
                 </div>
                 <DialogFooter>
                     <Button
-                        className="cursor-pointer bg-accent text-accent-foreground hover:bg-accent/80"
+                        className="cursor-pointer"
                         disabled={isCreating}
                         onClick={() => handleConfirm()}
                     >
@@ -365,7 +365,7 @@ function CreateGroupButton() {
                         <Trans>Confirm</Trans>
                     </Button>
                     <DialogClose asChild>
-                        <Button className="cursor-pointer">
+                        <Button className="cursor-pointer bg-accent text-accent-foreground hover:bg-accent/80">
                             <Trans>Cancel</Trans>
                         </Button>
                     </DialogClose>
@@ -436,8 +436,8 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
             onOpenChange={(v) => setOpen(v)}
         >
             <Tooltip delayDuration={1000}>
-                <DialogTrigger>
-                    <TooltipTrigger asChild>
+                <TooltipTrigger>
+                    <DialogTrigger asChild>
                         <Button
                             size="icon-sm"
                             className="bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
@@ -445,8 +445,8 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
                         >
                             <TrashIcon />
                         </Button>
-                    </TooltipTrigger>
-                </DialogTrigger>
+                    </DialogTrigger>
+                </TooltipTrigger>
                 <TooltipContent className="select-none" color="destructive">
                     <Trans>Delete</Trans>
                 </TooltipContent>
@@ -501,7 +501,7 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
                 </DialogHeader>
                 <DialogFooter>
                     <Button
-                        className="cursor-pointer bg-accent text-accent-foreground hover:bg-accent/80"
+                        className="cursor-pointer"
                         disabled={isDeleting}
                         onClick={() => handleConfirm()}
                     >
@@ -511,7 +511,7 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
                         <Trans>Confirm</Trans>
                     </Button>
                     <DialogClose asChild>
-                        <Button className="cursor-pointer">
+                        <Button className="cursor-pointer bg-accent text-accent-foreground hover:bg-accent/80">
                             <Trans>Cancel</Trans>
                         </Button>
                     </DialogClose>
@@ -590,9 +590,6 @@ function GroupTable() {
         setIsLoading(false);
     }, []);
 
-    // const selectedRows = table.getFilteredSelectedRowModel().rows.length;
-    // const totalRows = table.getFilteredRowModel().rows.length;
-
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
@@ -628,16 +625,20 @@ function GroupTable() {
                     </DropdownMenuContent>
                 </DropdownMenu>
                 <CreateGroupButton />
-                {/* <Tooltip delayDuration={1000}>
+                <Tooltip delayDuration={1000}>
                     <TooltipTrigger asChild>
-                        <Button className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground">
-                            <PlusIcon />
+                        <Button
+                            className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                            onClick={handleRefreshGroups}
+                            disabled={isLoading}
+                        >
+                            <RefreshCwIcon className={isLoading ? "animate-spin" : ""} />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                        <Trans>Create Group</Trans>
+                    <TooltipContent className="select-none">
+                        <Trans>Refresh</Trans>
                     </TooltipContent>
-                </Tooltip> */}
+                </Tooltip>
             </div>
             <div className="overflow-hidden rounded-md border">
                 <Table>
@@ -687,7 +688,7 @@ function GroupTable() {
                                             colSpan={columns.length}
                                             className="h-24 text-center"
                                         >
-                                            <Trans>No results</Trans>
+                                            <Trans>Empty</Trans>
                                         </TableCell>
                                     </TableRow>
                                 )
@@ -721,16 +722,6 @@ function GroupTable() {
                 </div>
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
-                <Button
-                    onClick={handleRefreshGroups}
-                    disabled={isLoading}
-                    className="cursor-pointer w-20 bg-accent text-accent-foreground hover:bg-accent/80"
-                >
-                    {
-                        isLoading && <Spinner className="w-4" />
-                    }
-                    <Trans>Refresh</Trans>
-                </Button>
                 <ProxySwitch className="h-9 bg-accent text-accent-foreground hover:bg-accent/90" />
             </div>
         </div>
