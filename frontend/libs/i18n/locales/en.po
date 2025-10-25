@@ -26,55 +26,67 @@ msgstr "Reset"
 #: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:179
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:104
 #: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:114
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:365
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:511
 msgid "Confirm"
 msgstr "Confirm"
 
 #: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:205
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:129
 msgid "Edit Rules"
 msgstr "Edit Rules"
 
 #: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:225
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:451
 #: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:57
 msgid "Delete"
 msgstr "Delete"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/CreateGroupButton.tsx:11
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:334
 msgid "Create Group"
 msgstr "Create Group"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:39
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:588
 msgid "Failed to refresh firewall groups"
 msgstr "Failed to refresh firewall groups"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:55
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:95
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:527
 msgid "ID"
 msgstr "ID"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:56
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:52
 #: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:102
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:108
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:43
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:345
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:529
 msgid "Description"
 msgstr "Description"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:57
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:117
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:57
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:531
 msgid "Date Created"
 msgstr "Date Created"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:58
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:132
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:83
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:533
 msgid "Last Modified"
 msgstr "Last Modified"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:59
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:139
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:104
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:535
 msgid "Rules"
 msgstr "Rules"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:60
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:144
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:110
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:537
 msgid "Instances"
 msgstr "Instances"
 
@@ -89,11 +101,13 @@ msgstr "Firewall Groups"
 
 #: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:163
 #: frontend/apps/web/src/routes/_app/groups/$id.tsx:150
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:732
 #: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:76
 msgid "Refresh"
 msgstr "Refresh"
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:42
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:340
 msgid "New Firewall Group"
 msgstr "New Firewall Group"
 
@@ -104,6 +118,8 @@ msgstr "Create"
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:75
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:107
 #: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:117
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:369
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:515
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -112,26 +128,32 @@ msgid "Delete Firewall Group"
 msgstr "Delete Firewall Group"
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:53
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:457
 msgid "Are you sure you want to delete this firewall group?"
 msgstr "Are you sure you want to delete this firewall group?"
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:60
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:464
 msgid "ID: "
 msgstr "ID: "
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:66
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:470
 msgid "Description: "
 msgstr "Description: "
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:74
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:478
 msgid "Date Created: "
 msgstr "Date Created: "
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:82
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:486
 msgid "Rules: "
 msgstr "Rules: "
 
 #: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:90
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:494
 msgid "Instances: "
 msgstr "Instances: "
 
@@ -273,12 +295,13 @@ msgid "Notes"
 msgstr "Notes"
 
 #: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:138
-#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:150
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:116
 #: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:190
 msgid "Actions"
 msgstr "Actions"
 
 #: frontend/apps/web/src/hooks/Firewall/groups.ts:82
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:289
 msgid "Failed to create the new firewall group"
 msgstr "Failed to create the new firewall group"
 
@@ -291,6 +314,7 @@ msgid "Failed to update group: {message}"
 msgstr "Failed to update group: {message}"
 
 #: frontend/apps/web/src/hooks/Firewall/groups.ts:304
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:404
 msgid "Successfully deleted group with ID {groupId}"
 msgstr "Successfully deleted group with ID {groupId}"
 
@@ -341,6 +365,22 @@ msgstr "Help"
 #: frontend/libs/ui/src/components/lavascope/site-header.tsx:12
 msgid "About"
 msgstr "About"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:350
+msgid "Enter description here..."
+msgstr "Enter description here..."
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:409
+msgid "Failed to delete group"
+msgstr "Failed to delete group"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:610
+msgid "Columns"
+msgstr "Columns"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table.tsx:690
+msgid "Empty"
+msgstr "Empty"
 
 #: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:34
 msgid "Add endpoint"
@@ -434,13 +474,13 @@ msgid "Version"
 msgstr "Version"
 
 #: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:173
-#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:22
+#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:23
 msgid "Address"
 msgstr "Address"
 
-#: frontend/libs/ui/src/components/lavascope/proxy-switch.tsx:18
-#: frontend/libs/ui/src/components/lavascope/proxy-switch.tsx:25
-#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:18
+#: frontend/libs/ui/src/components/lavascope/proxy-switch.tsx:26
+#: frontend/libs/ui/src/components/lavascope/proxy-switch.tsx:33
+#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:19
 msgid "Proxy"
 msgstr "Proxy"
 
@@ -481,7 +521,7 @@ msgstr "Language"
 msgid "Theme"
 msgstr "Theme"
 
-#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:28
+#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:29
 msgid "Enter http proxy address"
 msgstr "Enter http proxy address"
 
