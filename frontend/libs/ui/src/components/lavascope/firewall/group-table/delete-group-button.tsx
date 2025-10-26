@@ -1,8 +1,7 @@
 import { useVultrAPI } from "@lavascope/hook";
 import logging from "@lavascope/log";
-import { IPVersion } from "@lavascope/store";
 import { VultrFirewall } from "@lavascope/store/firewlall";
-import type { IListRulesResponse } from "@lavascope/vultr";
+import type { IListGroupsResponse } from "@lavascope/vultr";
 import { Trans } from "@lingui/react/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
@@ -13,71 +12,60 @@ import { toast } from "sonner";
 
 import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Spinner, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
 
-function useDeleteRuleMutation() {
+function useDeleteGroupMutation() {
     const vultrAPI = useVultrAPI();
 
     const queryClient = useQueryClient();
 
-    const setRuleIsDeleting = useSetAtom(VultrFirewall.setRuleIsDeletingAtom);
-    const deleteRule = useSetAtom(VultrFirewall.deleteRuleAtom);
+    const setGroupIsDeleting = useSetAtom(VultrFirewall.setGroupIsDeletingAtom);
+    const deleteGroupState = useSetAtom(VultrFirewall.deleteGroupStateAtom);
 
-    const deleteRuleMutation = useMutation({
-        mutationFn: async ({
-            groupId,
-            ruleId,
-        }: {
-            groupId: string;
-            ruleId: string;
-        }) =>
-            await vultrAPI.firewall.deleteRule({
+    const deleteGroupMutation = useMutation({
+        mutationKey: ["groups"],
+        mutationFn: async (groupId: string) =>
+            await vultrAPI.firewall.deleteGroup({
                 "firewall-group-id": groupId,
-                "firewall-rule-id": ruleId,
             }),
-        onMutate: ({ groupId, ruleId }) => {
-            setRuleIsDeleting(groupId, ruleId, true);
+        onMutate: async (groupId) => {
+            setGroupIsDeleting(groupId, true);
         },
-        onSuccess: async (_, { groupId, ruleId }) => {
-            logging.info(
-                `Successfully deleted the rule ${ruleId} in group ${groupId} from Vultr API.`
-            );
-            deleteRule(groupId, ruleId);
-            queryClient.setQueryData(
-                ["rules", groupId],
-                (state: IListRulesResponse) => produce(state, (draft) => {
-                    draft.firewall_rules = draft.firewall_rules.filter((rule) => rule.id.toString() !== ruleId);
+        onSuccess: async (_, groupId) => {
+            deleteGroupState(groupId);
+            queryClient.setQueryData(["groups"], (state: IListGroupsResponse) =>
+                produce(state, (draft) => {
                     draft.meta.total -= 1;
+                    draft.firewall_groups = draft.firewall_groups.filter((group) => group.id !== groupId);
                 })
             );
+            logging.info(`Successfully deleted group with ID ${groupId}`);
+            toast.success(() => <Trans>Successfully deleted group with ID {groupId}</Trans>);
         },
-        onError: (err, { groupId, ruleId }) => {
-            setRuleIsDeleting(groupId, ruleId, false);
-            logging.error(
-                `Failed to delete the rule ${ruleId} in group ${groupId}: ${err}`
-            );
-            const message = err.message || "Unknown error";
-            toast.error(() => <Trans>Failed to delete the rule</Trans>, { description: message });
+        onError: (err) => {
+            logging.error(`Failed to delete group: ${err}`);
+            const message = err.message || "unknown error";
+            toast.error(() => <Trans>Failed to delete group</Trans>, { description: message });
+        },
+        onSettled: (_res, _err, groupId: string) => {
+            setGroupIsDeleting(groupId, false);
         },
     });
 
-    return deleteRuleMutation;
+    return deleteGroupMutation;
 }
 
-function DeleteRuleButton({ rule, groupId }: { rule: VultrFirewall.Rule; groupId: string }) {
+function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
     const [open, setOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
-    const deleteRuleMutation = useDeleteRuleMutation();
+    const deleteGroupMutation = useDeleteGroupMutation();
 
     const handleConfirm = useCallback(() => {
         if (isDeleting) return;
         setIsDeleting(true);
         setOpen(false);
         setIsDeleting(false);
-        deleteRuleMutation.mutate({
-            groupId,
-            ruleId: rule.id.toString(),
-        });
-    }, [rule.id, isDeleting]);
+        deleteGroupMutation.mutate(group.id);
+    }, [isDeleting, group.id]);
 
     return (
         <Dialog
@@ -104,57 +92,47 @@ function DeleteRuleButton({ rule, groupId }: { rule: VultrFirewall.Rule; groupId
                 <DialogHeader>
                     <DialogTitle className="text-lg">
                         <Trans>
-                            Are you sure you want to delete this rule?
+                            Are you sure you want to delete this firewall group?
                         </Trans>
                     </DialogTitle>
                     <DialogDescription />
                     <div className="text-popover-foreground">
                         <p>
                             <span>
-                                <Trans>IP Version</Trans>{": "}
+                                <Trans>ID: </Trans>
+                            </span>
+                            <span className="font-mono">{group.id}</span>
+                        </p>
+                        <p>
+                            <span>
+                                <Trans>Description: </Trans>
                             </span>
                             <span className="font-mono">
-                                {rule.ip_type === IPVersion.V4 ? "IPv4" : "IPv6"}
+                                {group.description}
                             </span>
                         </p>
                         <p>
                             <span>
-                                <Trans>Protocol</Trans>{": "}
+                                <Trans>Date Created: </Trans>
                             </span>
                             <span className="font-mono">
-                                {VultrFirewall.toProtocolDisplay(rule.protocol, rule.port)}
+                                {new Date(group.date_created).toLocaleString()}
                             </span>
                         </p>
                         <p>
                             <span>
-                                <Trans>Port</Trans>{": "}
+                                <Trans>Rules: </Trans>
                             </span>
                             <span className="font-mono">
-                                {rule.port}
+                                {group.rule_count}
                             </span>
                         </p>
                         <p>
                             <span>
-                                <Trans>Source Type</Trans>{": "}
+                                <Trans>Instances: </Trans>
                             </span>
                             <span className="font-mono">
-                                {rule.source}
-                            </span>
-                        </p>
-                        <p>
-                            <span>
-                                <Trans>Source Address</Trans>{": "}
-                            </span>
-                            <span className="font-mono">
-                                {`${rule.subnet}/${rule.subnet_size}`}
-                            </span>
-                        </p>
-                        <p>
-                            <span>
-                                <Trans>Notes</Trans>{": "}
-                            </span>
-                            <span className="font-mono">
-                                {rule.notes}
+                                {group.instance_count}
                             </span>
                         </p>
                     </div>
@@ -181,4 +159,4 @@ function DeleteRuleButton({ rule, groupId }: { rule: VultrFirewall.Rule; groupId
     );
 }
 
-export { DeleteRuleButton };
+export { DeleteGroupButton };

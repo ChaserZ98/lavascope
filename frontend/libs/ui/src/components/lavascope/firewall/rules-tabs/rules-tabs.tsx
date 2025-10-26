@@ -174,29 +174,7 @@ function RulesTabs({ groupId }: { groupId: string }) {
                         // onRuleDelete={onRuleDelete}
                     />
                 </TabsContent>
-                {/* <Tab key="IPv4" title="IPv4">
-                        <RulesTable
-                            ipVersion={IPVersion.V4}
-                            rules={ipv4Rules}
-                            isLoading={isLoading}
-                            onRuleDelete={onRuleDelete}
-                        />
-                    </TabsList>
-                    <Tab key="IPv6" title="IPv6">
-                        <RulesTable
-                            ipVersion={IPVersion.V6}
-                            rules={ipv6Rules}
-                            isLoading={isLoading}
-                            onRuleDelete={onRuleDelete}
-                        />
-                    </Tab> */}
             </Tabs>
-            {/* <DeleteRuleModal
-                    isOpen={deleteModal.isOpen}
-                    rule={selectedRule}
-                    groupId={groupId}
-                    onClose={handleModalClose}
-                /> */}
         </div>
     );
 }

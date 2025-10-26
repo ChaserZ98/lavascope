@@ -103,7 +103,7 @@ function GroupInfo({ groupId }: { groupId: string }) {
                     </Tooltip>
                 </div>
             </div>
-            <div className="flex flex-col items-center gap-4 sm:flex-row">
+            <div className="flex items-center gap-4 sm:flex-row">
                 <div className="flex flex-col gap-2 items-center">
                     <p className="text-default-400 text-sm md:text-base">
                         <Trans>Description</Trans>
@@ -112,7 +112,7 @@ function GroupInfo({ groupId }: { groupId: string }) {
                         {group.description}
                     </p>
                 </div>
-                <Separator orientation="vertical" />
+                <Separator orientation="vertical" className="hidden sm:block" />
                 <div className="flex flex-col gap-2 items-center">
                     <p className="text-default-400 text-sm md:text-base">
                         <Trans>Group Rules</Trans>
@@ -123,9 +123,9 @@ function GroupInfo({ groupId }: { groupId: string }) {
                         <span>{group.max_rule_count}</span>
                     </p>
                 </div>
-                <Separator orientation="vertical" />
+                <Separator orientation="vertical" className="hidden sm:block" />
                 <div className="flex flex-col gap-2 items-center">
-                    <p className="text-default-400 text-sm  md:text-base">
+                    <p className="text-default-400 text-sm md:text-base">
                         <Trans>Linked Instances</Trans>
                     </p>
                     <p className="font-mono text-sm md:text-base">

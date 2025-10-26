@@ -123,7 +123,9 @@ function RulesTable({ groupId, ipVersion, rules, isLoading }: {
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
     const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 });
 
-    const data: ColumnData[] = rules.map((rule) => ({ ...rule.rule, groupId }));
+    const data = useMemo(() => {
+        return rules.map((rule) => ({ ...rule.rule, groupId }));
+    }, [rules, groupId]);
 
     const table = useReactTable({
         data,
