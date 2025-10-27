@@ -35,11 +35,15 @@ pub enum TrayIconLeftClickError {
 
 fn handle_tray_icon_left_click(tray: &TrayIcon) -> Result<(), TrayIconLeftClickError> {
     let app = tray.app_handle();
+
     if let Some(window) = app.get_webview_window("main") {
         let is_window_visible = window.is_visible()?;
         if is_window_visible {
             window.hide()?;
         } else {
+            #[cfg(target_os = "macos")]
+            let _ = app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
             window.show()?;
             window.set_focus()?;
         }
