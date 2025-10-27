@@ -1,7 +1,7 @@
 use lavascope_logging::LogBuilder;
-use tauri::{Builder, Wry, generate_context, generate_handler};
+use tauri::{Builder, RunEvent, WindowEvent, Wry, generate_context, generate_handler};
 
-use super::commands;
+use super::{commands, event_handler};
 
 pub struct AppBuilder(Builder<Wry>);
 
@@ -13,23 +13,25 @@ impl AppBuilder {
     pub fn run(self) -> Result<(), tauri::Error> {
         let app = self.0.build(generate_context!())?;
 
-        #[allow(unused_variables)]
-        app.run(|_app, event| {
-            // workaround for macos single instance reopen issue
-            // see details https://github.com/tauri-apps/plugins-workspace/issues/1613#issuecomment-2454134194
-            #[cfg(target_os = "macos")]
-            {
-                use tauri::{Manager, RunEvent};
-
+        app.run(|app, event| match event {
+            RunEvent::Reopen {
+                has_visible_windows,
+                ..
+            } => {
+                event_handler::handle_reopen(app, has_visible_windows);
+            }
+            RunEvent::WindowEvent { label, event, .. } => {
+                if label != "main" {
+                    return;
+                }
                 match event {
-                    RunEvent::Reopen { .. } => {
-                        let main_window = _app.get_webview_window("main").unwrap();
-                        let _ = main_window.show();
-                        let _ = main_window.set_focus();
+                    WindowEvent::CloseRequested { .. } => {
+                        event_handler::handle_window_close(app);
                     }
                     _ => {}
                 }
             }
+            _ => {}
         });
 
         Ok(())
