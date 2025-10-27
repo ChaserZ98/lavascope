@@ -1,17 +1,20 @@
 import { useVultrAPI } from "@lavascope/hook";
 import logging from "@lavascope/log";
-import { IPVersion } from "@lavascope/store";
+import { ipv4Atom, ipv6Atom, IPVersion } from "@lavascope/store";
 import { VultrFirewall } from "@lavascope/store/firewlall";
 import type { IListRulesResponse } from "@lavascope/vultr";
 import { Trans, useLingui } from "@lingui/react/macro";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { PlusIcon } from "lucide-react";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Input, Label, Spinner, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
+
+import { getProtocolPort, ProtocolSelect } from "./protocol-select";
+import { getSource, SourceTypeSelect } from "./source-type-select";
 
 function useCreateRuleMutation() {
     const vultrAPI = useVultrAPI();
@@ -89,6 +92,9 @@ function useCreateRuleMutation() {
 }
 
 function CreateRuleButton({ groupId, ipVersion }: { groupId: string; ipVersion: IPVersion }) {
+    const myIPv4 = useAtomValue(ipv4Atom);
+    const myIPv6 = useAtomValue(ipv6Atom);
+
     const [isCreating, setIsCreating] = useState<boolean>(false);
     const [open, setOpen] = useState<boolean>(false);
     const [newRule, setNewRule] = useState<VultrFirewall.NewRuleState>(ipVersion === IPVersion.V4 ? VultrFirewall.initialNewRuleIPv4 : VultrFirewall.initialNewRuleIPv6);
@@ -110,10 +116,7 @@ function CreateRuleButton({ groupId, ipVersion }: { groupId: string; ipVersion: 
     return (
         <Dialog
             open={open}
-            onOpenChange={(v) => {
-                setOpen(v);
-                setDescription("");
-            }}
+            onOpenChange={setOpen}
         >
             <Tooltip delayDuration={1000}>
                 <TooltipTrigger asChild>
@@ -138,62 +141,90 @@ function CreateRuleButton({ groupId, ipVersion }: { groupId: string; ipVersion: 
                     <DialogDescription />
                 </DialogHeader>
                 <div className="space-y-3">
-                    <Label htmlFor="new-rule-protocol">
+                    <Label>
                         <Trans>Protocol</Trans>
                     </Label>
-                    <Input
-                        id="new-rule-protocol"
-                        name="newRuleProtocol"
-                        placeholder={t`Enter description here...`}
-                        disabled={isCreating}
+                    <ProtocolSelect
+                        newRule={newRule}
                         value={newRule.protocol}
-                        onChange={(e) => setNewRule(produce((draft) => {
-                            draft.protocol = e.target.value;
-                        }))}
+                        onValueChange={(v) => {
+                            const protocol = v as VultrFirewall.ProtocolSelection;
+                            const port = getProtocolPort(protocol);
+                            setNewRule(produce((draft) => {
+                                draft.protocol = protocol;
+                                draft.port = port;
+                            }));
+                        }}
                     />
-                    <Label htmlFor="new-rule-protocol">
+                    <Label htmlFor="new-rule-port">
                         <Trans>Port</Trans>
                     </Label>
                     <Input
                         id="new-rule-port"
                         name="newRulePort"
-                        placeholder={t`Enter description here...`}
-                        disabled={isCreating}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder={t`Enter port number here...`}
+                        disabled={isCreating || (newRule.protocol !== VultrFirewall.Protocol.TCP && newRule.protocol !== VultrFirewall.Protocol.UDP)}
+                        value={newRule.port}
+                        onChange={(e) => {
+                            const value = e.target.value;
+                            if (value === "") {
+                                setNewRule(produce((draft) => {
+                                    draft.port = "";
+                                }));
+                                return;
+                            }
+                            const port = parseInt(value);
+                            if (isNaN(port) || port < 0 || port > 65535) return;
+                            setNewRule(produce((draft) => {
+                                draft.port = value;
+                            }));
+                        }}
                     />
-                    <Label htmlFor="new-rule-protocol">
+                    <Label>
                         <Trans>Source Type</Trans>
                     </Label>
-                    <Input
-                        id="new-rule-protocol"
-                        name="newRuleProtocol"
-                        placeholder={t`Enter description here...`}
-                        disabled={isCreating}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                    <SourceTypeSelect
+                        newRule={newRule}
+                        value={newRule.sourceType}
+                        onValueChange={(v) => {
+                            const sourceType = v as VultrFirewall.SourceType;
+                            const source = getSource(
+                                sourceType,
+                                newRule.ip_type,
+                                myIPv4.value,
+                                myIPv6.value
+                            );
+                            setNewRule(produce((draft) => {
+                                draft.sourceType = sourceType;
+                                draft.source = source;
+                            }));
+                        }}
                     />
-                    <Label htmlFor="new-rule-protocol">
+                    <Label htmlFor="new-rule-source">
                         <Trans>Source</Trans>
                     </Label>
                     <Input
-                        id="new-rule-protocol"
-                        name="newRuleProtocol"
-                        placeholder={t`Enter description here...`}
-                        disabled={isCreating}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        id="new-rule-source"
+                        name="newRuleSource"
+                        placeholder={t`Enter source here...`}
+                        disabled={isCreating || newRule.sourceType !== VultrFirewall.SourceType.CUSTOM}
+                        value={newRule.source}
+                        onChange={(e) => setNewRule(produce((draft) => {
+                            draft.source = e.target.value;
+                        }))}
                     />
-                    <Label htmlFor="new-rule-protocol">
+                    <Label htmlFor="new-rule-Notes">
                         <Trans>Notes</Trans>
                     </Label>
                     <Input
-                        id="new-rule-protocol"
-                        name="newRuleProtocol"
-                        placeholder={t`Enter description here...`}
+                        id="new-rule-notes"
+                        name="newRuleNotes"
+                        placeholder={t`Enter notes here...`}
                         disabled={isCreating}
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        value={newRule.notes}
+                        onChange={(e) => setNewRule(produce((draft) => {
+                            draft.notes = e.target.value;
+                        }))}
                     />
                 </div>
                 <DialogFooter>

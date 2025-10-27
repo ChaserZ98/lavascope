@@ -24,7 +24,7 @@ function ColorSchemeBlock() {
                     if (value === "") return;
                     setThemeWithAnimate(value as ColorScheme, 500);
                 }}
-                className="w-full max-w-[200px]"
+                className="w-full max-w-[200px] grid grid-cols-3"
             >
                 <ToggleGroupItem value={ColorScheme.AUTO} aria-label="Toggle auto mode" className="cursor-pointer">
                     <Trans>Auto</Trans>

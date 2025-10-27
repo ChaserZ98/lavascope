@@ -5,7 +5,7 @@ import { useAtomValue } from "jotai";
 import { selectAtom } from "jotai/utils";
 import { useMemo } from "react";
 
-import { Separator, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
 
 function RelativeTime({ date }: { date: string }) {
     const now = new Date();
@@ -48,92 +48,86 @@ function GroupInfo({ groupId }: { groupId: string }) {
     if (!group) return null;
 
     return (
-        <>
-            <div className="flex w-full items-center justify-center gap-4">
-                <div className="text-xs md:text-sm">
-                    <span>
-                        <Trans>Group ID: </Trans>
-                    </span>
-                    <span className="font-bold font-mono">{groupId}</span>
-                </div>
-                <div className="text-xs md:text-sm">
-                    <span>
-                        <Trans>Created: </Trans>
-                    </span>
-                    <Tooltip delayDuration={1000}>
-                        <TooltipTrigger asChild>
-                            <span className="font-mono">
-                                {
-                                    new Date(group.date_created).toLocaleString(
-                                        language,
-                                        {
-                                            timeZoneName: "short",
-                                            hour12: false,
-                                        }
-                                    )
-                                }
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <RelativeTime date={group.date_created} />
-                        </TooltipContent>
-                    </Tooltip>
-                </div>
-                <div className="text-xs md:text-sm">
-                    <span>
-                        <Trans>Last Modified: </Trans>
-                    </span>
-                    <Tooltip delayDuration={1000}>
-                        <TooltipTrigger asChild>
-                            <span className="font-mono">
-                                {
-                                    new Date(group.date_created).toLocaleString(
-                                        language,
-                                        {
-                                            timeZoneName: "short",
-                                            hour12: false,
-                                        }
-                                    )
-                                }
-                            </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <RelativeTime date={group.date_created} />
-                        </TooltipContent>
-                    </Tooltip>
-                </div>
+        <div className="grid grid-cols-3 w-full gap-4">
+            <div className="flex flex-col gap-2 items-center text-sm md:text-base">
+                <span>
+                    <Trans>Group ID</Trans>
+                </span>
+                <span className="font-mono text-center">{groupId}</span>
             </div>
-            <div className="flex items-center gap-4 sm:flex-row">
-                <div className="flex flex-col gap-2 items-center">
-                    <p className="text-default-400 text-sm md:text-base">
-                        <Trans>Description</Trans>
-                    </p>
-                    <p className="font-mono text-sm md:text-base">
-                        {group.description}
-                    </p>
-                </div>
-                <Separator orientation="vertical" className="hidden sm:block" />
-                <div className="flex flex-col gap-2 items-center">
-                    <p className="text-default-400 text-sm md:text-base">
-                        <Trans>Group Rules</Trans>
-                    </p>
-                    <p className="font-mono text-sm md:text-base">
-                        <span className="text-primary">{group.rule_count}</span>
-                        <span>/</span>
-                        <span>{group.max_rule_count}</span>
-                    </p>
-                </div>
-                <Separator orientation="vertical" className="hidden sm:block" />
-                <div className="flex flex-col gap-2 items-center">
-                    <p className="text-default-400 text-sm md:text-base">
-                        <Trans>Linked Instances</Trans>
-                    </p>
-                    <p className="font-mono text-sm md:text-base">
-                        {group.instance_count}
-                    </p>
-                </div>
+            <div className="flex flex-col gap-2 items-center text-sm md:text-base">
+                <span>
+                    <Trans>Created</Trans>
+                </span>
+                <Tooltip delayDuration={1000}>
+                    <TooltipTrigger asChild>
+                        <span className="font-mono text-center">
+                            {
+                                new Date(group.date_created).toLocaleString(
+                                    language,
+                                    {
+                                        timeZoneName: "short",
+                                        hour12: false,
+                                    }
+                                )
+                            }
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <RelativeTime date={group.date_created} />
+                    </TooltipContent>
+                </Tooltip>
             </div>
-        </>
+            <div className="flex flex-col gap-2 items-center text-sm md:text-base">
+                <span>
+                    <Trans>Last Modified</Trans>
+                </span>
+                <Tooltip delayDuration={1000}>
+                    <TooltipTrigger asChild>
+                        <span className="font-mono text-center">
+                            {
+                                new Date(group.date_created).toLocaleString(
+                                    language,
+                                    {
+                                        timeZoneName: "short",
+                                        hour12: false,
+                                    }
+                                )
+                            }
+                        </span>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <RelativeTime date={group.date_created} />
+                    </TooltipContent>
+                </Tooltip>
+            </div>
+            <div className="flex flex-col gap-2 items-center text-sm md:text-base">
+                <span>
+                    <Trans>Description</Trans>
+                </span>
+                <span className="font-mono">
+                    {group.description}
+                </span>
+            </div>
+            <div className="flex flex-col gap-2 items-center text-sm md:text-base">
+                <span>
+                    <Trans>Group Rules</Trans>
+                </span>
+                <span className="font-mono">
+                    <span className="text-primary">{group.rule_count}</span>
+                    /
+                    {group.max_rule_count}
+                </span>
+            </div>
+            <div className="flex flex-col gap-2 items-center text-sm md:text-base">
+                <span>
+                    <Trans>Linked Instances</Trans>
+                </span>
+                <span className="font-mono">
+                    {group.instance_count}
+                </span>
+            </div>
+        </div>
     );
 }
 

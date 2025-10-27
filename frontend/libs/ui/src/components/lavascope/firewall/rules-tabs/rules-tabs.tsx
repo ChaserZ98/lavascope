@@ -6,15 +6,20 @@ import { ErrorResponse } from "@lavascope/vultr";
 import { Trans } from "@lingui/react/macro";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
+import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, type PaginationState, type SortingState, useReactTable, type VisibilityState } from "@tanstack/react-table";
 import { produce } from "immer";
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectAtom } from "jotai/utils";
+import { RefreshCwIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "#components/ui";
+import { Button, ToggleGroup, ToggleGroupItem, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
 
-import { RulesTable } from "./rules-table";
+import { CreateRuleButton } from "./create-rule-button";
+import { columns, ColumnsSelector, RulesTable } from "./rules-table";
+
+type ColumnData = VultrFirewall.Rule & { groupId: string };
 
 function useRulesQuery(groupId: string) {
     const navigate = useNavigate();
@@ -97,6 +102,12 @@ function RulesTabs({ groupId }: { groupId: string }) {
 
     const rulesState = useAtomValue(groupRulesAtom);
 
+    const [ipVersion, setIPVersion] = useState<IPVersion>(IPVersion.V4);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    const [pagination, setPagination] = useState<PaginationState>({ pageIndex: 0, pageSize: 5 });
+
     const v4State = useMemo(() => {
         const rules = [];
         for (const rule in rulesState) {
@@ -119,7 +130,26 @@ function RulesTabs({ groupId }: { groupId: string }) {
         return rules;
     }, [rulesState]);
 
-    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const data = useMemo<ColumnData[]>(() => {
+        const state = ipVersion === IPVersion.V4 ? v4State : v6State;
+        return state.map((rule) => ({ ...rule.rule, groupId }));
+    }, [v4State, v6State, ipVersion, groupId]);
+
+    const table = useReactTable({
+        data,
+        columns,
+        onSortingChange: setSorting,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onPaginationChange: setPagination,
+        state: {
+            sorting,
+            columnVisibility,
+            pagination
+        }
+    });
 
     const handleRefresh = useCallback(async () => {
         setIsLoading(true);
@@ -134,8 +164,50 @@ function RulesTabs({ groupId }: { groupId: string }) {
     }, []);
 
     return (
-        <div className="flex flex-col w-full relative bg-content1 p-4 overflow-hidden min-h-60">
-            <Tabs
+        <div className="w-full space-y-2">
+            <div className="flex justify-center items-center">
+                <ToggleGroup
+                    variant="outline"
+                    type="single"
+                    value={ipVersion}
+                    onValueChange={(v) => {
+                        if (v.length === 0) return;
+                        setIPVersion(v as IPVersion);
+                    }}
+                    className="static sm:absolute"
+                >
+                    <ToggleGroupItem
+                        value={IPVersion.V4}
+                        className={ipVersion !== IPVersion.V4 ? "cursor-pointer" : ""}
+                    >
+                        IPv4
+                    </ToggleGroupItem>
+                    <ToggleGroupItem
+                        value={IPVersion.V6}
+                        className={ipVersion !== IPVersion.V6 ? "cursor-pointer" : ""}
+                    >
+                        IPv6
+                    </ToggleGroupItem>
+                </ToggleGroup>
+                <ColumnsSelector table={table} />
+                <CreateRuleButton groupId={groupId} ipVersion={ipVersion} />
+                <Tooltip delayDuration={1000}>
+                    <TooltipTrigger asChild>
+                        <Button
+                            className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
+                            onClick={handleRefresh}
+                            disabled={isLoading}
+                        >
+                            <RefreshCwIcon className={isLoading ? "animate-spin" : ""} />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="select-none">
+                        <Trans>Refresh</Trans>
+                    </TooltipContent>
+                </Tooltip>
+            </div>
+            <RulesTable table={table} isLoading={isLoading} />
+            {/* <Tabs
                 defaultValue={IPVersion.V4}
                 aria-label="Options"
                 // isVertical={screenSize === Screen.SM ? false : true}
@@ -174,7 +246,7 @@ function RulesTabs({ groupId }: { groupId: string }) {
                         // onRuleDelete={onRuleDelete}
                     />
                 </TabsContent>
-            </Tabs>
+            </Tabs> */}
         </div>
     );
 }

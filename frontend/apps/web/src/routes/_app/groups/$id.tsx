@@ -67,17 +67,7 @@ function Rules() {
             </h2>
             <GroupInfo groupId={groupId} />
             <RulesTabs groupId={groupId} />
-            <div className="flex gap-4 justify-center items-center flex-wrap">
-                {/* <Button onClick={handleRefresh}>
-                    {
-                        isLoading ?
-                            (
-                                <Spinner className="h-4 w-4" />
-                            ) :
-                            null
-                    }
-                    <Trans>Refresh</Trans>
-                </Button> */}
+            <div className="mx-auto">
                 <ProxySwitch />
             </div>
         </div>
