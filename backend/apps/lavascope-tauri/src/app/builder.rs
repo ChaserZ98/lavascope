@@ -14,6 +14,7 @@ impl AppBuilder {
         let app = self.0.build(generate_context!())?;
 
         app.run(|app, event| match event {
+            #[cfg(target_os = "macos")]
             RunEvent::Reopen {
                 has_visible_windows,
                 ..
