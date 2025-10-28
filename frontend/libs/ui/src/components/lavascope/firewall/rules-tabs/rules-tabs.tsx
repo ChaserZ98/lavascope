@@ -10,16 +10,15 @@ import { getCoreRowModel, getPaginationRowModel, getSortedRowModel, type Paginat
 import { produce } from "immer";
 import { useAtomValue, useSetAtom } from "jotai";
 import { selectAtom } from "jotai/utils";
-import { RefreshCwIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
-import { Button, ToggleGroup, ToggleGroupItem, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
+import { ToggleGroup, ToggleGroupItem } from "#components/ui";
 
+import { ColumnsFilterSelect } from "./columns-filter-select";
 import { CreateRuleButton } from "./create-rule-button";
-import { columns, ColumnsSelector, RulesTable } from "./rules-table";
-
-type ColumnData = VultrFirewall.Rule & { groupId: string };
+import { RefreshButton } from "./refresh-button";
+import { type ColumnData, columns, RulesTable } from "./rules-table";
 
 function useRulesQuery(groupId: string) {
     const navigate = useNavigate();
@@ -132,8 +131,8 @@ function RulesTabs({ groupId }: { groupId: string }) {
 
     const data = useMemo<ColumnData[]>(() => {
         const state = ipVersion === IPVersion.V4 ? v4State : v6State;
-        return state.map((rule) => ({ ...rule.rule, groupId }));
-    }, [v4State, v6State, ipVersion, groupId]);
+        return state.map((rule) => ({ ...rule, groupId, isTableLoading: isLoading }));
+    }, [v4State, v6State, ipVersion, groupId, isLoading]);
 
     const table = useReactTable({
         data,
@@ -155,9 +154,7 @@ function RulesTabs({ groupId }: { groupId: string }) {
         setIsLoading(true);
         const res = await rulesQuery.refetch();
         if (res.isError) {
-            const message = res.error instanceof Error ?
-                res.error.message :
-                res.error;
+            const message = res.error.message;
             toast.error(() => <Trans>Failed to fetch firewall rules</Trans>, { description: message });
         }
         setIsLoading(false);
@@ -189,64 +186,11 @@ function RulesTabs({ groupId }: { groupId: string }) {
                         IPv6
                     </ToggleGroupItem>
                 </ToggleGroup>
-                <ColumnsSelector table={table} />
+                <ColumnsFilterSelect table={table} />
                 <CreateRuleButton groupId={groupId} ipVersion={ipVersion} />
-                <Tooltip delayDuration={1000}>
-                    <TooltipTrigger asChild>
-                        <Button
-                            className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                            onClick={handleRefresh}
-                            disabled={isLoading}
-                        >
-                            <RefreshCwIcon className={isLoading ? "animate-spin" : ""} />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="select-none">
-                        <Trans>Refresh</Trans>
-                    </TooltipContent>
-                </Tooltip>
+                <RefreshButton isLoading={isLoading} onClick={handleRefresh} />
             </div>
             <RulesTable table={table} isLoading={isLoading} />
-            {/* <Tabs
-                defaultValue={IPVersion.V4}
-                aria-label="Options"
-                // isVertical={screenSize === Screen.SM ? false : true}
-                color="primary"
-                // radius="lg"
-                // size={screenSize === Screen.SM ? "sm" : "md"}
-                // variant="solid"
-                // classNames={{
-                //     base: "flex justify-center md:px-2",
-                //     tabList:
-                //         "transition-colors-opacity bg-content2 my-auto",
-                //     cursor: "transition-colors-opacity",
-                //     tab: "transition-colors-opacity",
-                //     panel: "overflow-auto md:px-0",
-                // }}
-            >
-                <TabsList className="self-center">
-                    <TabsTrigger value={IPVersion.V4}>IPv4</TabsTrigger>
-                    <TabsTrigger value={IPVersion.V6}>IPv6</TabsTrigger>
-                </TabsList>
-                <TabsContent value={IPVersion.V4}>
-                    <RulesTable
-                        groupId={groupId}
-                        ipVersion={IPVersion.V4}
-                        rules={v4State}
-                        isLoading={isLoading}
-                        // onRuleDelete={onRuleDelete}
-                    />
-                </TabsContent>
-                <TabsContent value={IPVersion.V6}>
-                    <RulesTable
-                        groupId={groupId}
-                        ipVersion={IPVersion.V6}
-                        rules={v6State}
-                        isLoading={isLoading}
-                        // onRuleDelete={onRuleDelete}
-                    />
-                </TabsContent>
-            </Tabs> */}
         </div>
     );
 }

@@ -84,7 +84,7 @@ function SourceTypeSelect({
             aria-label="Source Type"
             {...props}
         >
-            <SelectTrigger>
+            <SelectTrigger className="cursor-pointer">
                 <p><TranslatedSourceType value={newRule.sourceType} /></p>
             </SelectTrigger>
             <SelectContent>

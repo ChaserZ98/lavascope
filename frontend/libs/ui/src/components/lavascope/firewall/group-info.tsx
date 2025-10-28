@@ -2,8 +2,6 @@ import { languageAtom } from "@lavascope/store";
 import { VultrFirewall } from "@lavascope/store/firewlall";
 import { Plural, Trans } from "@lingui/react/macro";
 import { useAtomValue } from "jotai";
-import { selectAtom } from "jotai/utils";
-import { useMemo } from "react";
 
 import { Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
 
@@ -39,13 +37,8 @@ function RelativeTime({ date }: { date: string }) {
     return <Plural value={years} one="# year ago" other="# years ago" />;
 }
 
-function GroupInfo({ groupId }: { groupId: string }) {
-    const groupAtom = useMemo(() => selectAtom(VultrFirewall.groupsStateAtom, (state) => state[groupId]?.group), []);
-
+function GroupInfo({ group }: { group: VultrFirewall.Group }) {
     const language = useAtomValue(languageAtom);
-    const group = useAtomValue(groupAtom);
-
-    if (!group) return null;
 
     return (
         <div className="grid grid-cols-3 w-full gap-4">
@@ -53,7 +46,7 @@ function GroupInfo({ groupId }: { groupId: string }) {
                 <span>
                     <Trans>Group ID</Trans>
                 </span>
-                <span className="font-mono text-center">{groupId}</span>
+                <span className="font-mono text-center">{group.id}</span>
             </div>
             <div className="flex flex-col gap-2 items-center text-sm md:text-base">
                 <span>

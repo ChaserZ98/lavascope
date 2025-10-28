@@ -1,6 +1,10 @@
+import { VultrFirewall } from "@lavascope/store/firewlall";
 import { GroupInfo, ProxySwitch, RulesTabs } from "@lavascope/ui/components/lavascope";
 import { Trans } from "@lingui/react/macro";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useAtomValue } from "jotai";
+import { selectAtom } from "jotai/utils";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/_app/groups/$id")({
     component: Rules,
@@ -9,65 +13,23 @@ export const Route = createFileRoute("/_app/groups/$id")({
 function Rules() {
     const { id: groupId = "" } = Route.useParams();
 
-    // const deleteModal = useDisclosure();
+    const navigate = useNavigate();
 
-    // const rulesQuery = useRulesQuery(groupId);
+    const groupAtom = useMemo(() => selectAtom(VultrFirewall.groupsStateAtom, (state) => state[groupId]?.group), []);
+    const group = useAtomValue(groupAtom);
 
-    // const screenSize = useAtomValue(screenSizeAtom);
-    // const rulesState = useAtomValue(
-    //     selectAtom(
-    //         VultrFirewall.rulesAtom,
-    //         useCallback((state) => state[groupId] || {}, [groupId])
-    //     )
-    // );
-
-    // const [selectedRule, setSelectedRule] = useState<VultrFirewall.Rule | null>(null);
-
-    // const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    // const rulesIsLoading = rulesQuery.isFetching;
-    // const ipv4Rules = Object.values(rulesState).filter(
-    //     (state): state is VultrFirewall.RuleState =>
-    //         state !== undefined && state.rule.ip_type === IPVersion.V4
-    // );
-    // const ipv6Rules = Object.values(rulesState).filter(
-    //     (state): state is VultrFirewall.RuleState =>
-    //         state !== undefined && state.rule.ip_type === IPVersion.V6
-    // );
-
-    // const handleRefresh = useCallback(async () => {
-    //     setIsLoading(true);
-    //     const res = await rulesQuery.refetch();
-    //     if (res.isError) {
-    //         const message = res.error instanceof Error ?
-    //             res.error.message :
-    //             res.error;
-    //         toast.error(() => <Trans>Failed to fetch firewall rules</Trans>, { description: message });
-    //     }
-    //     setIsLoading(false);
-    // }, []);
-    // const onRuleDelete = useCallback((rule: VultrFirewall.Rule) => {
-    //     setSelectedRule(rule);
-    //     deleteModal.onOpen();
-    // }, []);
-
-    // return (
-    //     <div className="flex flex-col px-8 pb-4 gap-4 items-center select-none">
-    //         <h2 className="text-lg font-bold text-foreground transition-colors-opacity md:text-2xl">
-    //             <Trans>Edit Firewall Group</Trans>
-    //         </h2>
-    //         <GroupInfo groupId={groupId} />
-    //     </div>
-    // );
+    if (!group) {
+        return navigate({ to: "/groups", replace: true });
+    }
 
     return (
-        <div className="flex flex-col px-8 pb-4 gap-4 items-center select-none">
-            <h2 className="text-lg font-bold text-foreground transition-colors-opacity md:text-2xl">
+        <div className="w-full space-y-4 select-none">
+            <h2 className="text-center text-lg font-bold text-foreground transition-colors-opacity md:text-2xl">
                 <Trans>Edit Firewall Group</Trans>
             </h2>
-            <GroupInfo groupId={groupId} />
+            <GroupInfo group={group} />
             <RulesTabs groupId={groupId} />
-            <div className="mx-auto">
+            <div className="mx-auto w-fit">
                 <ProxySwitch />
             </div>
         </div>

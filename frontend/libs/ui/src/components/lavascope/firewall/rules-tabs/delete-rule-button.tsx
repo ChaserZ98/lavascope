@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
 import { useSetAtom } from "jotai";
 import { TrashIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { type ComponentProps, useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Spinner, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
@@ -62,7 +62,7 @@ function useDeleteRuleMutation() {
     return deleteRuleMutation;
 }
 
-function DeleteRuleButton({ rule, groupId }: { rule: VultrFirewall.Rule; groupId: string }) {
+function DeleteRuleButton({ rule, groupId, ...props }: { rule: VultrFirewall.Rule; groupId: string } & ComponentProps<typeof Button>) {
     const [open, setOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -90,6 +90,7 @@ function DeleteRuleButton({ rule, groupId }: { rule: VultrFirewall.Rule; groupId
                         size="icon-sm"
                         className="bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
                         onClick={() => setOpen(true)}
+                        {...props}
                     >
                         <DialogTrigger asChild>
                             <TrashIcon />

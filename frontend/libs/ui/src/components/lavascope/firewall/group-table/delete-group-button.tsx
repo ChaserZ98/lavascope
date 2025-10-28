@@ -7,7 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { produce } from "immer";
 import { useSetAtom } from "jotai";
 import { TrashIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { type ComponentProps, useCallback, useState } from "react";
 import { toast } from "sonner";
 
 import { Button, Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger, Spinner, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
@@ -53,7 +53,7 @@ function useDeleteGroupMutation() {
     return deleteGroupMutation;
 }
 
-function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
+function DeleteGroupButton({ group, ...props }: { group: VultrFirewall.Group } & ComponentProps<typeof Button>) {
     const [open, setOpen] = useState<boolean>(false);
     const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
@@ -70,7 +70,7 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
     return (
         <Dialog
             open={open}
-            onOpenChange={(v) => setOpen(v)}
+            onOpenChange={setOpen}
         >
             <Tooltip delayDuration={1000}>
                 <TooltipTrigger asChild>
@@ -78,6 +78,7 @@ function DeleteGroupButton({ group }: { group: VultrFirewall.Group }) {
                         size="icon-sm"
                         className="bg-transparent text-foreground hover:bg-destructive hover:text-destructive-foreground cursor-pointer"
                         onClick={() => setOpen(true)}
+                        {...props}
                     >
                         <DialogTrigger asChild>
                             <TrashIcon />

@@ -129,7 +129,7 @@ function CreateRuleButton({ groupId, ipVersion }: { groupId: string; ipVersion: 
                         </DialogTrigger>
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent className="select-none">
+                <TooltipContent className="select-none" color="primary">
                     <Trans>Create Group</Trans>
                 </TooltipContent>
             </Tooltip>

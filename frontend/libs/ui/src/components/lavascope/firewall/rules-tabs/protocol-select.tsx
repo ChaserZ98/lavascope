@@ -125,35 +125,8 @@ function ProtocolSelect({
     const protocolSelection = newRule.protocol;
 
     return (
-        <Select
-            // open={true}
-            // items={protocols}
-            // isDisabled={isDisabled}
-            // variant="faded"
-            // selectionMode="single"
-            // placeholder="SSH"
-            // aria-label="Protocol"
-            // selectedKeys={new Set([protocolSelection])}
-            // onSelectionChange={(keys) => {
-            //     const protocol =
-            //         (keys.currentKey as ProtocolSelection) || protocolSelection;
-            //     const port = getProtocolPort(protocol);
-            //     const rule = {
-            //         ...newRule,
-            //         protocol,
-            //         port,
-            //     };
-            //     setNewRule(groupId, rule);
-            // }}
-            // classNames={{
-            //     base: "min-w-[150px] !duration-250",
-            //     trigger: "transition-colors-opacity",
-            //     value: "transition-colors-opacity",
-            //     selectorIcon: "text-foreground transition-colors-opacity",
-            // }}
-            {...props}
-        >
-            <SelectTrigger>
+        <Select {...props}>
+            <SelectTrigger className="cursor-pointer">
                 <p className="uppercase">{protocolSelection}</p>
             </SelectTrigger>
             <SelectContent>
@@ -171,25 +144,6 @@ function ProtocolSelect({
                     ))
                 }
             </SelectContent>
-            {/* {(type) => (
-                <SelectSection title={type.title} showDivider key={type.title}>
-                    {type.items.map((protocol) => (
-                        <SelectItem
-                            key={protocol.value}
-                            textValue={protocol.title}
-                        >
-                            <div className="flex flex-col">
-                                <span className="text-sm">
-                                    {protocol.title}
-                                </span>
-                                <span className="text-xs text-default-400 text-wrap">
-                                    {protocol.description}
-                                </span>
-                            </div>
-                        </SelectItem>
-                    ))}
-                </SelectSection>
-            )} */}
         </Select>
     );
 }

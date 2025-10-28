@@ -8,15 +8,19 @@ import { Link } from "@tanstack/react-router";
 import { type ColumnDef, type ColumnFiltersState, flexRender, getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, type PaginationState, type RowSelectionState, type SortingState, useReactTable, type VisibilityState } from "@tanstack/react-table";
 import { produce } from "immer";
 import { useAtomValue, useSetAtom } from "jotai";
-import { ArrowUpDown, ChevronDown, ChevronLeftIcon, ChevronRightIcon, RefreshCwIcon, SquarePenIcon } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ChevronLeftIcon, ChevronRightIcon, SquarePenIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { ProxySwitch } from "#components/lavascope/proxy-switch";
-import { Button, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
+import { Button, Input, Table, TableBody, TableCell, TableHead, TableHeader, TableRow, Tooltip, TooltipContent, TooltipTrigger } from "#components/ui";
+import { cn } from "#lib/utils";
 
+import { ColumnsFilterSelect } from "./columns-filter-select";
 import { CreateGroupButton } from "./create-group-button";
 import { DeleteGroupButton } from "./delete-group-button";
+import { RefreshButton } from "./refresh-button";
+import { RowsPerPageSelect } from "./rows-per-page-select";
 
 function useGroupsQuery() {
     const vultrAPI = useVultrAPI();
@@ -90,38 +94,52 @@ function TranslatedID({ value }: { value: string }) {
     }
 }
 
-const idColumn: ColumnDef<VultrFirewall.Group> = {
+type ColumnData = Omit<VultrFirewall.GroupState, "newRule" | "newDescription"> & { isTableLoading: boolean };
+
+const idColumn: ColumnDef<ColumnData> = {
     id: "ID",
-    accessorKey: "id",
     header: () => <div className="text-center">ID</div>,
-    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.group.id}</div>,
 };
-const descriptionColumn: ColumnDef<VultrFirewall.Group> = {
+const descriptionColumn: ColumnDef<ColumnData> = {
     id: "Description",
-    accessorKey: "description",
     header: () => (
         <div className="w-fit mx-auto">
             <Trans>Description</Trans>
         </div>
     ),
-    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>,
+    cell: ({ row }) => <div className="text-center">{row.original.group.description}</div>,
 };
-const dateCreatedColumn: ColumnDef<VultrFirewall.Group> = {
+const dateCreatedColumn: ColumnDef<ColumnData> = {
     id: "Date Created",
-    accessorKey: "date_created",
-    header: ({ column }) => (
-        <div className="w-fit mx-auto">
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                <Trans>Date Created</Trans>
-                <ArrowUpDown />
-            </Button>
-        </div>
-    ),
-    cell: ({ row, column }) => {
-        const value = new Date(row.getValue(column.id)).toLocaleString(
+    header: ({ column }) => {
+        const sortedState = column.getIsSorted();
+        const handleClick = () => {
+            if (!sortedState) {
+                column.toggleSorting(false);
+            } else if (sortedState === "asc") {
+                column.toggleSorting(true);
+            } else {
+                column.clearSorting();
+            }
+        };
+
+        return (
+            <div className="w-fit mx-auto">
+                <Button
+                    variant="ghost"
+                    onClick={handleClick}
+                >
+                    <Trans>Date Created</Trans>
+                    {
+                        sortedState === false ? <ArrowUpDown /> : sortedState === "asc" ? <ArrowUp /> : <ArrowDown />
+                    }
+                </Button>
+            </div>
+        );
+    },
+    cell: ({ row }) => {
+        const value = new Date(row.original.group.date_created).toLocaleString(
             Intl.DateTimeFormat().resolvedOptions().locale,
             {
                 timeZoneName: "short",
@@ -132,22 +150,36 @@ const dateCreatedColumn: ColumnDef<VultrFirewall.Group> = {
         return <div className="text-center">{value}</div>;
     },
 };
-const lastModifiedColumn: ColumnDef<VultrFirewall.Group> = {
+const lastModifiedColumn: ColumnDef<ColumnData> = {
     id: "Last Modified",
-    accessorKey: "date_modified",
-    header: ({ column }) => (
-        <div className="w-fit mx-auto">
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                <Trans>Last Modified</Trans>
-                <ArrowUpDown />
-            </Button>
-        </div>
-    ),
-    cell: ({ row, column }) => {
-        const value = new Date(row.getValue(column.id)).toLocaleString(
+    header: ({ column }) => {
+        const sortedState = column.getIsSorted();
+        const handleClick = () => {
+            if (!sortedState) {
+                column.toggleSorting(false);
+            } else if (sortedState === "asc") {
+                column.toggleSorting(true);
+            } else {
+                column.clearSorting();
+            }
+        };
+
+        return (
+            <div className="w-fit mx-auto">
+                <Button
+                    variant="ghost"
+                    onClick={handleClick}
+                >
+                    <Trans>Last Modified</Trans>
+                    {
+                        sortedState === false ? <ArrowUpDown /> : sortedState === "asc" ? <ArrowUp /> : <ArrowDown />
+                    }
+                </Button>
+            </div>
+        );
+    },
+    cell: ({ row }) => {
+        const value = new Date(row.original.group.date_modified).toLocaleString(
             Intl.DateTimeFormat().resolvedOptions().locale,
             {
                 timeZoneName: "short",
@@ -159,31 +191,44 @@ const lastModifiedColumn: ColumnDef<VultrFirewall.Group> = {
         );
     },
 };
-const rulesColumn: ColumnDef<VultrFirewall.Group> = {
+const rulesColumn: ColumnDef<ColumnData> = {
     id: "Rules",
-    accessorKey: "rule_count",
     header: () => <div className="text-center"><Trans>Rules</Trans></div>,
-    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>
+    cell: ({ row }) => <div className="text-center">{row.original.group.rule_count}</div>
 };
-const instancesColumn: ColumnDef<VultrFirewall.Group> = {
+const instancesColumn: ColumnDef<ColumnData> = {
     id: "Instances",
-    accessorKey: "instance_count",
     header: () => <div className="text-center"><Trans>Instances</Trans></div>,
-    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>
+    cell: ({ row }) => <div className="text-center">{row.original.group.instance_count}</div>
 };
-const actionsColumn: ColumnDef<VultrFirewall.Group> = {
+const actionsColumn: ColumnDef<ColumnData> = {
     id: "actions",
     enableHiding: false,
     header: () => <div className="text-center"><Trans>Actions</Trans></div>,
     cell: ({ row }) => {
-        const group = row.original;
+        const state = row.original;
+        const group = state.group;
+        const disabled = state.isTableLoading || state.isUpdating || state.isDeleting || state.isCreating;
 
         return (
             <div className="flex gap-2 justify-center items-center">
                 <Tooltip delayDuration={1000}>
                     <TooltipTrigger asChild>
-                        <Button size="icon-sm" className="bg-transparent text-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground" asChild>
-                            <Link to="/groups/$id" params={{ id: row.original.id }}>
+                        <Button
+                            size="icon-sm"
+                            className={
+                                cn(
+                                    "bg-transparent text-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground",
+                                    { "pointer-events-none opacity-50": disabled }
+                                )
+                            }
+                            aria-disabled={disabled}
+                            asChild
+                        >
+                            <Link
+                                to="/groups/$id"
+                                params={{ id: group.id }}
+                            >
                                 <SquarePenIcon />
                             </Link>
                         </Button>
@@ -192,13 +237,16 @@ const actionsColumn: ColumnDef<VultrFirewall.Group> = {
                         <Trans>Edit Rules</Trans>
                     </TooltipContent>
                 </Tooltip>
-                <DeleteGroupButton group={group} />
+                <DeleteGroupButton
+                    group={group}
+                    disabled={disabled}
+                />
             </div>
         );
     },
 };
 
-const columns: ColumnDef<VultrFirewall.Group>[] = [
+const columns: ColumnDef<ColumnData>[] = [
     idColumn,
     descriptionColumn,
     dateCreatedColumn,
@@ -223,9 +271,15 @@ function GroupTable() {
     });
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const data = useMemo(() => {
-        return Object.values(groupsState).filter((groupState) => groupState !== undefined).map((groupState) => groupState.group);
-    }, [groupsState]);
+    const data: ColumnData[] = useMemo(() => {
+        return Object.values(groupsState).filter((groupState) => groupState !== undefined).map((state) => ({
+            group: state.group,
+            isCreating: state.isCreating,
+            isUpdating: state.isUpdating,
+            isDeleting: state.isDeleting,
+            isTableLoading: isLoading
+        }));
+    }, [groupsState, isLoading]);
 
     const table = useReactTable({
         data,
@@ -258,58 +312,32 @@ function GroupTable() {
         setIsLoading(false);
     }, []);
 
+    const totalRows = table.getFilteredRowModel().rows.length;
+
+    const pageSize = table.getState().pagination.pageSize;
+    const pageSizeOptions = [5, 10, 20];
+
     return (
         <div className="w-full">
-            <div className="flex items-center py-4">
-                <Input
-                    placeholder="Filter description..."
-                    value={table.getColumn("Description")?.getFilterValue() as string ?? ""}
-                    onChange={
-                        (e) => table.getColumn("Description")?.setFilterValue(e.target.value)
-                    }
-                    className="max-w-3xs h-full"
-                />
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline" className="ml-auto h-full dark:hover:bg-accent dark:hover:text-accent-foreground">
-                            <Trans>Columns</Trans> <ChevronDown />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {
-                            table
-                                .getAllColumns()
-                                .filter((column) => column.getCanHide())
-                                .map((column) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(v) => column.toggleVisibility(v)}
-                                    >
-                                        <TranslatedID value={column.id} />
-                                    </DropdownMenuCheckboxItem>
-                                ))
+            <div className="flex justify-between items-center py-4 gap-2">
+                <div>
+                    <Input
+                        placeholder="Filter description..."
+                        value={table.getColumn("Description")?.getFilterValue() as string ?? ""}
+                        onChange={
+                            (e) => table.getColumn("Description")?.setFilterValue(e.target.value)
                         }
-                    </DropdownMenuContent>
-                </DropdownMenu>
-                <CreateGroupButton />
-                <Tooltip delayDuration={1000}>
-                    <TooltipTrigger asChild>
-                        <Button
-                            className="ml-2 h-full bg-accent text-accent-foreground cursor-pointer hover:bg-primary hover:text-primary-foreground"
-                            onClick={handleRefreshGroups}
-                            disabled={isLoading}
-                        >
-                            <RefreshCwIcon className={isLoading ? "animate-spin" : ""} />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent className="select-none">
-                        <Trans>Refresh</Trans>
-                    </TooltipContent>
-                </Tooltip>
+                        className="max-w-3xs h-full"
+                    />
+                </div>
+                <div className="flex items-center">
+                    <ColumnsFilterSelect table={table} />
+                    <CreateGroupButton />
+                    <RefreshButton isLoading={isLoading} onClick={handleRefreshGroups} />
+                </div>
             </div>
             <div className="overflow-hidden rounded-md border">
-                <Table>
+                <Table className={isLoading ? "animate-pulse" : ""}>
                     <TableHeader>
                         {
                             table.getHeaderGroups().map((headerGroup) => (
@@ -337,7 +365,11 @@ function GroupTable() {
                             table.getRowModel().rows?.length ?
                                 (
                                     table.getRowModel().rows.map((row) => (
-                                        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                                        <TableRow
+                                            key={row.id}
+                                            data-state={row.getIsSelected() && "selected"}
+                                            className={row.original.isCreating || row.original.isUpdating || row.original.isDeleting ? "animate-pulse" : ""}
+                                        >
                                             {
                                                 row.getVisibleCells().map((cell) => (
                                                     <TableCell key={cell.id}>
@@ -365,12 +397,12 @@ function GroupTable() {
                 </Table>
             </div>
             <div className="flex items-center justify-center space-x-2 py-4">
-                <div className="space-x-2">
+                <div className="flex space-x-2 sm:absolute">
                     <Button
                         variant="outline"
                         size="sm"
                         onClick={() => table.previousPage()}
-                        disabled={!table.getCanPreviousPage()}
+                        disabled={!table.getCanPreviousPage() || isLoading}
                     >
                         <ChevronLeftIcon />
                     </Button>
@@ -378,10 +410,19 @@ function GroupTable() {
                         variant="outline"
                         size="sm"
                         onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        disabled={!table.getCanNextPage() || isLoading}
                     >
                         <ChevronRightIcon />
                     </Button>
+                    <RowsPerPageSelect
+                        pageSizeOptions={pageSizeOptions}
+                        value={pageSize.toString()}
+                        onValueChange={(v) => table.setPageSize(parseInt(v))}
+                        disabled={isLoading}
+                    />
+                </div>
+                <div className="ml-auto">
+                    <Trans>{totalRows} row(s) in total</Trans>
                 </div>
             </div>
             <div className="flex gap-4 justify-center items-center flex-wrap">
@@ -391,4 +432,4 @@ function GroupTable() {
     );
 }
 
-export { GroupTable };
+export { GroupTable, TranslatedID };

@@ -1,43 +1,43 @@
 import { VultrFirewall } from "@lavascope/store/firewlall";
-import { Trans, useLingui } from "@lingui/react/macro";
+import { Trans } from "@lingui/react/macro";
 import { type ColumnDef, flexRender, useReactTable } from "@tanstack/react-table";
-import { ArrowUpDownIcon, ChevronDown, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ArrowUpDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 
-import { Button, DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#components/ui";
+import { Button, Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "#components/ui";
 
 import { DeleteRuleButton } from "./delete-rule-button";
+import { RowsPerPageSelect } from "./rows-per-page-select";
 
-type ColumnData = VultrFirewall.Rule & { groupId: string };
+type ColumnData = VultrFirewall.RuleState & { groupId: string; isTableLoading: boolean };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const idColumn: ColumnDef<ColumnData> = {
     id: "ID",
-    accessorKey: "id",
     header: () => <div className="text-center">ID</div>,
-    cell: ({ row, column }) => <div>{row.getValue(column.id)}</div>
+    cell: ({ row }) => <div>{row.original.rule.id}</div>
 };
 const protocolColumn: ColumnDef<ColumnData> = {
     id: "Protocol",
-    accessorKey: "protocol",
-    header: ({ column }) => (
-        <div className="text-center">
-            <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-                <Trans>Protocol</Trans>
-                <ArrowUpDownIcon />
-            </Button>
-        </div>
-    ),
-    cell: ({ row, column }) => <div className="uppercase text-center">{row.getValue(column.id)}</div>
+    header: ({ column }) => {
+        return (
+            <div className="text-center">
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    <Trans>Protocol</Trans>
+                    <ArrowUpDownIcon />
+                </Button>
+            </div>
+        );
+    },
+    cell: ({ row }) => <div className="uppercase text-center">{row.original.rule.protocol}</div>
 };
 const portColumn: ColumnDef<ColumnData> = {
     id: "Port",
-    accessorKey: "port",
     sortingFn: (rowA, rowB) => {
-        const portA = parseInt(rowA.original.port);
-        const portB = parseInt(rowB.original.port);
+        const portA = parseInt(rowA.original.rule.port);
+        const portB = parseInt(rowB.original.rule.port);
         if (portA === portB) return 0;
         if (!isNaN(portA) && !isNaN(portB)) return portA - portB;
         if (isNaN(portA) && !isNaN(portB)) return -1;
@@ -54,48 +54,45 @@ const portColumn: ColumnDef<ColumnData> = {
             </Button>
         </div>
     ),
-    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>
+    cell: ({ row }) => <div className="text-center">{row.original.rule.port}</div>
 };
 const sourceTypeColumn: ColumnDef<ColumnData> = {
     id: "Source Type",
-    accessorKey: "source",
     header: () => <div className="text-center"><Trans>Source Type</Trans></div>,
     cell: ({ row }) => {
-        const { t } = useLingui();
-
-        const rule = row.original;
+        const rule = row.original.rule;
 
         const sourceType = rule.source === "cloudflare" ?
-            t`Cloudflare` :
-            rule.subnet === "::" || rule.subnet === "0.0.0.0" ? t`Anywhere` : t`Custom`;
+            <Trans>Cloudflare</Trans> :
+            rule.subnet === "::" || rule.subnet === "0.0.0.0" ? <Trans>Anywhere</Trans> : <Trans>Custom</Trans>;
         return <div className="text-center">{sourceType}</div>;
     }
 };
 const sourceColumn: ColumnDef<ColumnData> = {
     id: "Source",
-    accessorKey: "source",
     header: () => <div className="text-center"><Trans>Source</Trans></div>,
     cell: ({ row }) => {
-        const rule = row.original;
+        const rule = row.original.rule;
         const value = rule.source === "cloudflare" ? "cloudflare" : `${rule.subnet}/${rule.subnet_size}`;
         return <div className="text-center">{value}</div>;
     }
 };
 const noteColumn: ColumnDef<ColumnData> = {
     id: "Notes",
-    accessorKey: "notes",
     header: () => <div className="text-center"><Trans>Note</Trans></div>,
-    cell: ({ row, column }) => <div className="text-center">{row.getValue(column.id)}</div>
+    cell: ({ row }) => <div className="text-center">{row.original.rule.notes}</div>
 };
 const actionsColumn: ColumnDef<ColumnData> = {
     id: "Actions",
     accessorKey: "id",
     header: () => <div className="text-center"><Trans>Actions</Trans></div>,
     cell: ({ row }) => {
-        const rule = row.original;
+        const rule = row.original.rule;
+        const groupId = row.original.groupId;
+        const disabled = row.original.isTableLoading || row.original.isCreating || row.original.isDeleting;
         return (
             <div className="flex gap-2 justify-center items-center">
-                <DeleteRuleButton rule={rule} groupId={rule.groupId} />
+                <DeleteRuleButton rule={rule} groupId={groupId} disabled={disabled} />
             </div>
         );
     }
@@ -129,38 +126,15 @@ function TranslatedID({ value }: { value: string }) {
     }
 }
 
-function ColumnsSelector<T>({ table }: { table: ReturnType<typeof useReactTable<T>> }) {
-    return (
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="ml-auto h-full dark:hover:bg-accent dark:hover:text-accent-foreground">
-                    <Trans>Columns</Trans> <ChevronDown />
-                </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-                {
-                    table
-                        .getAllColumns()
-                        .filter((column) => column.getCanHide())
-                        .map((column) => (
-                            <DropdownMenuCheckboxItem
-                                key={column.id}
-                                checked={column.getIsVisible()}
-                                onCheckedChange={(v) => column.toggleVisibility(v)}
-                            >
-                                <TranslatedID value={column.id} />
-                            </DropdownMenuCheckboxItem>
-                        ))
-                }
-            </DropdownMenuContent>
-        </DropdownMenu>
-    );
-}
-
 function RulesTable({ table, isLoading }: {
     table: ReturnType<typeof useReactTable<ColumnData>>;
     isLoading?: boolean;
 }) {
+    const totalRows = table.getFilteredRowModel().rows.length;
+
+    const pageSize = table.getState().pagination.pageSize;
+    const pageSizeOptions = [5, 10, 20];
+
     return (
         <div className="w-full">
             <div className="overflow-hidden rounded-md border">
@@ -192,7 +166,7 @@ function RulesTable({ table, isLoading }: {
                             table.getRowModel().rows?.length ?
                                 (
                                     table.getRowModel().rows.map((row) => (
-                                        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                                        <TableRow key={row.id} data-state={row.getIsSelected() && "selected"} className={row.original.isCreating || row.original.isDeleting ? "animate-pulse" : ""}>
                                             {
                                                 row.getVisibleCells().map((cell) => (
                                                     <TableCell key={cell.id}>
@@ -220,7 +194,7 @@ function RulesTable({ table, isLoading }: {
                 </Table>
             </div>
             <div className="flex items-center justify-center space-x-2 py-4">
-                <div className="space-x-2">
+                <div className="flex space-x-2 sm:absolute">
                     <Button
                         variant="outline"
                         size="sm"
@@ -237,10 +211,19 @@ function RulesTable({ table, isLoading }: {
                     >
                         <ChevronRightIcon />
                     </Button>
+                    <RowsPerPageSelect
+                        pageSizeOptions={pageSizeOptions}
+                        value={pageSize.toString()}
+                        onValueChange={(v) => table.setPageSize(parseInt(v))}
+                        disabled={isLoading}
+                    />
+                </div>
+                <div className="ml-auto">
+                    <Trans>{totalRows} row(s) in total</Trans>
                 </div>
             </div>
         </div>
     );
 }
 
-export { columns, ColumnsSelector, RulesTable, TranslatedID };
+export { type ColumnData, columns, RulesTable, TranslatedID };
