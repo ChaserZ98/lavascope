@@ -93,20 +93,26 @@
       "name": "@lavascope/hook",
       "dependencies": {
         "@lavascope/fetch": "workspace:*",
+        "@lavascope/log": "workspace:*",
+        "@lavascope/notification": "workspace:*",
         "@lavascope/store": "workspace:*",
         "@lavascope/vultr": "workspace:*",
+        "@lingui/core": "catalog:i18n",
+        "@lingui/react": "catalog:i18n",
         "@tauri-apps/api": "catalog:tauri",
         "@tauri-apps/plugin-autostart": "catalog:tauri",
         "@tauri-apps/plugin-clipboard-manager": "catalog:tauri",
         "@tauri-apps/plugin-http": "catalog:tauri",
         "@tauri-apps/plugin-os": "catalog:tauri",
-        "jotai": "catalog:jotai",
         "react": "catalog:react",
       },
       "devDependencies": {
         "@lavascope/ts-config": "workspace:*",
         "@types/react": "catalog:react",
         "typescript": "catalog:",
+      },
+      "peerDependencies": {
+        "jotai": "catalog:jotai",
       },
     },
     "frontend/libs/i18n": {
@@ -136,6 +142,17 @@
         "@lavascope/ts-config": "workspace:*",
         "typescript": "catalog:",
         "vite": "catalog:vite",
+      },
+    },
+    "frontend/libs/notification": {
+      "name": "@lavascope/notification",
+      "dependencies": {
+        "@lavascope/log": "workspace:*",
+        "@tauri-apps/plugin-notification": "catalog:tauri",
+      },
+      "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:",
       },
     },
     "frontend/libs/store": {
@@ -660,6 +677,8 @@
     "@lavascope/i18n": ["@lavascope/i18n@workspace:frontend/libs/i18n"],
 
     "@lavascope/log": ["@lavascope/log@workspace:frontend/libs/log"],
+
+    "@lavascope/notification": ["@lavascope/notification@workspace:frontend/libs/notification"],
 
     "@lavascope/store": ["@lavascope/store@workspace:frontend/libs/store"],
 

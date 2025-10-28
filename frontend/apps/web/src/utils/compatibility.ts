@@ -24,13 +24,6 @@ export function checkCompatibility(platform: Platform) {
         }
         logging.error(`Browser support: Not OK`);
         throw new CompatibilityError("Your browser may not be supported. Some features may not work as expected. Please try updating your browser or using a different one.");
-        // toast.warning(
-        //     `Your browser may not be supported. Some features may not work as expected. Please try updating your browser or using a different one.`,
-        //     {
-        //         autoClose: false,
-        //         closeButton: false,
-        //     }
-        // );
     } else {
         if (isSupported) {
             logging.info("Browser support: OK");
@@ -38,12 +31,5 @@ export function checkCompatibility(platform: Platform) {
         }
         logging.error(`WebView support: Not OK`);
         throw new CompatibilityError("Your browser may not be supported. Some features may not work as expected. Please try updating your browser or using a different one.");
-        // toast.warning(
-        //     `Your webview may not be supported. Some features may not work as expected. Please try updating your webview.`,
-        //     {
-        //         autoClose: false,
-        //         closeButton: false,
-        //     }
-        // );
     }
 }

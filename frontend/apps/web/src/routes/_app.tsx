@@ -56,7 +56,7 @@ function RouteComponent() {
             const message = e instanceof CompatibilityError ? e.message : "Unknown Error";
             toast.warning(
                 () => <Trans>Compatibility Warning</Trans>,
-                { description: message }
+                { description: message, duration: Infinity }
             );
         }
 

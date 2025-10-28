@@ -1,0 +1,16 @@
+{
+    "name": "@lavascope/notification",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "@lavascope/log": "workspace:*",
+        "@tauri-apps/plugin-notification": "catalog:tauri"
+    },
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:"
+    }
+}
