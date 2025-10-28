@@ -218,7 +218,7 @@ sketch
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
+# !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
@@ -259,3 +259,6 @@ bunfig.toml
 *.code-workspace
 
 build-info.json
+
+.vscode/settings.json
+!.vscode/settings.example.json
