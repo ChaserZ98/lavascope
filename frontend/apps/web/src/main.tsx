@@ -9,43 +9,56 @@ import { QueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { StrictMode } from "react";
-import ReactDOM from "react-dom/client";
+import { createRoot } from "react-dom/client";
 
-import AppError from "./AppError";
+import { AppError } from "./AppError";
 import { routeTree } from "./routeTree.gen";
 import { createIDBPersister } from "./utils/persister";
 
-const router = createRouter({
-    routeTree,
-    defaultPendingComponent: () => (
-        <div className="w-full h-full flex flex-col items-center justify-center">
-            <div className="flex items-center justify-center gap-2">
-                <Spinner className="w-10 h-10" />
-                <p>Loading...</p>
+function initRouter() {
+    const router = createRouter({
+        routeTree,
+        defaultPendingComponent: () => (
+            <div className="w-full h-full flex flex-col items-center justify-center">
+                <div className="flex items-center justify-center gap-2">
+                    <Spinner className="w-10 h-10" />
+                    <p>Loading...</p>
+                </div>
             </div>
-        </div>
-    ),
-    defaultErrorComponent: ({ error, reset }) => (
-        <AppError error={error} reset={reset} />
-    ),
-});
+        ),
+        defaultErrorComponent: ({ error, reset }) => (
+            <AppError error={error} reset={reset} />
+        ),
+    });
 
-const queryClient = new QueryClient({
-    defaultOptions: {
-        queries: {
-            gcTime: 1000 * 60 * 60 * 24, // 24 hours
-        },
-    },
-});
-const persister = createIDBPersister("reactQuery");
+    return router;
+}
 
-function initReact() {
-    const root = document.getElementById("root");
+async function initStore() {
     initTheme();
     initColorScheme();
+    await initializeI18n();
+}
+
+async function main() {
+    const root = document.getElementById("root");
     if (!root) throw new Error("Root element not found");
 
-    const reactRoot = ReactDOM.createRoot(root);
+    await initStore();
+
+    const router = initRouter();
+
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                gcTime: 1000 * 60 * 60 * 24, // 24 hours
+            },
+        },
+    });
+
+    const persister = createIDBPersister("reactQuery");
+
+    const reactRoot = createRoot(root);
     reactRoot.render(
         <StrictMode>
             <PersistQueryClientProvider
@@ -60,9 +73,4 @@ function initReact() {
     );
 }
 
-async function main() {
-    await initializeI18n();
-    initReact();
-}
-
-main();
+await main();
