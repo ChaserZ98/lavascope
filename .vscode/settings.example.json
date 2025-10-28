@@ -1,7 +1,7 @@
 {
     "tailwindCSS.experimental.configFile": "./frontend/libs/tailwind/src/tailwind.css",
     "tailwindCSS.classFunctions": ["cn"],
-    "typescript.tsdk": "node_modules\\typescript\\lib",
+    "typescript.tsdk": "node_modules/typescript/lib",
     "search.followSymlinks": false,
     // change this to do conditional build check
     // examples:
