@@ -1,4 +1,6 @@
 {
+    // VSCode settings template. Copy recommended settings to your local .vscode/settings.json.
+    // Do not commit personal overrides—this file should remain a shared reference.
     "tailwindCSS.experimental.configFile": "./frontend/libs/tailwind/src/tailwind.css",
     "tailwindCSS.classFunctions": ["cn"],
     "typescript.tsdk": "node_modules/typescript/lib",
