@@ -10,7 +10,8 @@
         "@tauri-apps/api": "catalog:tauri"
     },
     "devDependencies": {
-        "typescript": "catalog:",
-        "vite": "catalog:vite"
+        "@lavascope/ts-config": "workspace:*",
+        "vite": "catalog:vite",
+        "typescript": "catalog:"
     }
 }

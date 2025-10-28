@@ -1,4 +1,4 @@
 {
-    "extends": "./tsconfig.base.json",
-    "include": ["*.ts", "*.js"]
+    "extends": "@lavascope/ts-config/base.json",
+    "include": ["eslint.config.ts"]
 }

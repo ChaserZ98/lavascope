@@ -13,443 +13,608 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Group/index.tsx:48
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:50
+#: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:50
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:50
 msgid "Enter description here"
 msgstr "輸入描述"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Group/index.tsx:59
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:227
+#: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:77
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:227
 msgid "Reset"
 msgstr "重置"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Group/index.tsx:156
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:104
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:114
+#: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:179
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:104
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:112
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:159
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:149
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:208
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:171
 msgid "Confirm"
 msgstr "確定"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Group/index.tsx:182
+#: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:205
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:192
 msgid "Edit Rules"
 msgstr "編輯規則"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Group/index.tsx:206
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:197
+#: frontend/apps/web/src/components/Firewall/Groups/Group/index.tsx:225
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:88
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:100
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:57
 msgid "Delete"
 msgstr "刪除"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/CreateGroupButton.tsx:11
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/CreateGroupButton.tsx:11
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:127
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:130
 msgid "Create Group"
 msgstr "創建安全組"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:48
-msgid "Failed to fetch firewall groups: {message}"
-msgstr "獲取防火墻安全組失敗: {message}"
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:39
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:256
+msgid "Failed to refresh firewall groups"
+msgstr "刷新防火墻組失敗"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:64
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:55
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:77
 msgid "ID"
 msgstr "ID"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:65
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:52
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:102
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:56
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:52
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:102
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:106
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:139
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:79
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:104
 msgid "Description"
 msgstr "描述"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:66
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:57
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:81
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:118
 msgid "Date Created"
 msgstr "創建日期"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:67
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:58
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:83
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:83
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:144
 msgid "Last Modified"
 msgstr "最後修改日期"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:68
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:59
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:85
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:165
 msgid "Rules"
 msgstr "規則"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:69
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:60
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:87
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:171
 msgid "Instances"
 msgstr "實例"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:70
-#: frontend/apps/ui/src/components/MyIPTable.tsx:150
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:61
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:176
 msgid "Action"
 msgstr "操作"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:76
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:67
 msgid "Firewall Groups"
 msgstr "防火墻安全組"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/GroupTable/Table.tsx:169
-#: frontend/apps/ui/src/components/MyIPTable.tsx:215
-#: frontend/apps/ui/src/routes/_app/groups/$id.tsx:122
+#: frontend/apps/web/src/components/Firewall/Groups/GroupTable/Table.tsx:163
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:307
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:76
 msgid "Refresh"
 msgstr "刷新"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:42
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:42
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:133
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:136
 msgid "New Firewall Group"
 msgstr "新防火墻安全組"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:72
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:72
 msgid "Create"
 msgstr "創建"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:75
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:107
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:117
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/CreateGroupModal.tsx:75
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:107
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:115
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:163
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:153
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:212
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:175
 msgid "Cancel"
 msgstr "取消"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:49
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:49
 msgid "Delete Firewall Group"
 msgstr "刪除防火墻安全組"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:53
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:53
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:94
 msgid "Are you sure you want to delete this firewall group?"
 msgstr "你確定要刪除這個防火墻安全組嗎?"
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:60
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:60
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:102
 msgid "ID: "
 msgstr "ID: "
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:66
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:66
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:108
 msgid "Description: "
 msgstr "描述: "
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:74
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:74
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:116
 msgid "Date Created: "
 msgstr "創建日期: "
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:82
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:82
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:124
 msgid "Rules: "
 msgstr "規則: "
 
-#: frontend/apps/ui/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:90
+#: frontend/apps/web/src/components/Firewall/Groups/Modal/DeleteGroupModal.tsx:90
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:132
 msgid "Instances: "
 msgstr "實例: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:55
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:55
 msgid "Delete Firewall Rule"
 msgstr "刪除安全組規則"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:59
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:59
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:106
 msgid "Are you sure you want to delete this rule?"
 msgstr "你確定要刪除這條規則嗎?"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:66
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:66
 msgid "IP Version: "
 msgstr "IP版本: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:76
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:74
 msgid "Protocol: "
 msgstr "協議: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:84
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:82
 msgid "Port: "
 msgstr "端口: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:90
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:88
 msgid "Source Type: "
 msgstr "源類型: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:98
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:96
 msgid "Source Address: "
 msgstr "源地址: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/DeleteRuleModal.tsx:106
+#: frontend/apps/web/src/components/Firewall/Rules/DeleteRuleModal.tsx:104
 msgid "Notes: "
 msgstr "注釋: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:13
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:13
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:15
 msgid "Just now"
 msgstr "剛剛"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:17
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:17
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:19
 msgid "{minutes, plural, one {# minute ago} other {# minutes ago}}"
 msgstr "{minutes, plural, one {#分鐘前} other {#分鐘前}}"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:22
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:22
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:24
 msgid "{hours, plural, one {# hour ago} other {# hours ago}}"
 msgstr "{hours, plural, one {#小時前} other {#小時前}}"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:26
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:26
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:28
 msgid "{days, plural, one {# day ago} other {# days ago}}"
 msgstr "{days, plural, one {#天前} other {#天前}}"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:30
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:30
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:32
 msgid "{weeks, plural, one {# week ago} other {# weeks ago}}"
 msgstr "{weeks, plural, one {#周前} other {#周前}}"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:34
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:34
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:36
 msgid "{months, plural, one {# month ago} other {# months ago}}"
 msgstr "{months, plural, one {#個月前} other {#個月前}}"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:37
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:37
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:39
 msgid "{years, plural, one {# year ago} other {# years ago}}"
 msgstr "{years, plural, one {#年前} other {#年前}}"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:54
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:54
 msgid "Group ID: "
 msgstr "安全組ID: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:60
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:60
 msgid "Created: "
 msgstr "創建日期: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:80
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:80
 msgid "Last Modified: "
 msgstr "最後編輯日期: "
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:114
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:114
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:114
 msgid "Group Rules"
 msgstr "安全組規則"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/GroupInfo.tsx:128
+#: frontend/apps/web/src/components/Firewall/Rules/GroupInfo.tsx:128
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:124
 msgid "Linked Instances"
 msgstr "連接的實例"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/AddButtonCell.tsx:42
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/AddButtonCell.tsx:42
 msgid "Add Rule"
 msgstr "添加規則"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/NoteCell.tsx:28
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/NoteCell.tsx:27
 msgid "Enter note here"
 msgstr "輸入注釋"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:49
-#: frontend/apps/ui/src/components/Navbar.tsx:54
-#: frontend/apps/ui/src/components/Navbar.tsx:118
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:49
+#: frontend/libs/ui/src/components/lavascope/app-sidebar.tsx:34
+#: frontend/libs/ui/src/components/lavascope/site-header.tsx:9
 msgid "My IP"
 msgstr "我的IP"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:53
-#: frontend/apps/ui/src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:15
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:53
+#: frontend/apps/web/src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:15
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:44
 msgid "Cloudflare"
 msgstr "Cloudflare"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:57
-#: frontend/apps/ui/src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:18
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:57
+#: frontend/apps/web/src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:18
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:45
 msgid "Custom"
 msgstr "自定義"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:61
-#: frontend/apps/ui/src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:17
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:61
+#: frontend/apps/web/src/components/Firewall/Rules/Rule/SourceTypeCell.tsx:17
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:45
 msgid "Anywhere"
 msgstr "任意"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:66
+#: frontend/apps/web/src/components/Firewall/Rules/NewRule/SourceTypeCell.tsx:66
 msgid "Load Balancer (WIP)"
 msgstr "負載均衡器 (開發中)"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/Rule/DeleteButtonCell.tsx:22
+#: frontend/apps/web/src/components/Firewall/Rules/Rule/DeleteButtonCell.tsx:22
 msgid "Delete Rule"
 msgstr "刪除規則"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/RulesTable.tsx:115
+#: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:133
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:142
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:122
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:25
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:91
 msgid "Protocol"
 msgstr "協議"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/RulesTable.tsx:116
+#: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:134
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:155
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:130
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:31
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:93
 msgid "Port"
 msgstr "端口"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/RulesTable.tsx:117
+#: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:135
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:166
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:138
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:37
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:95
 msgid "Source Type"
 msgstr "源類型"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/RulesTable.tsx:118
+#: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:136
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:177
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:52
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:97
 msgid "Source"
 msgstr "源"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/RulesTable.tsx:119
+#: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:137
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:188
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:154
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:99
 msgid "Notes"
 msgstr "注釋"
 
-#: frontend/apps/ui/src/components/Firewall/Rules/RulesTable.tsx:120
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:147
+#: frontend/apps/web/src/components/Firewall/Rules/RulesTable.tsx:138
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:177
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:68
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:101
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:190
 msgid "Actions"
 msgstr "操作"
 
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:59
-msgid "Failed to reset {version} endpoints: {message}"
-msgstr "重置{version}節點失敗: {message}"
+#: frontend/apps/web/src/hooks/Firewall/groups.ts:82
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:82
+msgid "Failed to create the new firewall group"
+msgstr "創建新防火墻組失敗"
 
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:67
-msgid "Endpoint URL cannot be empty"
-msgstr "節點地址不能為空"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:72
-msgid "Endpoint URL already exists"
-msgstr "節點地址已存在"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:85
-msgid "Failed to add endpoint URL: {message}"
-msgstr "添加節點地址失敗: {message}"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:102
-msgid "Failed to delete the endpoint {endpoint}: {message}"
-msgstr "刪除節點{endpoint}失敗: {message}"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:113
-msgid "Failed to restore {version} endpoints: {message}"
-msgstr "恢復{version}節點失敗: {message}"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:124
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:132
-msgid "IPv4 Endpoints"
-msgstr "IPv4節點"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:125
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:133
-msgid "IPv6 Endpoints"
-msgstr "IPv6節點"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:144
-msgid "URL"
-msgstr "地址"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:154
-msgid "Enter endpoint URL here"
-msgstr "輸入節點地址"
-
-#: frontend/apps/ui/src/components/IPEndpointsTable.tsx:171
-msgid "Add endpoint"
-msgstr "添加節點"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:56
-msgid "No {version} endpoint is set."
-msgstr "未設置{version}節點"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:59
-msgid "Please add at least one {version} endpoint."
-msgstr "請添加至少一個{version}節點"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:90
-msgid "Failed to fetch {version} address: All requests to endpoints failed."
-msgstr "獲取{version}地址失敗: 所有節點請求失敗"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:95
-msgid "Failed to fetch {version} address: unknown error"
-msgstr "獲取{version}地址失敗: 未知錯誤"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:105
-msgid "Copied to clipboard"
-msgstr "已復製到剪貼板"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:120
-msgid "Failed to copy to clipboard"
-msgstr "復製到剪貼板失敗"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:131
-msgid "My Public IP Addresses"
-msgstr "我的公共IP地址"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:144
-msgid "Version"
-msgstr "版本"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:147
-#: frontend/apps/ui/src/components/Settings/ProxySection.tsx:27
-msgid "Address"
-msgstr "地址"
-
-#: frontend/apps/ui/src/components/MyIPTable.tsx:187
-msgid "Copy"
-msgstr "複製"
-
-#: frontend/apps/ui/src/components/Navbar.tsx:38
-#: frontend/apps/ui/src/components/Navbar.tsx:105
-msgid "Groups"
-msgstr "安全組"
-
-#: frontend/apps/ui/src/components/Navbar.tsx:134
-#: frontend/apps/ui/src/routes/_app/settings.tsx:20
-msgid "Settings"
-msgstr "設置"
-
-#: frontend/apps/ui/src/components/ProxySwitch.tsx:26
-#: frontend/apps/ui/src/components/Settings/ProxySection.tsx:22
-msgid "Proxy"
-msgstr "代理"
-
-#: frontend/apps/ui/src/components/Settings/DevPanelSection.tsx:18
-msgid "Dev Panel"
-msgstr "開發者面板"
-
-#: frontend/apps/ui/src/components/Settings/General/AutoStartBlock.tsx:59
-msgid "Launch at startup"
-msgstr "開機自動啟動"
-
-#: frontend/apps/ui/src/components/Settings/General/GeneralSection.tsx:11
-msgid "General"
-msgstr "通用"
-
-#: frontend/apps/ui/src/components/Settings/General/Language.tsx:32
-msgid "language"
-msgstr "語言"
-
-#: frontend/apps/ui/src/components/Settings/ProxySection.tsx:29
-msgid "Enter http proxy address"
-msgstr "輸入HTTP代理地址"
-
-#: frontend/apps/ui/src/components/Settings/SecretsSection.tsx:18
-msgid "Secrets"
-msgstr "隱私"
-
-#: frontend/apps/ui/src/components/Settings/SecretsSection.tsx:23
-msgid "API Token"
-msgstr "API令牌"
-
-#: frontend/apps/ui/src/components/Settings/SecretsSection.tsx:25
-msgid "Enter token here"
-msgstr "輸入令牌"
-
-#: frontend/apps/ui/src/components/TauriTitleBar.tsx:101
-#: frontend/apps/ui/src/components/TauriTitleBar.tsx:137
-msgid "The application is still running in the background."
-msgstr "應用程式仍會在後台運行."
-
-#: frontend/apps/ui/src/components/ThemeSwitch.tsx:16
-msgid "Theme"
-msgstr "主題"
-
-#: frontend/apps/ui/src/hooks/Firewall/groups.ts:95
-msgid "Failed to create the new firewall group: {message}"
-msgstr "創建新防火墻安全組失敗: {message}"
-
-#: frontend/apps/ui/src/hooks/Firewall/groups.ts:228
+#: frontend/apps/web/src/hooks/Firewall/groups.ts:260
 msgid "Successfully updated group with ID {groupId}"
 msgstr "成功更新ID為{groupId}的安全組"
 
-#: frontend/apps/ui/src/hooks/Firewall/groups.ts:234
+#: frontend/apps/web/src/hooks/Firewall/groups.ts:266
 msgid "Failed to update group: {message}"
 msgstr "更新安全組失敗: {message}"
 
-#: frontend/apps/ui/src/hooks/Firewall/groups.ts:272
+#: frontend/apps/web/src/hooks/Firewall/groups.ts:304
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:41
 msgid "Successfully deleted group with ID {groupId}"
 msgstr "刪除ID為{groupId}的安全組成功"
 
-#: frontend/apps/ui/src/hooks/Firewall/groups.ts:277
+#: frontend/apps/web/src/hooks/Firewall/groups.ts:309
 msgid "Failed to delete group: {message}"
 msgstr "刪除安全組失敗: {message}"
 
-#: frontend/apps/ui/src/hooks/Firewall/rules.ts:96
+#: frontend/apps/web/src/hooks/Firewall/rules.ts:96
 msgid "Failed to create a new rule: {message}"
 msgstr "創建新規則失敗: {message}"
 
-#: frontend/apps/ui/src/hooks/Firewall/rules.ts:129
+#: frontend/apps/web/src/hooks/Firewall/rules.ts:129
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-tabs.tsx:43
 msgid "Group with ID {groupId} not found"
 msgstr "未找到ID為{groupId}的安全組"
 
-#: frontend/apps/ui/src/hooks/Firewall/rules.ts:223
+#: frontend/apps/web/src/hooks/Firewall/rules.ts:255
 msgid "Failed to delete the rule: {message}"
 msgstr "刪除安全組規則失敗: {message}"
 
-#: frontend/apps/ui/src/routes/_app/groups/$id.tsx:64
-msgid "Failed to fetch firewall rules: {message}"
-msgstr "獲取防火墻安全組規則失敗: {message}"
+#: frontend/apps/web/src/routes/_app.tsx:58
+msgid "Compatibility Warning"
+msgstr "兼容性警告"
 
-#: frontend/apps/ui/src/routes/_app/groups/$id.tsx:76
+#: frontend/apps/web/src/routes/_app/groups/$id.tsx:66
 msgid "Edit Firewall Group"
 msgstr "編輯防火墻安全組"
+
+#: frontend/libs/ui/src/components/lavascope/app-sidebar.tsx:29
+#: frontend/libs/ui/src/components/lavascope/site-header.tsx:8
+msgid "Groups"
+msgstr "安全組"
+
+#: frontend/libs/ui/src/components/lavascope/app-sidebar.tsx:42
+#: frontend/libs/ui/src/components/lavascope/site-header.tsx:10
+msgid "Settings"
+msgstr "設置"
+
+#: frontend/libs/ui/src/components/lavascope/app-sidebar.tsx:47
+#: frontend/libs/ui/src/components/lavascope/site-header.tsx:11
+msgid "Help"
+msgstr "幫助"
+
+#: frontend/libs/ui/src/components/lavascope/app-sidebar.tsx:53
+#: frontend/libs/ui/src/components/lavascope/site-header.tsx:12
+msgid "About"
+msgstr "關於"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:54
+msgid "Group ID"
+msgstr "安全組ID"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-info.tsx:60
+msgid "Created"
+msgstr "創建日期"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/create-group-button.tsx:144
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:147
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:160
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:171
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:182
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:193
+msgid "Enter description here..."
+msgstr "輸入描述..."
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/delete-group-button.tsx:46
+msgid "Failed to delete group"
+msgstr "刪除安全組失敗"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:275
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:159
+msgid "Columns"
+msgstr "列"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/group-table/group-table.tsx:359
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:242
+msgid "Empty"
+msgstr "空"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/create-rule-button.tsx:84
+msgid "Failed to create the new rule"
+msgstr "創建新規則失敗"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:58
+msgid "Failed to delete the rule"
+msgstr "刪除規則失敗"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:114
+msgid "IP Version"
+msgstr "IP版本"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/delete-rule-button.tsx:146
+msgid "Source Address"
+msgstr "源"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-table.tsx:62
+msgid "Note"
+msgstr "注釋"
+
+#: frontend/libs/ui/src/components/lavascope/firewall/rules-tabs/rules-tabs.tsx:131
+msgid "Failed to fetch firewall rules"
+msgstr "獲取防火墻規則失敗"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:34
+msgid "Add endpoint"
+msgstr "添加節點"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:99
+msgid "Failed to reset {version} endpoints"
+msgstr "重置{version}節點失敗"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:107
+msgid "Endpoint URL cannot be empty"
+msgstr "節點地址不能為空"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:112
+msgid "{value} is not a valid URL"
+msgstr "{value}不是有效的地址"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:117
+msgid "Endpoint URL already exists"
+msgstr "節點地址已存在"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:129
+msgid "Failed to add endpoint URL"
+msgstr "添加節點地址失敗"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:143
+msgid "Failed to delete the endpoint {endpoint}"
+msgstr "刪除節點{endpoint}失敗"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:161
+msgid "Failed to restore {version} endpoints"
+msgstr "重置{version}節點失敗"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:171
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:179
+msgid "IPv4 Endpoints"
+msgstr "IPv4節點"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:172
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:180
+msgid "IPv6 Endpoints"
+msgstr "IPv6節點"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:187
+msgid "URL"
+msgstr "地址"
+
+#: frontend/libs/ui/src/components/lavascope/ip-endpoints-table.tsx:198
+msgid "Enter endpoint URL here"
+msgstr "輸入節點地址"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:51
+msgid "Copy"
+msgstr "複製"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:101
+msgid "No {version} endpoint is set"
+msgstr "未設置{version}節點"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:101
+msgid "Please add at least one {version} endpoint"
+msgstr "請至少添加一個{version}節點"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:127
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:135
+msgid "Failed to fetch {version} address"
+msgstr "獲取{version}地址失敗"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:129
+msgid "All request to endpoints failed"
+msgstr "所有到節點請求都失敗"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:137
+msgid "Unknown error"
+msgstr "未知錯誤"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:149
+msgid "Copied to clipboard"
+msgstr "已復製到剪貼板"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:153
+msgid "Failed to copy to clipboard"
+msgstr "復製到剪貼板失敗"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:160
+msgid "My Public IP Addresses"
+msgstr "我的公網IP地址"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:170
+msgid "Version"
+msgstr "版本"
+
+#: frontend/libs/ui/src/components/lavascope/my-ip-table.tsx:173
+#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:23
+msgid "Address"
+msgstr "地址"
+
+#: frontend/libs/ui/src/components/lavascope/proxy-switch.tsx:26
+#: frontend/libs/ui/src/components/lavascope/proxy-switch.tsx:33
+#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:19
+msgid "Proxy"
+msgstr "代理"
+
+#: frontend/libs/ui/src/components/lavascope/settings/dev-panel.tsx:18
+msgid "Dev Panel"
+msgstr "開發者面板"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/auto-start-block.tsx:39
+#: frontend/libs/ui/src/components/lavascope/settings/general/auto-start-block.tsx:45
+msgid "Launch at startup"
+msgstr "開機自動啟動"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/color-scheme-block.tsx:16
+msgid "Color Scheme"
+msgstr "色調"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/color-scheme-block.tsx:30
+msgid "Auto"
+msgstr "默認"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/color-scheme-block.tsx:33
+msgid "Light"
+msgstr "淺色"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/color-scheme-block.tsx:36
+msgid "Dark"
+msgstr "深色"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/general-section.tsx:14
+msgid "General"
+msgstr "通用"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/language-block.tsx:26
+msgid "Language"
+msgstr "語言"
+
+#: frontend/libs/ui/src/components/lavascope/settings/general/theme-block.tsx:23
+msgid "Theme"
+msgstr "主題"
+
+#: frontend/libs/ui/src/components/lavascope/settings/proxy.tsx:29
+msgid "Enter http proxy address"
+msgstr "輸入HTTP代理地址"
+
+#: frontend/libs/ui/src/components/lavascope/settings/secrets.tsx:15
+msgid "Secrets"
+msgstr "隱私"
+
+#: frontend/libs/ui/src/components/lavascope/settings/secrets.tsx:19
+msgid "API Token"
+msgstr "API令牌"
+
+#: frontend/libs/ui/src/components/lavascope/settings/secrets.tsx:25
+msgid "Enter token here"
+msgstr "輸入令牌"
+
+#: frontend/libs/ui/src/components/lavascope/tauri-title-bar.tsx:101
+#: frontend/libs/ui/src/components/lavascope/tauri-title-bar.tsx:137
+msgid "The application is still running in the background."
+msgstr "應用程式仍會在後台運行."

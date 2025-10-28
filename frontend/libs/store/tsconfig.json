@@ -1,0 +1,8 @@
+{
+    "extends": "@lavascope/ts-config/base.json",
+    "compilerOptions": {
+        "lib": ["ES2022", "DOM"],
+        "types": ["vite/client"]
+    },
+    "include": ["src"]
+}

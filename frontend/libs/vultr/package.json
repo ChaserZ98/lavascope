@@ -1,0 +1,13 @@
+{
+    "name": "@lavascope/vultr",
+    "type": "module",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "@lavascope/fetch": "workspace:*",
+        "typescript": "catalog:"
+    }
+}

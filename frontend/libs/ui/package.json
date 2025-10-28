@@ -1,0 +1,80 @@
+{
+    "name": "@lavascope/ui",
+    "type": "module",
+    "exports": {
+        "./components/ui": "./src/components/ui/index.ts",
+        "./components/ui/*": "./src/components/ui/*.tsx",
+        "./components/lavascope": "./src/components/lavascope/index.ts",
+        "./components/lavascope/*": "./src/components/lavascope/*.tsx",
+        "./lib/*": "./src/lib/*.ts",
+        "./images/*": "./src/images/*"
+    },
+    "imports": {
+        "#components/ui": "./src/components/ui/index.ts",
+        "#components/ui/*": "./src/components/ui/*.tsx",
+        "#components/lavascope": "./src/components/lavascope/index.ts",
+        "#components/lavascope/*": "./src/components/lavascope/*.tsx",
+        "#lib/*": "./src/lib/*.ts",
+        "#images/*": "./src/images/*"
+    },
+    "scripts": {
+        "shadcn": "bunx --bun shadcn@latest"
+    },
+    "peerDependencies": {
+        "jotai": "catalog:jotai",
+        "jotai-devtools": "catalog:jotai"
+    },
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "@types/node": "catalog:",
+        "@types/bun": "catalog:",
+        "@types/react": "catalog:react",
+        "@types/react-dom": "catalog:react",
+        "@tanstack/react-router-devtools": "catalog:tanstack",
+        "vite": "catalog:vite",
+        "typescript": "catalog:"
+    },
+    "dependencies": {
+        "@lavascope/fetch": "workspace:*",
+        "@lavascope/hook": "workspace:*",
+        "@lavascope/i18n": "workspace:*",
+        "@lavascope/log": "workspace:*",
+        "@lavascope/store": "workspace:*",
+        "@lavascope/tailwind": "workspace:*",
+        "@lavascope/vultr": "workspace:*",
+        "@lingui/core": "catalog:i18n",
+        "@lingui/react": "catalog:i18n",
+        "@mdi/js": "catalog:icon",
+        "@mdi/react": "catalog:icon",
+        "@radix-ui/react-alert-dialog": "catalog:shadcn",
+        "@radix-ui/react-avatar": "catalog:shadcn",
+        "@radix-ui/react-checkbox": "catalog:shadcn",
+        "@radix-ui/react-dialog": "catalog:shadcn",
+        "@radix-ui/react-dropdown-menu": "catalog:shadcn",
+        "@radix-ui/react-label": "catalog:shadcn",
+        "@radix-ui/react-navigation-menu": "catalog:shadcn",
+        "@radix-ui/react-select": "catalog:shadcn",
+        "@radix-ui/react-separator": "catalog:shadcn",
+        "@radix-ui/react-slot": "catalog:shadcn",
+        "@radix-ui/react-switch": "catalog:shadcn",
+        "@radix-ui/react-tabs": "catalog:shadcn",
+        "@radix-ui/react-toggle": "catalog:shadcn",
+        "@radix-ui/react-toggle-group": "catalog:shadcn",
+        "@radix-ui/react-tooltip": "catalog:shadcn",
+        "@tabler/icons-react": "catalog:icon",
+        "@tanstack/react-query": "catalog:tanstack",
+        "@tanstack/react-router": "catalog:tanstack",
+        "@tanstack/react-table": "catalog:tanstack",
+        "@tauri-apps/api": "catalog:tauri",
+        "@tauri-apps/plugin-notification": "catalog:tauri",
+        "@tauri-apps/plugin-os": "catalog:tauri",
+        "class-variance-authority": "catalog:shadcn",
+        "clsx": "catalog:shadcn",
+        "immer": "catalog:jotai",
+        "lucide-react": "catalog:shadcn",
+        "react": "catalog:react",
+        "react-dom": "catalog:react",
+        "sonner": "catalog:shadcn",
+        "tailwind-merge": "catalog:shadcn"
+    }
+}

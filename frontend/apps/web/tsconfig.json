@@ -1,0 +1,11 @@
+{
+    "extends": "@lavascope/ts-config/vite.json",
+    "include": ["src", "lingui.config.ts"],
+    "compilerOptions": {
+        "jsx": "react-jsx",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    }
+}

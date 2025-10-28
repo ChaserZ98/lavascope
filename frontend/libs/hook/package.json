@@ -1,0 +1,25 @@
+{
+    "name": "@lavascope/hook",
+    "exports": {
+        ".": "./src/index.ts"
+    },
+    "type": "module",
+    "private": true,
+    "dependencies": {
+        "@lavascope/store": "workspace:*",
+        "@lavascope/fetch": "workspace:*",
+        "@lavascope/vultr": "workspace:*",
+        "react": "catalog:react",
+        "@tauri-apps/plugin-os": "catalog:tauri",
+        "@tauri-apps/api": "catalog:tauri",
+        "@tauri-apps/plugin-autostart": "catalog:tauri",
+        "@tauri-apps/plugin-http": "catalog:tauri",
+        "@tauri-apps/plugin-clipboard-manager": "catalog:tauri",
+        "jotai": "catalog:jotai"
+    },
+    "devDependencies": {
+        "@lavascope/ts-config": "workspace:*",
+        "typescript": "catalog:",
+        "@types/react": "catalog:react"
+    }
+}

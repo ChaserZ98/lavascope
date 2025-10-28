@@ -1,7 +1,20 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
 @plugin "tailwind-scrollbar";
 
-@plugin "./hero.ts";
-@source "../../../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+@source "../../ui/src/**/*.{js,ts,jsx,tsx}";
+
 @custom-variant dark (&:is(.dark *));
+
+@import "./theme-variables.css";
+@import "./view-transition.css";
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

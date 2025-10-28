@@ -7,11 +7,12 @@
     "type": "module",
     "private": true,
     "dependencies": {
-        "@heroui/react": "catalog:heroui",
         "tailwind-scrollbar": "catalog:tailwindcss"
     },
     "devDependencies": {
-        "typescript": "catalog:",
-        "tailwindcss": "catalog:tailwindcss"
+        "@lavascope/ts-config": "workspace:*",
+        "tailwindcss": "catalog:tailwindcss",
+        "tw-animate-css": "catalog:shadcn",
+        "typescript": "catalog:"
     }
 }
