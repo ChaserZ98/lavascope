@@ -1,11 +1,11 @@
-use lavascope_state::StateError;
+use lavascope_state::MenuStateError;
 
 use crate::event::{TrayIconLeftClickError, TrayIconRightClickError};
 
 #[derive(thiserror::Error, Debug)]
 pub enum CreateTrayError {
     #[error(transparent)]
-    StateError(#[from] StateError),
+    StateError(#[from] MenuStateError),
     #[error(transparent)]
     TauriError(#[from] tauri::Error),
 }

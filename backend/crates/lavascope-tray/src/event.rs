@@ -1,5 +1,5 @@
 use lavascope_i18n::t;
-use lavascope_state::{MenuState, StateError};
+use lavascope_state::{MenuState, MenuStateError};
 use tauri::{
     Manager,
     tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
@@ -58,7 +58,7 @@ pub enum TrayIconRightClickError {
     #[error(transparent)]
     TauriError(#[from] tauri::Error),
     #[error(transparent)]
-    StateError(#[from] StateError),
+    StateError(#[from] MenuStateError),
     #[error("Failed to get main window")]
     FailedToGetMainWindow,
 }

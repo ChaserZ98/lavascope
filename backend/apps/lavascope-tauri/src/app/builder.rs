@@ -1,7 +1,18 @@
 use lavascope_logging::LogBuilder;
 use tauri::{Builder, RunEvent, WindowEvent, Wry, generate_context, generate_handler};
 
+use crate::app::event_handler::WindowCloseEventError;
+
 use super::{commands, event_handler};
+
+#[derive(thiserror::Error, Debug)]
+pub enum RunEventError {
+    #[cfg(target_os = "macos")]
+    #[error(transparent)]
+    ReopenEvent(#[from] super::event_handler::ReopenEventError),
+    #[error(transparent)]
+    WindowCloseEvent(#[from] WindowCloseEventError),
+}
 
 pub struct AppBuilder(Builder<Wry>);
 
@@ -13,26 +24,30 @@ impl AppBuilder {
     pub fn run(self) -> Result<(), tauri::Error> {
         let app = self.0.build(generate_context!())?;
 
-        app.run(|app, event| match event {
-            #[cfg(target_os = "macos")]
-            RunEvent::Reopen {
-                has_visible_windows,
-                ..
-            } => {
-                event_handler::handle_reopen(app, has_visible_windows);
-            }
-            RunEvent::WindowEvent { label, event, .. } => {
-                if label != "main" {
-                    return;
-                }
-                match event {
-                    WindowEvent::CloseRequested { .. } => {
-                        event_handler::handle_window_close(app);
+        app.run(|app, event| {
+            let res: Result<(), RunEventError> = match event {
+                #[cfg(target_os = "macos")]
+                RunEvent::Reopen {
+                    has_visible_windows,
+                    ..
+                } => event_handler::handle_reopen(app, has_visible_windows),
+                RunEvent::WindowEvent { label, event, .. } => {
+                    if label != "main" {
+                        return;
                     }
-                    _ => {}
+                    match event {
+                        WindowEvent::CloseRequested { .. } => {
+                            event_handler::handle_window_close(app).map_err(|e| e.into())
+                        }
+                        _ => Ok(()),
+                    }
                 }
+                _ => Ok(()),
+            };
+
+            if let Err(e) = res {
+                log::error!("{e}");
             }
-            _ => {}
         });
 
         Ok(())
@@ -70,9 +85,16 @@ impl Default for AppBuilder {
         builder = builder.setup(|app| {
             #[cfg(all(desktop))]
             {
+                use std::sync::Mutex;
+
+                use lavascope_state::WindowState;
                 use lavascope_tray::TrayIconBuilder;
+                use tauri::Manager;
                 let app_handle = app.handle();
                 TrayIconBuilder::build(&app_handle).unwrap();
+
+                let window_state = WindowState::default();
+                app_handle.manage(Mutex::new(window_state));
             }
 
             Ok(())
