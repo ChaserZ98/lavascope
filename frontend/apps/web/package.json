@@ -60,7 +60,6 @@
         "typescript": "catalog:",
         "vite": "catalog:vite",
         "vite-plugin-babel-macros": "catalog:i18n",
-        "vite-tsconfig-paths": "catalog:vite",
-        "jotai-devtools": "catalog:jotai"
+        "vite-tsconfig-paths": "catalog:vite"
     }
 }
