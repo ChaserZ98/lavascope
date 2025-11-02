@@ -1,10 +1,5 @@
-import logging from "@lavascope/log";
-import { tauriNotify } from "@lavascope/notification";
 import { Platform } from "@lavascope/store";
-import { useLingui } from "@lingui/react/macro";
-import type { UnlistenFn } from "@tauri-apps/api/event";
-import { Window } from "@tauri-apps/api/window";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 function usePreventContextMenu({ isDevMode, isDesktop }: { isDevMode: boolean; isDesktop: boolean }) {
     useEffect(() => {
@@ -36,42 +31,42 @@ function usePreventRefreshKey({ isDevMode, isDesktop }: { isDevMode: boolean; is
     }, [isDevMode, isDesktop]);
 }
 
-function useWindowOnCloseEffect({ isDesktop }: { isDesktop: boolean }) {
-    const { t } = useLingui();
+// function useWindowOnCloseEffect({ isDesktop }: { isDesktop: boolean }) {
+//     const { t } = useLingui();
 
-    const unlistenCloseRef = useRef<UnlistenFn>(() => {});
-    const isFirstCloseEvent = useRef<boolean>(true);
+//     const unlistenCloseRef = useRef<UnlistenFn>(() => {});
+//     const isFirstCloseEvent = useRef<boolean>(true);
 
-    useEffect(() => {
-        if (!isDesktop) return;
+//     useEffect(() => {
+//         if (!isDesktop) return;
 
-        Window.getByLabel("main")
-            .then((window) => {
-                if (!window) throw new Error("Window not found");
-                return window.onCloseRequested(async (e) => {
-                    e.preventDefault();
-                    await window.hide();
-                    if (isFirstCloseEvent.current) {
-                        await tauriNotify(
-                            t`The application is still running in the background.`
-                        );
-                        isFirstCloseEvent.current = false;
-                    }
-                });
-            })
-            .then((fn) => {
-                unlistenCloseRef.current = fn;
-            })
-            .catch((e) => {
-                logging.error(`Error while setting up window close event listener: ${e}`);
-            });
+//         Window.getByLabel("main")
+//             .then((window) => {
+//                 if (!window) throw new Error("Window not found");
+//                 return window.onCloseRequested(async (e) => {
+//                     e.preventDefault();
+//                     await window.hide();
+//                     if (isFirstCloseEvent.current) {
+//                         await tauriNotify(
+//                             t`The application is still running in the background.`
+//                         );
+//                         isFirstCloseEvent.current = false;
+//                     }
+//                 });
+//             })
+//             .then((fn) => {
+//                 unlistenCloseRef.current = fn;
+//             })
+//             .catch((e) => {
+//                 logging.error(`Error while setting up window close event listener: ${e}`);
+//             });
 
-        return () => {
-            unlistenCloseRef.current();
-            unlistenCloseRef.current = () => {};
-        };
-    }, [t, isDesktop]);
-}
+//         return () => {
+//             unlistenCloseRef.current();
+//             unlistenCloseRef.current = () => {};
+//         };
+//     }, [t, isDesktop]);
+// }
 
 function useDesktopEffect({ appMode, platform }: { appMode: string; platform: Platform }) {
     const isDevMode = appMode === "development";
@@ -79,7 +74,6 @@ function useDesktopEffect({ appMode, platform }: { appMode: string; platform: Pl
 
     usePreventContextMenu({ isDevMode, isDesktop });
     usePreventRefreshKey({ isDevMode, isDesktop });
-    useWindowOnCloseEffect({ isDesktop });
 }
 
 export { useDesktopEffect };

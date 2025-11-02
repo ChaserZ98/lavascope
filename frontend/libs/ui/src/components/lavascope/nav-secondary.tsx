@@ -14,7 +14,14 @@ export type NavSecondaryItem = {
     title: string;
     url: string;
     icon: Icon;
-    target?: "_blank";
+    target?: never;
+    external?: never;
+} | {
+    title: string;
+    url: string;
+    icon: Icon;
+    target: "_blank";
+    external: true;
 };
 
 export function NavSecondary({
@@ -32,10 +39,21 @@ export function NavSecondary({
                     {items.map((item) => (
                         <SidebarMenuItem key={item.title}>
                             <SidebarMenuButton asChild>
-                                <Link to={item.url} data-active={pathname.startsWith(item.url)} target={item.target}>
-                                    <item.icon />
-                                    <span>{item.title}</span>
-                                </Link>
+                                {
+                                    item.external ?
+                                        (
+                                            <a href={item.url} target={item.target} rel="noreferrer">
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </a>
+                                        ) :
+                                        (
+                                            <Link to={item.url} data-active={pathname.startsWith(item.url)}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        )
+                                }
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}

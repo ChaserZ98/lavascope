@@ -47,7 +47,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: t`Help`,
             url: "https://github.com/chaserz98/lavascope",
             icon: IconHelp,
-            target: "_blank"
+            target: "_blank",
+            external: true
         },
         {
             title: t`About`,

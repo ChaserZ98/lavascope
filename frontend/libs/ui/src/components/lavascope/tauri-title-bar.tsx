@@ -20,10 +20,7 @@ const tauriTitleBarHeight = "2rem";
 function TauriTitleBar({ style }: React.ComponentProps<"div">) {
     const platform = useAtomValue(platformAtom);
 
-    // const { t } = useLingui();
-
     const unlistenResizeRef = useRef<UnlistenFn>(() => {});
-    // const isFirstClosed = useRef<boolean>(true);
 
     const [isMaximized, setIsMaximized] = useState(false);
 
@@ -90,16 +87,6 @@ function TauriTitleBar({ style }: React.ComponentProps<"div">) {
             e.stopPropagation();
             try {
                 const window = getCurrentWindow();
-                // if (window.label !== mainWindowLabel) {
-                //     await window.close();
-                //     return;
-                // }
-                // await window.hide();
-                // if (!isFirstClosed.current) return;
-                // await tauriNotify(
-                //     t`The application is still running in the background.`
-                // );
-                // isFirstClosed.current = false;
                 await window.close();
             } catch (err) {
                 logging.error(`Error while closing window: ${err}`);

@@ -1,4 +1,7 @@
 {
     "extends": "@lavascope/ts-config/base.json",
+    "compilerOptions": {
+        "types": ["vite/client"]
+    },
     "include": ["src"]
 }
