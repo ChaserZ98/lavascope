@@ -57,8 +57,8 @@ catalogs:
       specifier: ^5.4.1
       version: 5.5.2
     eslint-plugin-lingui:
-      specifier: ^0.10.0
-      version: 0.10.1
+      specifier: ^0.11.0
+      version: 0.11.0
     vite-plugin-babel-macros:
       specifier: ^1.0.6
       version: 1.0.6
@@ -264,7 +264,7 @@ importers:
         version: 9.39.0(jiti@2.6.1)
       eslint-plugin-lingui:
         specifier: catalog:i18n
-        version: 0.10.1(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3)
+        version: 0.11.0(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3)
       eslint-plugin-react:
         specifier: catalog:eslint
         version: 7.37.5(eslint@9.39.0(jiti@2.6.1))
@@ -3162,8 +3162,8 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  eslint-plugin-lingui@0.10.1:
-    resolution: {integrity: sha512-pyNM1fC4IDgxOdzwe4DxOOIBf396tbE8m9s4aw01TqOKCEIXT2apSqmZ6ESeX26lBQS2ItYj/0Bhme6ZLKfYNQ==}
+  eslint-plugin-lingui@0.11.0:
+    resolution: {integrity: sha512-O2Ixoapt5fa4VKZJgXhVwb6BHnzByIUDNMfZOhHWGMYk40GfGCho4MUfspLVrHAFLimgBPKXtCcJ8GC4YNZmfg==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
       eslint: ^8.37.0 || ^9.0.0
@@ -3695,7 +3695,6 @@ packages:
     resolution: {integrity: sha512-Quz3MvAwHxVYNXsOByL7xI5EB2WYOeFswqaHIA3qOK3isRWTxiplBEocmmru6XmxDB2L7jDNYtYA4FyimoAFEw==}
     engines: {node: '>=8.17.0'}
     hasBin: true
-    bundledDependencies: []
 
   jsx-ast-utils@3.3.5:
     resolution: {integrity: sha512-ZZow9HBI5O6EPgSJLUb8n2NKgmVWTwCvHGwFuJlMjvLFqlGG6pjirPhtdsseaLZjSibD8eegzmYpUZwoIlj2cQ==}
@@ -7423,7 +7422,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-lingui@0.10.1(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3):
+  eslint-plugin-lingui@0.11.0(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3):
     dependencies:
       '@typescript-eslint/utils': 8.46.2(eslint@9.39.0(jiti@2.6.1))(typescript@5.9.3)
       eslint: 9.39.0(jiti@2.6.1)
