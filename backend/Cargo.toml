@@ -27,4 +27,4 @@ rust-i18n = "3.1.5"
 [workspace.metadata.i18n]
 available-locales = ["en", "zh", "zh-Hant"]
 default-locale = "en"
-load-path = "locales"
+load-path = "./crates/lavascope-i18n/locales"

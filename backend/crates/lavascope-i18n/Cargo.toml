@@ -9,4 +9,4 @@ rust-i18n.workspace = true
 [package.metadata.i18n]
 available-locales = ["en", "zh", "zh-Hant"]
 default-locale = "en"
-load-path = "../../locales"
+load-path = "locales"

@@ -1,6 +1,6 @@
 {
     "productName": "LavaScope",
-    "version": "../../../frontend/apps/web/package.json",
+    "version": "0.1.2",
     "identifier": "com.chaserz98.lavascope",
     "build": {
         "beforeDevCommand": "bun run dev --host",

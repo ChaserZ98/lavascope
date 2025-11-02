@@ -1,5 +1,5 @@
 use lavascope_i18n::t;
-use lavascope_state::{MenuState, MenuStateError};
+use lavascope_state::{MenuState, MenuStateError, WindowState, WindowStateError};
 use tauri::{
     Manager,
     tray::{MouseButton, MouseButtonState, TrayIcon, TrayIconEvent},
@@ -30,48 +30,62 @@ pub fn handle_tray_icon_event(tray: &TrayIcon, event: TrayIconEvent) {
 #[derive(thiserror::Error, Debug)]
 pub enum TrayIconLeftClickError {
     #[error(transparent)]
-    TauriError(#[from] tauri::Error),
+    Tauri(#[from] tauri::Error),
+    #[error(transparent)]
+    WindowState(#[from] WindowStateError),
+    #[error("Failed to get webview window for label {0}")]
+    WindowNotFound(&'static str),
 }
 
 fn handle_tray_icon_left_click(tray: &TrayIcon) -> Result<(), TrayIconLeftClickError> {
     let app = tray.app_handle();
 
-    if let Some(window) = app.get_webview_window("main") {
-        let is_window_visible = window.is_visible()?;
-        if is_window_visible {
-            window.hide()?;
-        } else {
-            #[cfg(target_os = "macos")]
-            let _ = app.set_activation_policy(tauri::ActivationPolicy::Regular);
+    let window_state = WindowState::try_borrow_from_app(app)?;
+    let main_window_label = window_state.main_window_label;
 
-            window.show()?;
-            window.set_focus()?;
-        }
+    let window = app
+        .get_webview_window(main_window_label)
+        .ok_or(TrayIconLeftClickError::WindowNotFound(main_window_label))?;
 
-        return Ok(());
+    let is_window_visible = window.is_visible()?;
+    if is_window_visible {
+        window.hide()?;
+    } else {
+        #[cfg(target_os = "macos")]
+        app.set_activation_policy(tauri::ActivationPolicy::Regular)?;
+
+        window.show()?;
+        window.set_focus()?;
     }
+
     Ok(())
 }
 
 #[derive(thiserror::Error, Debug)]
 pub enum TrayIconRightClickError {
     #[error(transparent)]
-    TauriError(#[from] tauri::Error),
+    Tauri(#[from] tauri::Error),
     #[error(transparent)]
-    StateError(#[from] MenuStateError),
-    #[error("Failed to get main window")]
-    FailedToGetMainWindow,
+    MenuState(#[from] MenuStateError),
+    #[error(transparent)]
+    WindowState(#[from] WindowStateError),
+    #[error("Failed to get webview window for label {0}")]
+    WindowNotFound(&'static str),
 }
 
 fn handle_tray_icon_right_click(tray: &TrayIcon) -> Result<(), TrayIconRightClickError> {
     let app = tray.app_handle();
     let menu_state_mutex = MenuState::try_borrow_from_app(app)?;
+    // if let Err(e) = menu_state_mutex.lock()
     let menu = &mut menu_state_mutex.lock().unwrap().menu;
+
+    let window_state = WindowState::try_borrow_from_app(app)?;
+    let main_window_label = window_state.main_window_label;
 
     let window = tray
         .app_handle()
-        .get_webview_window("main")
-        .ok_or(TrayIconRightClickError::FailedToGetMainWindow)?;
+        .get_webview_window(main_window_label)
+        .ok_or(TrayIconRightClickError::WindowNotFound(main_window_label))?;
 
     let new_text = match window.is_visible().unwrap_or(false) {
         true => t!("Hide"),

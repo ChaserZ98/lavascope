@@ -1,0 +1,17 @@
+_version: 2
+Hide:
+  en: Hide
+  zh: 隐藏
+  zh-Hant: 隱藏
+Quit:
+  en: Quit
+  zh: 退出
+  zh-Hant: 退出
+Show:
+  en: Show
+  zh: 显示
+  zh-Hant: 顯示
+The application is still running in the background:
+  en: The application is still running in the background
+  zh: 程序将仍在后台运行
+  zh-Hant: 程式將仍在後台運行

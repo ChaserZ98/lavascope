@@ -1,7 +1,7 @@
 use lavascope_logging::LogBuilder;
 use tauri::{Builder, RunEvent, WindowEvent, Wry, generate_context, generate_handler};
 
-use crate::app::event_handler::WindowCloseEventError;
+use crate::app::{MAIN_WINDOW_LABEL, event_handler::WindowCloseEventError};
 
 use super::{commands, event_handler};
 
@@ -30,14 +30,15 @@ impl AppBuilder {
                 RunEvent::Reopen {
                     has_visible_windows,
                     ..
-                } => event_handler::handle_reopen(app, has_visible_windows),
+                } => event_handler::handle_reopen(app, has_visible_windows)
+                    .map_err(RunEventError::from),
                 RunEvent::WindowEvent { label, event, .. } => {
-                    if label != "main" {
+                    if label != MAIN_WINDOW_LABEL {
                         return;
                     }
                     match event {
-                        WindowEvent::CloseRequested { .. } => {
-                            event_handler::handle_window_close(app).map_err(|e| e.into())
+                        WindowEvent::CloseRequested { api, .. } => {
+                            event_handler::handle_window_close(app, api).map_err(|e| e.into())
                         }
                         _ => Ok(()),
                     }
@@ -76,25 +77,23 @@ impl Default for AppBuilder {
                 .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
                     use tauri::Manager;
 
-                    let main_window = app.get_webview_window("main").unwrap();
-                    let _ = main_window.show();
-                    let _ = main_window.set_focus();
+                    let window = app.get_webview_window(MAIN_WINDOW_LABEL).unwrap();
+                    let _ = window.show();
+                    let _ = window.set_focus();
                 }))
         }
 
         builder = builder.setup(|app| {
             #[cfg(all(desktop))]
             {
-                use std::sync::Mutex;
-
                 use lavascope_state::WindowState;
                 use lavascope_tray::TrayIconBuilder;
                 use tauri::Manager;
                 let app_handle = app.handle();
                 TrayIconBuilder::build(&app_handle).unwrap();
 
-                let window_state = WindowState::default();
-                app_handle.manage(Mutex::new(window_state));
+                let window_state = WindowState::new(MAIN_WINDOW_LABEL);
+                app_handle.manage(window_state);
             }
 
             Ok(())

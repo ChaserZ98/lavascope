@@ -1,6 +1,7 @@
 mod builder;
 pub mod commands;
 pub mod event_handler;
-pub mod window;
+mod window;
 
 pub use builder::*;
+pub use window::*;
